@@ -1,0 +1,65 @@
+<template>
+  <UDashboardNavbar>
+    <template #left>
+      <div class="flex items-center gap-4">
+        <h1 class="text-xl font-semibold text-white">{{ $t('nav.dashboard') }}</h1>
+      </div>
+    </template>
+
+    <template #right>
+      <div class="flex items-center gap-4">
+        <!-- Language Switcher -->
+        <SharedLanguageSwitcher />
+
+        <UIButton
+          variant="ghost"
+          icon="i-heroicons-bell"
+          aria-label="Notifications"
+        />
+        
+        <UDropdownMenu
+          :items="userMenuItems"
+          :content="{ align: 'end' }"
+          :ui="{ content: 'w-48' }"
+        >
+          <UIButton
+            variant="ghost"
+            trailing-icon="i-heroicons-chevron-down"
+          >
+            <div class="flex items-center gap-2">
+              <UAvatar
+                :alt="user?.email || 'User'"
+                size="sm"
+              />
+              <span class="hidden md:block">{{ user?.email || 'User' }}</span>
+            </div>
+          </UIButton>
+        </UDropdownMenu>
+      </div>
+    </template>
+  </UDashboardNavbar>
+</template>
+
+<script setup lang="ts">
+const { t } = useI18n()
+const localePath = useLocalePath()
+const { user, logout } = useAuthentication()
+
+const userMenuItems: any[][] = [
+  [{
+    label: user.value?.email || t('common.user'),
+    type: 'label',
+    disabled: true
+  }],
+  [{
+    label: t('nav.profile'),
+    icon: 'i-heroicons-user',
+    to: localePath('/user-panel')
+  }],
+  [{
+    label: t('nav.signOut'),
+    icon: 'i-heroicons-arrow-left-on-rectangle',
+    onSelect: () => logout()
+  }]
+]
+</script>

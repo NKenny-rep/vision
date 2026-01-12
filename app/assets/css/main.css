@@ -1,0 +1,23 @@
+@import 'tailwindcss';
+@import '@nuxt/ui';
+
+@theme {
+  /* --color-primary: #7d86fb;
+  --ui-primary: #7d86fb; */
+  --ui-radius: 0.5rem;
+}
+
+/* body {
+  background-color: #020420;
+  font-family: 'Roboto', sans-serif;
+  color: #fff;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #00dc82;
+} */

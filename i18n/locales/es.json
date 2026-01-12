@@ -1,0 +1,387 @@
+{
+  "common": {
+    "appName": "VideoVision",
+    "welcome": "Bienvenido",
+    "loading": "Cargando...",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "submit": "Enviar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "yes": "Sí",
+    "no": "No",
+    "error": "Error",
+    "success": "Éxito",
+    "warning": "Advertencia",
+    "info": "Información",
+    "inMyList": "En Mi Lista",
+    "profile": "Perfil",
+    "name": "Nombre",
+    "phone": "Teléfono",
+    "avatar": "Avatar",
+    "user": "Usuario",
+    "selected": "Seleccionado",
+    "select": "Seleccionar Plan",
+    "popular": "POPULAR"
+  },
+  "meta": {
+    "title": "VideoVision - Transmite Películas y Series Ilimitadas",
+    "description": "Mira donde quieras. Cancela cuando quieras. Únete a VideoVision hoy y disfruta del streaming ilimitado."
+  },
+  "nav": {
+    "home": "Inicio",
+    "movies": "Películas",
+    "tvShows": "Series",
+    "myList": "Mi Lista",
+    "browse": "Explorar",
+    "signIn": "Iniciar Sesión",
+    "signUp": "Registrarse",
+    "signOut": "Cerrar Sesión",
+    "profile": "Perfil",
+    "settings": "Configuración",
+    "dashboard": "Panel",
+    "userPanel": "Panel de Usuario",
+    "admin": "Administrador"
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar Sesión",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "rememberMe": "Recuérdame",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "signInButton": "Iniciar Sesión",
+      "noAccount": "¿No tienes una cuenta?",
+      "signUpLink": "Regístrate ahora",
+      "invalidCredentials": "Credenciales inválidas, por favor intenta de nuevo.",
+      "emailPlaceholder": "Ingresa tu correo electrónico",
+      "passwordPlaceholder": "Ingresa tu contraseña",
+      "emailRequired": "El correo electrónico es requerido",
+      "emailInvalid": "Correo electrónico inválido",
+      "passwordRequired": "La contraseña es requerida",
+      "passwordMinLength": "Debe tener al menos 8 caracteres"
+    },
+    "register": {
+      "title": "Registrarse",
+      "subtitle": "Crea tu cuenta y comienza a ver",
+      "personalInfo": "Información Personal",
+      "choosePlan": "Elige Tu Plan",
+      "name": "Nombre completo",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "signUpButton": "Crear Cuenta",
+      "submit": "Crear Cuenta",
+      "haveAccount": "¿Ya tienes una cuenta?",
+      "signInLink": "Inicia sesión",
+      "namePlaceholder": "Ingresa tu nombre completo",
+      "emailPlaceholder": "Ingresa tu correo electrónico",
+      "passwordPlaceholder": "Crea una contraseña",
+      "confirmPasswordPlaceholder": "Confirma tu contraseña",
+      "nameRequired": "El nombre es requerido",
+      "passwordsNotMatch": "Las contraseñas no coinciden",
+      "selectPlan": "Selecciona un plan de suscripción",
+      "planRequired": "Por favor selecciona un plan de suscripción",
+      "success": "¡Cuenta creada exitosamente!",
+      "failed": "Registro fallido. Por favor intenta de nuevo."
+    },
+    "providers": {
+      "google": "Google",
+      "github": "GitHub",
+      "continueWith": "Continuar con {provider}"
+    }
+  },
+  "landing": {
+    "hero": {
+      "title": "Películas ilimitadas, series de TV,",
+      "titleHighlight": "y más",
+      "subtitle": "Mira donde quieras. Cancela cuando quieras.",
+      "ctaText": "¿Listo para ver? Ingresa tu correo electrónico para crear o reiniciar tu membresía.",
+      "buttonText": "Comenzar",
+      "emailPlaceholder": "Correo electrónico"
+    },
+    "features": {
+      "heading": "Por qué elegir VideoVision",
+      "items": {
+        "tv": {
+          "title": "Disfruta en tu TV",
+          "description": "Mira en Smart TVs, PlayStation, Xbox, Chromecast, Apple TV, reproductores Blu-ray y más."
+        },
+        "download": {
+          "title": "Descarga tus programas",
+          "description": "Guarda tus favoritos fácilmente y siempre ten algo para ver sin conexión."
+        },
+        "everywhere": {
+          "title": "Mira en todas partes",
+          "description": "Transmite películas y series ilimitadas en tu teléfono, tableta, laptop y TV."
+        }
+      }
+    },
+    "pricing": {
+      "heading": "Elige el plan que más te convenga",
+      "subheading": "Actualiza, degrada o cancela cuando quieras.",
+      "plans": {
+        "basic": {
+          "title": "Básico",
+          "subtitle": "Buena calidad",
+          "price": "$9.99/mes",
+          "features": [
+            "Resolución 720p",
+            "Mira en 1 dispositivo",
+            "Películas y series ilimitadas"
+          ]
+        },
+        "standard": {
+          "title": "Estándar",
+          "subtitle": "Gran calidad",
+          "price": "$13.99/mes",
+          "features": [
+            "Resolución 1080p",
+            "Mira en 2 dispositivos",
+            "Películas y series ilimitadas",
+            "Descarga en 2 dispositivos"
+          ]
+        },
+        "premium": {
+          "title": "Premium",
+          "subtitle": "Mejor calidad",
+          "price": "$17.99/mes",
+          "features": [
+            "4K + HDR",
+            "Mira en 4 dispositivos",
+            "Películas y series ilimitadas",
+            "Descarga en 4 dispositivos"
+          ]
+        }
+      },
+      "selectButton": "Seleccionar Plan"
+    },
+    "faq": {
+      "heading": "Preguntas Frecuentes"
+    }
+  },
+  "movies": {
+    "title": "Películas",
+    "genre": "Género",
+    "year": "Año",
+    "rating": "Calificación",
+    "duration": "Duración",
+    "releaseDate": "Fecha de Lanzamiento",
+    "director": "Director",
+    "cast": "Reparto",
+    "playNow": "Reproducir Ahora",
+    "moreInfo": "Más Información",
+    "noMoviesInGenre": "No se encontraron películas en este género.",
+    "plot": "Sinopsis",
+    "noMoviesFound": "No se encontraron películas",
+    "loadingMovies": "Cargando películas...",
+    "addToList": "Agregar a Mi Lista",
+    "removeFromList": "Quitar de Mi Lista",
+    "play": "Reproducir",
+    "watchTrailer": "Ver Tráiler",
+    "moreInfo": "Más Información"
+  },
+  "reviews": {
+    "title": "Reseñas",
+    "writeReview": "Escribir una Reseña",
+    "yourRating": "Tu Calificación",
+    "yourReview": "Tu Reseña",
+    "submitReview": "Enviar Reseña",
+    "editReview": "Editar Reseña",
+    "deleteReview": "Eliminar Reseña",
+    "noReviews": "Aún no hay reseñas",
+    "loadingReviews": "Cargando reseñas...",
+    "reviewPlaceholder": "Comparte tu opinión sobre esta película...",
+    "reviewSubmitted": "Reseña enviada con éxito",
+    "reviewUpdated": "Reseña actualizada con éxito",
+    "reviewDeleted": "Reseña eliminada con éxito"
+  },
+  "dashboard": {
+    "welcome": "Bienvenido de nuevo",
+    "recentlyAdded": "Agregadas Recientemente",
+    "trending": "Tendencias Ahora",
+    "continueWatching": "Continuar Viendo",
+    "recommendedForYou": "Recomendadas para Ti",
+    "topRated": "Mejor Calificadas"
+  },
+  "userPanel": {
+    "title": "Panel de Usuario",
+    "myAccount": "Mi Cuenta",
+    "myReviews": "Mis Reseñas",
+    "watchHistory": "Historial de Reproducción",
+    "preferences": "Preferencias",
+    "language": "Idioma",
+    "theme": "Tema",
+    "welcomeToDashboard": "Bienvenido al Panel",
+    "manageDashboardContent": "Gestiona tu contenido de VideoVision",
+    "userInformation": "Información de Usuario",
+    "email": "Correo electrónico",
+    "roles": "Roles",
+    "movieList": {
+      "title": "Mi Lista",
+      "empty": {
+        "title": "Tu Lista Está Vacía",
+        "description": "Comienza a agregar películas para construir tu colección personal",
+        "browseButton": "Explorar Películas"
+      },
+      "removeButton": "Eliminar de la Lista"
+    }
+  },
+  "profile": {
+    "title": "Perfil",
+    "personalInfo": "Información Personal",
+    "paymentMethods": "Métodos de Pago",
+    "addPayment": "Agregar Método de Pago",
+    "subscription": {
+      "title": "Suscripción",
+      "noSubscription": "Sin suscripción activa",
+      "currentPlan": "Plan Actual",
+      "startDate": "Fecha de Inicio",
+      "endDate": "Fecha de Finalización",
+      "autoRenew": "Renovación Automática",
+      "changePlan": "Cambiar Plan",
+      "cancelSubscription": "Cancelar Suscripción",
+      "selectNewPlan": "Selecciona un Nuevo Plan",
+      "confirmChange": "Confirmar Cambio",
+      "planChanged": "Plan de suscripción actualizado exitosamente",
+      "cancelled": "Suscripción cancelada exitosamente",
+      "changeFailed": "Error al cambiar el plan de suscripción",
+      "cancelFailed": "Error al cancelar la suscripción",
+      "cancelConfirm": "¿Estás seguro de que quieres cancelar tu suscripción? Perderás acceso a las funciones premium."
+    },
+    "messages": {
+      "updateSuccess": "Perfil actualizado exitosamente",
+      "paymentAdded": "Método de pago agregado exitosamente",
+      "paymentRemoved": "Método de pago eliminado exitosamente"
+    },
+    "errors": {
+      "loadFailed": "Error al cargar el perfil",
+      "updateFailed": "Error al actualizar el perfil",
+      "paymentAddFailed": "Error al agregar método de pago",
+      "paymentRemoveFailed": "Error al eliminar método de pago"
+    }
+  },
+  "admin": {
+    "title": "Panel de Administración",
+    "manageMovies": "Gestionar Películas",
+    "manageUsers": "Gestionar Usuarios",
+    "statistics": "Estadísticas",
+    "addMovie": "Agregar Película",
+    "editMovie": "Editar Película",
+    "deleteMovie": "Eliminar Película",
+    "dashboard": {
+      "title": "Panel de Administración",
+      "subtitle": "Gestiona tu contenido y usuarios de VideoVision",
+      "totalVideos": "Total de Videos",
+      "activeUsers": "Usuarios Activos",
+      "totalViews": "Total de Vistas",
+      "revenue": "Ingresos",
+      "quickActions": "Acciones Rápidas",
+      "addNewVideo": "Agregar Nuevo Video",
+      "manageUsers": "Gestionar Usuarios",
+      "viewAnalytics": "Ver Analíticas",
+      "recentActivity": "Actividad Reciente",
+      "newVideoUploaded": "Nuevo video subido",
+      "newUserRegistered": "Nuevo usuario registrado",
+      "hoursAgo": "hace {count} horas"
+    },
+    "videos": {
+      "title": "Videos",
+      "subtitle": "Gestiona tu biblioteca de videos",
+      "addVideo": "Agregar Video",
+      "createVideo": "Crear Video",
+      "createVideoSubtitle": "Agregar un nuevo video a tu biblioteca",
+      "id": "ID",
+      "title": "Título",
+      "status": "Estado",
+      "views": "Vistas",
+      "actions": "Acciones",
+      "published": "publicado",
+      "draft": "borrador",
+      "videoTitle": "Título del Video",
+      "description": "Descripción",
+      "videoUrl": "URL del Video",
+      "thumbnailUrl": "URL de Miniatura",
+      "category": "Categoría",
+      "tags": "Etiquetas",
+      "createButton": "Crear Video",
+      "cancel": "Cancelar",
+      "enterTitle": "Ingresa el título del video",
+      "enterDescription": "Ingresa la descripción del video",
+      "enterVideoUrl": "https://...",
+      "enterThumbnailUrl": "https://...",
+      "enterCategory": "Acción, Drama, etc.",
+      "enterTags": "etiqueta1, etiqueta2, etiqueta3",
+      "required": "requerido"
+    }
+  },
+  "errors": {
+    "404": "Página no encontrada",
+    "500": "Error interno del servidor",
+    "unauthorized": "Acceso no autorizado",
+    "forbidden": "Acceso prohibido",
+    "networkError": "Ocurrió un error de red",
+    "tryAgain": "Por favor intenta de nuevo",
+    "loadingFailed": "Error al cargar el contenido"
+  },
+  "search": {
+    "title": "Base de Datos de Películas",
+    "titleHighlight": "Base de Datos",
+    "subtitle": "Busca por título, luego refina los resultados con filtros de tipo y año",
+    "searchPlaceholder": "Buscar películas, series o episodios...",
+    "searchButton": "Buscar",
+    "filterByType": "Filtrar por Tipo",
+    "filterByYear": "Filtrar por Año",
+    "allTypes": "Todos los Tipos",
+    "allYears": "Todos los Años",
+    "clearFilters": "Limpiar Filtros",
+    "requiresSearch": "(requiere búsqueda)",
+    "enterSearchTerm": "Por favor ingresa un término de búsqueda",
+    "noResultsFound": "No se encontraron resultados",
+    "searchFailed": "Error al buscar películas",
+    "movie": "Película",
+    "series": "Serie",
+    "episode": "Episodio"
+  },
+  "watch": {
+    "movieNotFound": "Película No Encontrada",
+    "movieNotFoundDescription": "La película que buscas no existe.",
+    "backToBrowse": "Volver a Explorar",
+    "watchTrailer": "Ver Tráiler",
+    "addToMyList": "Agregar a Mi Lista",
+    "share": "Compartir",
+    "genre": "Género",
+    "director": "Director",
+    "cast": "Reparto",
+    "plot": "Sinopsis",
+    "rated": "Clasificación",
+    "released": "Estreno",
+    "boxOffice": "Taquilla",
+    "awards": "Premios",
+    "reviewsAndRatings": "Reseñas y Calificaciones"
+  },
+  "validation": {
+    "required": "{field} es requerido",
+    "minLength": "{field} debe tener al menos {min} caracteres",
+    "maxLength": "{field} no debe exceder {max} caracteres",
+    "email": "Por favor ingresa un correo electrónico válido",
+    "url": "Por favor ingresa una URL válida",
+    "number": "Por favor ingresa un número válido",
+    "date": "Por favor ingresa una fecha válida"
+  },
+  "footer": {
+    "copyright": "© {year} VideoVision. Todos los derechos reservados.",
+    "termsOfService": "Términos de Servicio",
+    "privacyPolicy": "Política de Privacidad",
+    "contact": "Contáctanos",
+    "help": "Centro de Ayuda",
+    "about": "Sobre Nosotros"
+  }
+}

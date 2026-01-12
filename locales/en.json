@@ -1,0 +1,274 @@
+{
+  "common": {
+    "appName": "VideoVision",
+    "welcome": "Welcome",
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "saving": "Saving...",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filter",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "yes": "Yes",
+    "no": "No",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information",
+    "profile": "Profile",
+    "name": "Name",
+    "phone": "Phone",
+    "avatar": "Avatar",
+    "user": "User"
+  },
+  "meta": {
+    "title": "VideoVision - Stream Unlimited Movies & TV Shows",
+    "description": "Watch anywhere. Cancel anytime. Join VideoVision today and enjoy unlimited streaming."
+  },
+  "nav": {
+    "home": "Home",
+    "movies": "Movies",
+    "tvShows": "TV Shows",
+    "myList": "My List",
+    "browse": "Browse",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "profile": "Profile",
+    "settings": "Settings",
+    "dashboard": "Dashboard",
+    "userPanel": "User Panel",
+    "admin": "Admin"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "email": "Email address",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "signInButton": "Sign In",
+      "noAccount": "Don't have an account?",
+      "signUpLink": "Sign up now",
+      "invalidCredentials": "Invalid credentials, please try again.",
+      "emailPlaceholder": "Enter your email",
+      "passwordPlaceholder": "Enter your password",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email address",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Must be at least 8 characters"
+    },
+    "register": {
+      "title": "Sign Up",
+      "name": "Full name",
+      "email": "Email address",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "signUpButton": "Create Account",
+      "haveAccount": "Already have an account?",
+      "signInLink": "Sign in",
+      "namePlaceholder": "Enter your full name",
+      "emailPlaceholder": "Enter your email",
+      "passwordPlaceholder": "Create a password",
+      "confirmPasswordPlaceholder": "Confirm your password",
+      "nameRequired": "Name is required",
+      "passwordsNotMatch": "Passwords do not match"
+    },
+    "providers": {
+      "google": "Google",
+      "github": "GitHub",
+      "continueWith": "Continue with {provider}"
+    }
+  },
+  "landing": {
+    "hero": {
+      "title": "Unlimited movies, TV shows,",
+      "titleHighlight": "more",
+      "subtitle": "Watch anywhere. Cancel anytime.",
+      "ctaText": "Ready to watch? Enter your email to create or restart your membership.",
+      "buttonText": "Get Started",
+      "emailPlaceholder": "Email address"
+    },
+    "features": {
+      "heading": "Why Choose VideoVision",
+      "items": {
+        "tv": {
+          "title": "Enjoy on your TV",
+          "description": "Watch on Smart TVs, PlayStation, Xbox, Chromecast, Apple TV, Blu-ray players, and more."
+        },
+        "download": {
+          "title": "Download your shows",
+          "description": "Save your favorites easily and always have something to watch offline."
+        },
+        "everywhere": {
+          "title": "Watch everywhere",
+          "description": "Stream unlimited movies and TV shows on your phone, tablet, laptop, and TV."
+        }
+      }
+    },
+    "pricing": {
+      "heading": "Choose the plan that's right for you",
+      "subheading": "Upgrade, downgrade, or cancel anytime.",
+      "plans": {
+        "basic": {
+          "title": "Basic",
+          "subtitle": "Good quality",
+          "price": "$9.99/month",
+          "features": [
+            "720p Resolution",
+            "Watch on 1 device",
+            "Unlimited movies & TV shows"
+          ]
+        },
+        "standard": {
+          "title": "Standard",
+          "subtitle": "Great quality",
+          "price": "$13.99/month",
+          "features": [
+            "1080p Resolution",
+            "Watch on 2 devices",
+            "Unlimited movies & TV shows",
+            "Download on 2 devices"
+          ]
+        },
+        "premium": {
+          "title": "Premium",
+          "subtitle": "Best quality",
+          "price": "$17.99/month",
+          "features": [
+            "4K + HDR",
+            "Watch on 4 devices",
+            "Unlimited movies & TV shows",
+            "Download on 4 devices"
+          ]
+        }
+      },
+      "selectButton": "Select Plan"
+    },
+    "faq": {
+      "heading": "Frequently Asked Questions"
+    }
+  },
+  "movies": {
+    "title": "Movies",
+    "genre": "Genre",
+    "year": "Year",
+    "rating": "Rating",
+    "duration": "Duration",
+    "releaseDate": "Release Date",
+    "director": "Director",
+    "cast": "Cast",
+    "plot": "Plot",
+    "noMoviesFound": "No movies found",
+    "loadingMovies": "Loading movies...",
+    "addToList": "Add to My List",
+    "removeFromList": "Remove from List",
+    "play": "Play",
+    "watchTrailer": "Watch Trailer",
+    "moreInfo": "More Info"
+  },
+  "reviews": {
+    "title": "Reviews",
+    "writeReview": "Write a Review",
+    "yourRating": "Your Rating",
+    "yourReview": "Your Review",
+    "submitReview": "Submit Review",
+    "editReview": "Edit Review",
+    "deleteReview": "Delete Review",
+    "noReviews": "No reviews yet",
+    "loadingReviews": "Loading reviews...",
+    "reviewPlaceholder": "Share your thoughts about this movie...",
+    "reviewSubmitted": "Review submitted successfully",
+    "reviewUpdated": "Review updated successfully",
+    "reviewDeleted": "Review deleted successfully"
+  },
+  "dashboard": {
+    "welcome": "Welcome back",
+    "recentlyAdded": "Recently Added",
+    "trending": "Trending Now",
+    "continueWatching": "Continue Watching",
+    "recommendedForYou": "Recommended for You",
+    "topRated": "Top Rated"
+  },
+  "userPanel": {
+    "title": "User Panel",
+    "myAccount": "My Account",
+    "myReviews": "My Reviews",
+    "watchHistory": "Watch History",
+    "preferences": "Preferences",
+    "language": "Language",
+    "theme": "Theme",
+    "movieList": {
+      "title": "My List",
+      "removeButton": "Remove from list",
+      "empty": {
+        "title": "Your list is empty",
+        "description": "Add movies and TV shows to your list to watch later",
+        "browseButton": "Browse Movies"
+      },
+      "messages": {
+        "removed": "Movie removed from your list"
+      },
+      "errors": {
+        "removeFailed": "Failed to remove movie from list"
+      }
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "personalInfo": "Personal Information",
+    "paymentMethods": "Payment Methods",
+    "addPayment": "Add Payment Method",
+    "messages": {
+      "updateSuccess": "Profile updated successfully",
+      "paymentAdded": "Payment method added successfully",
+      "paymentRemoved": "Payment method removed successfully"
+    },
+    "errors": {
+      "loadFailed": "Failed to load profile",
+      "updateFailed": "Failed to update profile",
+      "paymentAddFailed": "Failed to add payment method",
+      "paymentRemoveFailed": "Failed to remove payment method"
+    }
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "manageMovies": "Manage Movies",
+    "manageUsers": "Manage Users",
+    "statistics": "Statistics",
+    "addMovie": "Add Movie",
+    "editMovie": "Edit Movie",
+    "deleteMovie": "Delete Movie"
+  },
+  "errors": {
+    "404": "Page not found",
+    "500": "Internal server error",
+    "unauthorized": "Unauthorized access",
+    "forbidden": "Access forbidden",
+    "networkError": "Network error occurred",
+    "tryAgain": "Please try again"
+  },
+  "validation": {
+    "required": "{field} is required",
+    "minLength": "{field} must be at least {min} characters",
+    "maxLength": "{field} must not exceed {max} characters",
+    "email": "Please enter a valid email address",
+    "url": "Please enter a valid URL",
+    "number": "Please enter a valid number",
+    "date": "Please enter a valid date"
+  },
+  "footer": {
+    "copyright": "© {year} VideoVision. All rights reserved.",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "contact": "Contact Us",
+    "help": "Help Center",
+    "about": "About Us"
+  }
+}
