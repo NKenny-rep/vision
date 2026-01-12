@@ -113,7 +113,7 @@ describe('useMovies', () => {
     })
 
     const { result } = await mountComposable()
-    const { data, error } = await result.getMovie('Detailed Movie')
+    await result.getMovie('Detailed Movie')
 
     expect(useFetchMock).toHaveBeenCalled()
   })

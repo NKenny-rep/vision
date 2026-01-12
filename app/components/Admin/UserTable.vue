@@ -135,7 +135,8 @@ const table = useVueTable({
 </script>
 
 <template>
-  <div class="overflow-x-auto">
+  <!-- Desktop Table View -->
+  <div class="hidden md:block overflow-x-auto">
     <table class="w-full">
       <thead>
         <tr
@@ -210,5 +211,105 @@ const table = useVueTable({
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <!-- Mobile Card View -->
+  <div class="md:hidden space-y-4 p-4">
+    <!-- Loading State -->
+    <div v-if="loading" class="flex justify-center py-8">
+      <UIcon name="i-heroicons-arrow-path" class="animate-spin w-8 h-8 text-orange-500" />
+    </div>
+
+    <!-- Empty State -->
+    <div v-else-if="!users || users.length === 0" class="text-center py-8 text-gray-400">
+      {{ t('admin.users.table.empty') }}
+    </div>
+
+    <!-- User Cards -->
+    <UCard v-for="user in users" v-else :key="user.id" class="overflow-hidden">
+      <div class="space-y-3">
+        <!-- User Info Header -->
+        <div class="flex items-center gap-3 pb-3 border-b border-gray-700">
+          <img
+            v-if="user.avatar"
+            :src="user.avatar"
+            :alt="user.name"
+            class="w-12 h-12 rounded-full object-cover"
+          >
+          <div
+            v-else
+            class="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center text-white font-semibold text-lg"
+          >
+            {{ user.name.charAt(0).toUpperCase() }}
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="font-semibold text-white truncate">{{ user.name }}</h3>
+            <p class="text-xs text-gray-400">ID: {{ user.id }}</p>
+          </div>
+        </div>
+
+        <!-- User Details -->
+        <div class="space-y-2">
+          <div class="flex items-start gap-2">
+            <UIcon name="i-heroicons-envelope" class="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-gray-400">{{ t('admin.users.table.email') }}</p>
+              <p class="text-sm text-white truncate">{{ user.email }}</p>
+            </div>
+          </div>
+
+          <div v-if="user.phone" class="flex items-start gap-2">
+            <UIcon name="i-heroicons-phone" class="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+            <div class="flex-1">
+              <p class="text-xs text-gray-400">{{ t('admin.users.table.phone') }}</p>
+              <p class="text-sm text-white">{{ user.phone }}</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-2">
+            <UIcon name="i-heroicons-shield-check" class="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+            <div class="flex-1">
+              <p class="text-xs text-gray-400">{{ t('admin.users.table.role') }}</p>
+              <span :class="['inline-block mt-1 px-2 py-1 rounded-full text-xs font-medium', getRoleBadgeClass(user.roleName)]">
+                {{ user.roleName }}
+              </span>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-2">
+            <UIcon name="i-heroicons-calendar" class="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+            <div class="flex-1">
+              <p class="text-xs text-gray-400">{{ t('admin.users.table.createdAt') }}</p>
+              <p class="text-sm text-white">{{ formatDate(user.createdAt) }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-gray-700">
+          <button
+            :title="t('common.view')"
+            class="text-blue-500 hover:text-blue-400 transition-colors p-2 rounded hover:bg-blue-500/10"
+            @click="emit('view', user)"
+          >
+            <UIcon name="i-heroicons-eye" class="w-5 h-5" />
+          </button>
+          <button
+            :title="t('common.edit')"
+            class="text-orange-500 hover:text-orange-400 transition-colors p-2 rounded hover:bg-orange-500/10"
+            @click="emit('edit', user)"
+          >
+            <UIcon name="i-heroicons-pencil-square" class="w-5 h-5" />
+          </button>
+          <button
+            :title="t('common.delete')"
+            class="text-red-500 hover:text-red-400 transition-colors p-2 rounded hover:bg-red-500/10"
+            @click="emit('delete', user)"
+          >
+            <UIcon name="i-heroicons-trash" class="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+    </UCard>
   </div>
 </template>

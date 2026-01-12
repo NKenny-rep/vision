@@ -1,5 +1,5 @@
 // app/components/UI/Button.test.ts
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import Button from './Button.vue'
 

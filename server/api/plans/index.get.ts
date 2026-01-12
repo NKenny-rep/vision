@@ -1,5 +1,4 @@
 import { useDB, subscriptionPlans } from '../../database'
-import { eq } from 'drizzle-orm'
 
 export default defineEventHandler(async (_event) => {
   try {
@@ -7,7 +6,6 @@ export default defineEventHandler(async (_event) => {
     const plans = await db
       .select()
       .from(subscriptionPlans)
-      .where(eq(subscriptionPlans.isActive, true))
       .orderBy(subscriptionPlans.price)
 
     return plans

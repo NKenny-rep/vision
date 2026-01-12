@@ -46,6 +46,8 @@ async function seed() {
     await db.delete(schema.reviews)
     await db.delete(schema.movieListItems)
     await db.delete(schema.movieLists)
+    await db.delete(schema.userSubscriptions)
+    await db.delete(schema.subscriptionPlans)
     await db.delete(schema.paymentMethods)
     await db.delete(schema.users)
     await db.delete(schema.paymentTypes)
@@ -373,17 +375,84 @@ async function seed() {
 
     console.log('✓ Review likes created')
 
+    // 8. Create subscription plans
+    console.log('Creating subscription plans...')
+    const [basicPlan, standardPlan, premiumPlan] = await db.insert(schema.subscriptionPlans).values([
+      {
+        name: 'Basic',
+        description: 'Perfect for casual viewers',
+        price: 999, // $9.99
+        billingPeriod: 'monthly',
+        features: JSON.stringify(['HD Quality', 'Watch on 1 device', 'Cancel anytime']),
+        maxDevices: 1,
+        maxQuality: 'HD',
+        isActive: true,
+      },
+      {
+        name: 'Standard',
+        description: 'Great for families',
+        price: 1499, // $14.99
+        billingPeriod: 'monthly',
+        features: JSON.stringify(['Full HD Quality', 'Watch on 2 devices', 'Download available', 'Cancel anytime']),
+        maxDevices: 2,
+        maxQuality: 'Full HD',
+        isActive: true,
+      },
+      {
+        name: 'Premium',
+        description: 'Ultimate entertainment',
+        price: 1999, // $19.99
+        billingPeriod: 'monthly',
+        features: JSON.stringify(['4K Quality', 'Watch on 4 devices', 'Download available', 'Priority support', 'Cancel anytime']),
+        maxDevices: 4,
+        maxQuality: '4K + HDR',
+        isActive: true,
+      },
+    ]).returning()
+
+    console.log('✓ Subscription plans created')
+
+    // 9. Create user subscriptions
+    console.log('Creating user subscriptions...')
+    await db.insert(schema.userSubscriptions).values([
+      {
+        userId: adminUser.id,
+        planId: premiumPlan.id,
+        status: 'active',
+        startDate: new Date('2024-01-01'),
+        autoRenew: true,
+      },
+      {
+        userId: user1.id,
+        planId: standardPlan.id,
+        status: 'active',
+        startDate: new Date('2024-06-15'),
+        autoRenew: true,
+      },
+      {
+        userId: user2.id,
+        planId: basicPlan.id,
+        status: 'active',
+        startDate: new Date('2024-08-01'),
+        autoRenew: false,
+      },
+    ])
+
+    console.log('✓ User subscriptions created')
+
     console.log('✅ Database seeded successfully!')
     console.log('\n📊 Summary:')
     console.log(`  - 2 roles`)
     console.log(`  - 4 users (admin@videovision.com / john.doe@example.com)`)
+    console.log(`  - 3 subscription plans`)
+    console.log(`  - 3 active subscriptions`)
     console.log(`  - 4 movie lists`)
     console.log(`  - 9 movie list items`)
     console.log(`  - 4 reviews`)
     console.log(`  - 7 review likes`)
     console.log('\n🔑 Login credentials (all users use password: "password123"):')
-    console.log('  Admin: admin@videovision.com')
-    console.log('  User:  john.doe@example.com')
+    console.log('  Admin: admin@videovision.com (Premium Plan)')
+    console.log('  User:  john.doe@example.com (Standard Plan)')
 
   } catch (error) {
     console.error('❌ Error seeding database:', error)

@@ -32,21 +32,30 @@ const handleRemove = async (omdbId: string) => {
 <template>
   <div class="container mx-auto px-4 py-8 space-y-8">
     <!-- Header -->
-    <div class="relative">
-      <NuxtImg
-        src="https://placehold.co/600x400/1a1a1a/orange?text=Movie+List+Background"
+    <div class="relative overflow-hidden rounded-lg">
+      <!-- Background Image -->
+      <NuxtImg 
+        src="/images/userlist-banner.jpeg" 
         alt="Movie List Background"
-        class="w-full h-64 object-cover rounded-lg"
-        loading="lazy"
-        width="600"
-        height="400"
+        format="webp" 
+        quality="80" 
+        sizes="sm:100vw md:50vw lg:800px"
+        class="w-full h-64 object-cover"
       />
-      <div class="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center">
-        <div class="text-center">
-          <h1 class="text-3xl md:text-4xl font-bold text-white">
+      
+      <!-- Gradient Overlay for better blending -->
+      <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80"/>
+      
+      <!-- Diffuse blur effect at edges -->
+      <div class="absolute inset-0 shadow-[inset_0_0_100px_rgba(0,0,0,0.6)]"/>
+      
+      <!-- Content -->
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="text-center px-4">
+          <h1 class="text-4xl md:text-5xl font-bold text-white drop-shadow-2xl">
             {{ $t('userPanel.movieList.title') }}
           </h1>
-          <p class="text-gray-300 mt-2">
+          <p class="text-sm md:text-base text-gray-200 mt-3 font-light tracking-wide uppercase opacity-80">
             {{ totalMovies }} {{ totalMovies === 1 ? 'movie' : 'movies' }}
           </p>
         </div>

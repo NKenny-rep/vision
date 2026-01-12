@@ -5,6 +5,12 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   modules: ['@nuxt/image', '@nuxt/ui', 'nuxt-auth-utils', '@nuxtjs/i18n', '@nuxt/eslint'],
   
+  eslint: {
+    config: {
+      stylistic: false,
+    },
+  },
+  
   runtimeConfig: {
     // Server-only keys (never sent to client)
     omdbApiKey: process.env.OMDB_API || '',

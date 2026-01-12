@@ -29,21 +29,65 @@ interface Emits {
   (e: 'refresh'): void
 }
 
-const _props = defineProps<Props>()
+const props = defineProps<Props>()
+const { subscription } = toRefs(props)
 const emit = defineEmits<Emits>()
 const { t } = useI18n()
 const { showSuccess, showError } = useToastNotification()
 
+// State
 const isChangingPlan = ref(false)
 const isCancelling = ref(false)
+const isSubscribing = ref(false)
 const showPlanSelector = ref(false)
+const showConfirmModal = ref(false)
+const showCancelModal = ref(false)
 const selectedPlanId = ref<number | null>(null)
 
+// Data fetching
 const { data: availablePlans } = await useFetch<SubscriptionPlan[]>('/api/plans')
 
-const formatPrice = (cents: number) => {
-  return (cents / 100).toFixed(2)
-}
+// Computed
+const selectedPlan = computed(() => 
+  availablePlans.value?.find(p => p.id === selectedPlanId.value) || null
+)
+
+const isLoading = computed(() => 
+  subscription.value ? isChangingPlan.value : isSubscribing.value
+)
+
+const confirmModalTitle = computed(() =>
+  subscription.value 
+    ? t('profile.subscription.confirmChangeTitle') 
+    : t('profile.subscription.confirmSubscribeTitle')
+)
+
+const confirmModalMessage = computed(() =>
+  subscription.value 
+    ? t('profile.subscription.confirmChangeMessage') 
+    : t('profile.subscription.confirmSubscribeMessage')
+)
+
+const confirmButtonText = computed(() =>
+  subscription.value 
+    ? t('profile.subscription.confirmChange') 
+    : t('profile.subscription.confirmSubscribe')
+)
+
+const selectedPlanInfo = computed(() =>
+  selectedPlan.value 
+    ? `${selectedPlan.value.name} - $${formatPrice(selectedPlan.value.price)}/${selectedPlan.value.billingPeriod}`
+    : ''
+)
+
+const currentPlanInfo = computed(() =>
+  subscription.value 
+    ? `${subscription.value.plan.name} - $${formatPrice(subscription.value.plan.price)}/${subscription.value.plan.billingPeriod}`
+    : ''
+)
+
+// Utilities
+const formatPrice = (cents: number) => (cents / 100).toFixed(2)
 
 const parsedFeatures = (featuresJson: string) => {
   try {
@@ -53,56 +97,104 @@ const parsedFeatures = (featuresJson: string) => {
   }
 }
 
+// API call wrapper
+const handleApiCall = async (
+  apiCall: () => Promise<void>,
+  loadingRef: Ref<boolean>,
+  successMessage: string,
+  errorMessage: string,
+  onSuccess?: () => void
+) => {
+  loadingRef.value = true
+  try {
+    await apiCall()
+    showSuccess(successMessage)
+    onSuccess?.()
+  } catch (error: unknown) {
+    const message = (error as { data?: { message?: string } })?.data?.message || errorMessage
+    showError(message)
+  } finally {
+    loadingRef.value = false
+  }
+}
+
+// Handlers
+const handleSubscribe = async () => {
+  if (!selectedPlanId.value) {
+    showError(t('profile.subscription.selectPlan'))
+    return
+  }
+
+  await handleApiCall(
+    () => $fetch('/api/user/subscription/subscribe', {
+      method: 'POST',
+      body: { planId: selectedPlanId.value }
+    }),
+    isSubscribing,
+    t('profile.subscription.subscribed'),
+    t('profile.subscription.subscribeFailed'),
+    () => {
+      showPlanSelector.value = false
+      showConfirmModal.value = false
+      emit('refresh')
+    }
+  )
+}
+
 const handleChangePlan = async () => {
   if (!selectedPlanId.value) {
     showError(t('profile.subscription.selectNewPlan'))
     return
   }
 
-  isChangingPlan.value = true
-  try {
-    await $fetch('/api/user/subscription/change-plan', {
+  await handleApiCall(
+    () => $fetch('/api/user/subscription/change-plan', {
       method: 'POST',
       body: { planId: selectedPlanId.value }
-    })
-
-    showSuccess(t('profile.subscription.planChanged'))
-
-    showPlanSelector.value = false
-    emit('refresh')
-  } catch (error: unknown) {
-    const errorMessage = (error as { data?: { message?: string } })?.data?.message || t('profile.subscription.changeFailed');
-    showError(errorMessage);
-  } finally {
-    isChangingPlan.value = false
-  }
+    }),
+    isChangingPlan,
+    t('profile.subscription.planChanged'),
+    t('profile.subscription.changeFailed'),
+    () => {
+      showPlanSelector.value = false
+      showConfirmModal.value = false
+      emit('refresh')
+    }
+  )
 }
 
 const handleCancelSubscription = async () => {
-  if (!confirm(t('profile.subscription.cancelConfirm'))) {
-    return
-  }
-
-  isCancelling.value = true
-  try {
-    await $fetch('/api/user/subscription/cancel', {
-      method: 'POST'
-    })
-
-    showSuccess(t('profile.subscription.cancelled'))
-
-    emit('refresh')
-  } catch (error: unknown) {
-    const errorMessage = (error as { data?: { message?: string } })?.data?.message || t('profile.subscription.cancelFailed');
-    showError(errorMessage);
-  } finally {
-    isCancelling.value = false
-  }
+  await handleApiCall(
+    () => $fetch('/api/user/subscription/cancel', { method: 'POST' }),
+    isCancelling,
+    t('profile.subscription.cancelled'),
+    t('profile.subscription.cancelFailed'),
+    () => {
+      showCancelModal.value = false
+      emit('refresh')
+    }
+  )
 }
 
-const openChangePlan = () => {
+const openPlanSelector = () => {
   selectedPlanId.value = null
   showPlanSelector.value = true
+}
+
+const handlePlanSelection = (planId: number) => {
+  if (subscription.value?.plan.id === planId) return
+  
+  selectedPlanId.value = planId
+  showPlanSelector.value = false
+  showConfirmModal.value = true
+}
+
+const handleConfirm = async () => {
+  if (subscription.value) {
+    await handleChangePlan()
+  } else {
+    await handleSubscribe()
+  }
 }
 </script>
 
@@ -121,12 +213,16 @@ const openChangePlan = () => {
     </template>
 
     <div v-if="!subscription" class="text-center py-8">
-      <p class="text-gray-600 dark:text-gray-400">{{ t('profile.subscription.noSubscription') }}</p>
+      <UIcon name="i-heroicons-credit-card" class="w-16 h-16 text-gray-400 mx-auto mb-4" />
+      <p class="text-gray-600 dark:text-gray-400 mb-4">{{ t('profile.subscription.noSubscription') }}</p>
+      <UButton color="primary" size="lg" @click="openPlanSelector">
+        {{ t('profile.subscription.subscribe') }}
+      </UButton>
     </div>
 
     <div v-else class="space-y-6">
       <!-- Current Plan -->
-      <div class="p-6 border border-gray-200 dark:border-gray-700 rounded-lg">
+      <div v-if="!showPlanSelector" class="p-6 border border-gray-200 dark:border-gray-700 rounded-lg">
         <div class="flex justify-between items-start mb-4">
           <div>
             <h4 class="text-xl font-bold">{{ subscription.plan.name }}</h4>
@@ -169,12 +265,12 @@ const openChangePlan = () => {
       </div>
 
       <!-- Actions -->
-      <div class="flex gap-3">
+      <div v-if="!showPlanSelector" class="flex gap-3">
         <UButton
           color="primary"
           variant="outline"
           :disabled="isChangingPlan || isCancelling"
-          @click="openChangePlan"
+          @click="openPlanSelector"
         >
           {{ t('profile.subscription.changePlan') }}
         </UButton>
@@ -182,70 +278,79 @@ const openChangePlan = () => {
           variant="outline"
           :loading="isCancelling"
           :disabled="isChangingPlan || isCancelling"
-          @click="handleCancelSubscription"
+          @click="showCancelModal = true"
         >
           {{ t('profile.subscription.cancelSubscription') }}
         </UButton>
       </div>
+    </div>
 
-      <!-- Plan Selector Modal -->
-      <UModal v-model="showPlanSelector">
-        <UCard>
-          <template #header>
-            <h3 class="text-lg font-semibold">{{ t('profile.subscription.selectNewPlan') }}</h3>
-          </template>
+    <!-- Plan Selector -->
+    <div v-if="showPlanSelector" class="mt-6">
+      <h3 class="text-lg font-semibold mb-4">
+        {{ subscription ? t('profile.subscription.selectNewPlan') : t('profile.subscription.selectPlan') }}
+      </h3>
 
-          <div class="space-y-4">
-            <div
-              v-for="plan in availablePlans"
-              :key="plan.id"
-              :class="[
-                'cursor-pointer p-4 rounded-lg border-2 transition-all',
-                selectedPlanId === plan.id
-                  ? 'border-primary bg-primary/10'
-                  : 'border-gray-300 dark:border-gray-600 hover:border-primary/50',
-                subscription.plan.id === plan.id ? 'opacity-50' : ''
-              ]"
-              @click="selectedPlanId = plan.id"
-            >
-              <div class="flex justify-between items-start mb-2">
-                <div>
-                  <h4 class="font-bold">{{ plan.name }}</h4>
-                  <p class="text-sm text-gray-600 dark:text-gray-400">{{ plan.description }}</p>
-                </div>
-                <div class="text-right">
-                  <div class="text-xl font-bold text-primary">
-                    ${{ formatPrice(plan.price) }}
-                  </div>
-                  <div class="text-xs text-gray-600 dark:text-gray-400">/{{ plan.billingPeriod }}</div>
-                </div>
+      <div class="space-y-4">
+          <div
+            v-for="plan in availablePlans"
+            :key="plan.id"
+            :class="[
+              'cursor-pointer p-4 rounded-lg border-2 transition-all',
+              selectedPlanId === plan.id
+                ? 'border-primary bg-primary/10'
+                : 'border-gray-300 dark:border-gray-600 hover:border-primary/50',
+              subscription?.plan.id === plan.id ? 'opacity-50 cursor-not-allowed' : ''
+            ]"
+            @click="handlePlanSelection(plan.id)"
+          >
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <h4 class="font-bold">{{ plan.name }}</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">{{ plan.description }}</p>
               </div>
-              <div v-if="subscription.plan.id === plan.id" class="text-xs text-gray-500">
-                {{ t('profile.subscription.currentPlan') }}
+              <div class="text-right">
+                <div class="text-xl font-bold text-primary">
+                  ${{ formatPrice(plan.price) }}
+                </div>
+                <div class="text-xs text-gray-600 dark:text-gray-400">/{{ plan.billingPeriod }}</div>
               </div>
+            </div>
+            <div v-if="subscription?.plan.id === plan.id" class="text-xs text-gray-500">
+              {{ t('profile.subscription.currentPlan') }}
             </div>
           </div>
+        </div>
 
-          <template #footer>
-            <div class="flex justify-end gap-3">
-              <UButton
-                variant="outline"
-                @click="showPlanSelector = false"
-              >
-                {{ t('common.cancel') }}
-              </UButton>
-              <UButton
-                color="primary"
-                :loading="isChangingPlan"
-                :disabled="!selectedPlanId || selectedPlanId === subscription.plan.id"
-                @click="handleChangePlan"
-              >
-                {{ t('profile.subscription.confirmChange') }}
-              </UButton>
-            </div>
-          </template>
-        </UCard>
-      </UModal>
-    </div>
+        <div class="flex justify-end gap-3 mt-6">
+          <UButton variant="outline" @click="showPlanSelector = false">
+            {{ t('common.cancel') }}
+          </UButton>
+        </div>
+      </div>
+
+    <!-- Confirmation Modal -->
+    <AdminConfirmModal
+      v-model:open="showConfirmModal"
+      :title="confirmModalTitle"
+      :message="confirmModalMessage"
+      :user-info="selectedPlanInfo"
+      :confirm-text="confirmButtonText"
+      confirm-class="bg-primary hover:bg-primary/90"
+      :loading="isLoading"
+      @confirm="handleConfirm"
+    />
+
+    <!-- Cancel Confirmation Modal -->
+    <AdminConfirmModal
+      v-model:open="showCancelModal"
+      :title="t('profile.subscription.cancelSubscription')"
+      :message="t('profile.subscription.cancelConfirm')"
+      :user-info="currentPlanInfo"
+      :confirm-text="t('profile.subscription.cancelSubscription')"
+      confirm-class="bg-red-600 hover:bg-red-700"
+      :loading="isCancelling"
+      @confirm="handleCancelSubscription"
+    />
   </UCard>
 </template>

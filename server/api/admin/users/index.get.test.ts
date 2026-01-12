@@ -2,6 +2,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { getQuery, createError, getRouterParam } from 'h3'
 
+// Import handler after mocks are set up
+// @ts-ignore
+import handler from './index.get'
+
 // Mock dependencies
 vi.mock('../../../database', () => ({
   useDB: vi.fn(),
@@ -10,11 +14,7 @@ vi.mock('../../../database', () => ({
 }))
 vi.mock('../../../utils/auth', () => ({
   requireAdmin: vi.fn(),
-}))
-
-// Import handler after mocks are set up
-// @ts-ignore
-import handler from './index.get' // Import the actual handler
+})) // Import the actual handler
 
 // Mock Drizzle ORM functions
 const mockDrizzle = {
