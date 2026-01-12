@@ -5,8 +5,12 @@ A modern video streaming platform built with Nuxt 4, featuring multi-language su
 ## Quick Start
 
 ### Prerequisites
+For non-containerized deployment:
 - Node.js 20+ 
 - PostgreSQL database
+OR
+- Docker
+(a dockerized project with database setup is provided)
 
 Note: for testing purposes there is already a neon postgre database connection working out of the box same as omdb
 ### Installation
@@ -19,6 +23,12 @@ npm install
 cp .env.example .env
 # Configure DATABASE_URL and other variables
 
+```
+
+if u want to use your own database these are the steps:
+
+
+```bash
 # Run database migrations
 npm run db:migrate
 
@@ -27,8 +37,8 @@ npm run db:seed
 
 # Start development server
 npm run dev
-
 ```
+
 
 Visit `http://localhost:3000`
 
@@ -46,7 +56,7 @@ npm run db:seed      # Seed database with sample data
 
 ## Tech Stack
 
-- **Framework**: Nuxt 3 (SSR/SSG)
+- **Framework**: Nuxt 4 (SSR/SSG)
 - **Language**: TypeScript
 - **Database**: PostgreSQL with Drizzle ORM
 - **Authentication**: nuxt-auth-utils
@@ -168,12 +178,35 @@ Tests include:
 
 ## Docker Deployment
 
+### Using Docker Compose (Recommended - Includes PostgreSQL)
+
+```bash
+# Start both app and database
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop containers
+docker-compose down
+
+# Stop and remove volumes (warning: deletes database data)
+docker-compose down -v
+```
+
+The app will be available at `http://localhost:3000` with its own isolated PostgreSQL database.
+
+### Using Docker Only (Manual)
+
 ```bash
 # Build image
 docker build -t videovision-app .
 
-# Run container
-docker run -p 3000:3000 videovision-app
+# Run container (requires external database)
+docker run -p 3000:3000 \
+  -e DATABASE_URL=your_database_url \
+  -e NUXT_SESSION_PASSWORD=your_secret \
+  videovision-app
 ```
 
 ## Documentation
@@ -182,3 +215,155 @@ docker run -p 3000:3000 videovision-app
 - [I18N_GUIDE.md](./docs/I18N_GUIDE.md) - Internationalization implementation
 - [DATABASE_SETUP.md](./docs/DATABASE_SETUP.md) - Database configuration
 
+---
+
+## Getting Started with Docker
+
+### Prerequisites
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running
+- Git (to clone the repository)
+
+### Step-by-Step Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd videoVision
+   ```
+
+2. **Start Docker Desktop**
+   - Ensure Docker Desktop is running (check system tray for Docker icon)
+   - Wait until Docker is fully started (icon stops animating)
+
+3. **Build and start containers**
+   ```bash
+   docker-compose up --build -d
+   ```
+   
+   This will:
+   - Build the Nuxt application
+   - Pull PostgreSQL 16 image
+   - Create and start both containers
+   - Automatically create database schema
+   - Seed the database with sample data
+
+4. **Verify containers are running**
+   ```bash
+   docker-compose ps
+   ```
+   
+   You should see:
+   - `videovision-app` - Running on port 3000
+   - `videovision-db` - Running on port 5432
+
+5. **View application logs**
+   ```bash
+   docker-compose logs -f app
+   ```
+   
+   Look for: `Listening on http://0.0.0.0:3000`
+
+6. **Access the application**
+   - Open browser: `http://localhost:3000`
+   - Login with default credentials:
+     - **Admin**: `admin@videovision.com` / `password123`
+     - **User**: `john.doe@example.com` / `password123`
+     - **User**: `goku@videovision.com` / `password123`
+     - **User**: `Tarantino@vision.com` / `tarantino`
+
+### Common Docker Commands
+
+```bash
+# View all logs
+docker-compose logs -f
+
+# Restart containers
+docker-compose restart
+
+# Stop containers (keeps data)
+docker-compose stop
+
+# Start stopped containers
+docker-compose start
+
+# Stop and remove containers (keeps volumes)
+docker-compose down
+
+# Stop and remove everything including database data
+docker-compose down -v
+
+# Rebuild after code changes
+docker-compose up --build -d
+
+# Access PostgreSQL CLI
+docker exec -it videovision-db psql -U videovision -d videovision
+```
+
+### Troubleshooting
+
+**Container won't start:**
+```bash
+# Check logs for errors
+docker-compose logs app
+docker-compose logs postgres
+
+# Remove containers and try again
+docker-compose down -v
+docker-compose up --build -d
+```
+
+**Port already in use:**
+```bash
+# Change ports in docker-compose.yml
+# For app: "3001:3000" instead of "3000:3000"
+# For db: "5433:5432" instead of "5432:5432"
+```
+
+**Database connection issues:**
+```bash
+# Ensure PostgreSQL container is healthy
+docker-compose ps
+
+# Check database logs
+docker-compose logs postgres
+
+# Restart with fresh database
+docker-compose down -v
+docker-compose up -d
+```
+
+### Development vs Production
+
+**Docker (Production-like):**
+- Uses containerized PostgreSQL
+- Built application in production mode
+- Isolated environment
+- Automatic driver switching (pg for Docker)
+
+**Local Development (Recommended for coding):**
+- Uses Neon DB (or any PostgreSQL)
+- Hot-reload enabled
+- Faster iteration
+- Uses neon-http driver
+
+### Updating the Application
+
+After making code changes:
+
+```bash
+# Rebuild and restart
+docker-compose down
+docker-compose up --build -d
+```
+
+### Data Persistence
+
+Database data persists in a Docker volume named `videovision_postgres_data`. To completely reset:
+
+```bash
+# Warning: This deletes all data!
+docker-compose down -v
+docker-compose up -d
+```
+
+The database will be automatically reseeded with default data.

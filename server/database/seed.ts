@@ -1,11 +1,17 @@
 import { config } from 'dotenv'
 import { neon } from '@neondatabase/serverless'
-import { drizzle } from 'drizzle-orm/neon-http'
+import { drizzle as drizzleNeon } from 'drizzle-orm/neon-http'
+import { drizzle as drizzlePostgres } from 'drizzle-orm/node-postgres'
+import pg from 'pg'
 import bcrypt from 'bcrypt'
 import * as schema from './schema'
 
+const { Pool } = pg
+
 // Load environment variables from .env file
 config()
+
+const isDocker = process.env.DOCKER_ENV === 'true'
 
 async function seed() {
   const databaseUrl = process.env.DATABASE_URL
@@ -14,8 +20,17 @@ async function seed() {
     throw new Error('DATABASE_URL environment variable is not set')
   }
 
-  const sql = neon(databaseUrl)
-  const db = drizzle(sql, { schema })
+  let db
+  if (isDocker) {
+    const pool = new Pool({ 
+      connectionString: databaseUrl,
+      ssl: false
+    })
+    db = drizzlePostgres(pool, { schema })
+  } else {
+    const sql = neon(databaseUrl)
+    db = drizzleNeon(sql, { schema })
+  }
 
   console.log('🌱 Seeding database...')
 
