@@ -73,3 +73,21 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+
+//
+To build the Docker image, navigate to the project's root directory in your terminal and run the following command:
+
+```bash
+docker build -t videovision-app .
+```
+
+This command will build the Docker image and tag it as `videovision-app`.
+
+o run the Docker container, use the following command:
+
+```bash
+docker run -p 3000:3000 videovision-app
+```
+
+This command will start the container and map port 3000 of the host to port 3000 of the container. You can then access the application in your browser at `http://localhost:3000`.
