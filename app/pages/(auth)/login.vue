@@ -9,7 +9,7 @@ definePageMeta({
 
 const { t } = useI18n();
 const localePath = useLocalePath();
-const toast = useToast();
+const { showInfo, showError, showSuccess } = useToastNotification();
 const route = useRoute();
 
 const cookieLoginEmail = useCookie<string|null>('login_email', {
@@ -57,14 +57,14 @@ const providers = [
     label: t('auth.providers.google'),
     icon: 'i-simple-icons-google',
     onClick: () => {
-      toast.add({ title: t('auth.providers.google'), description: t('auth.providers.continueWith', { provider: 'Google' }) });
+      showInfo(t('auth.providers.continueWith', { provider: 'Google' }), t('auth.providers.google'));
     },
   },
   {
     label: t('auth.providers.github'),
     icon: 'i-simple-icons-github',
     onClick: () => {
-      toast.add({ title: t('auth.providers.github'), description: t('auth.providers.continueWith', { provider: 'GitHub' }) });
+      showInfo(t('auth.providers.continueWith', { provider: 'GitHub' }), t('auth.providers.github'));
     },
   },
 ];
@@ -93,20 +93,13 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
   const isSuccessful = await login(email, password, redirectPath.value);
 
   if ( !isSuccessful) {
-    toast.add({
-      title: t('common.error'),
-      description: t('auth.login.invalidCredentials'),
-    });
+    showError(t('auth.login.invalidCredentials'));
     isPosting.value = false;
     return;
   }
   
   // Success toast (navigation happens in composable)
-  toast.add({
-    title: t('common.welcome'),
-    description: t('common.success'),
-    color: 'orange'
-  });
+  showSuccess(t('common.success'), t('common.welcome'));
 }
 </script>
 

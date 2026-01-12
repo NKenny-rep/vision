@@ -73,12 +73,21 @@ export interface UserSubscription {
 }
 
 export const useProfile = () => {
-  // Static payment types - could be fetched from API if needed
-  const paymentTypes: PaymentType[] = [
-    { id: 1, name: 'credit_card', displayName: 'Credit Card' },
-    { id: 2, name: 'debit_card', displayName: 'Debit Card' },
-    { id: 3, name: 'paypal', displayName: 'PayPal' }
-  ]
+  const paymentTypes = ref<PaymentType[]>([])
+
+  /**
+   * Get available payment types
+   */
+  const getPaymentTypes = async (): Promise<PaymentType[]> => {
+    try {
+      const types = await $fetch<PaymentType[]>('/api/payment-types')
+      paymentTypes.value = types
+      return types
+    } catch (error) {
+      console.error('Failed to fetch payment types:', error)
+      return []
+    }
+  }
 
   /**
    * Get user profile with payment methods
@@ -87,7 +96,12 @@ export const useProfile = () => {
     try {
       const response = await $fetch<{ success: boolean; profile: UserProfile }>('/api/user/profile')
       return response.success ? response.profile : null
-    } catch (error) {
+    } catch (error: any) {
+      // If unauthorized (401), redirect to login
+      if (error?.statusCode === 401) {
+        await navigateTo('/login')
+        return null
+      }
       console.error('Failed to fetch profile:', error)
       throw error
     }
@@ -139,13 +153,6 @@ export const useProfile = () => {
   }
 
   /**
-   * Get available payment types
-   */
-  const getPaymentTypes = (): PaymentType[] => {
-    return paymentTypes
-  }
-
-  /**
    * Get current user subscription
    */
   const getSubscription = async (): Promise<UserSubscription | null> => {
@@ -188,6 +195,9 @@ export const useProfile = () => {
   }
 
   return {
+    // Data
+    paymentTypes,
+    
     // Methods
     getProfile,
     updateProfile,
@@ -196,9 +206,6 @@ export const useProfile = () => {
     getPaymentTypes,
     getSubscription,
     changePlan,
-    cancelSubscription,
-    
-    // Constants
-    paymentTypes
+    cancelSubscription
   }
 }

@@ -1,5 +1,5 @@
 import { eq, and } from 'drizzle-orm'
-import { useDB, paymentMethods } from '../../../database'
+import { useDB, paymentMethods, users } from '../../../database'
 
 /**
  * Add Payment Method API Endpoint
@@ -14,19 +14,34 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const body = await readBody(event)
-  const { paymentTypeId, cardLast4, cardBrand, expiryMonth, expiryYear, isDefault } = body
-
-  // Validate required fields
-  if (!paymentTypeId || !cardLast4 || !cardBrand) {
-    throw createError({
-      statusCode: 400,
-      message: 'Missing required payment method fields'
-    })
-  }
-
   try {
     const db = useDB()
+    
+    // Verify user exists
+    const [user] = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.id, session.user.id))
+      .limit(1)
+    
+    if (!user) {
+      await clearUserSession(event)
+      throw createError({
+        statusCode: 401,
+        message: 'Unauthorized'
+      })
+    }
+
+    const body = await readBody(event)
+    const { paymentTypeId, cardLast4, cardBrand, expiryMonth, expiryYear, isDefault } = body
+
+    // Validate required fields
+    if (!paymentTypeId || !cardLast4 || !cardBrand) {
+      throw createError({
+        statusCode: 400,
+        message: 'Missing required payment method fields'
+      })
+    }
     
     // If this is the default, unset other defaults
     if (isDefault) {

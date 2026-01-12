@@ -23,10 +23,10 @@ export const USER_ROUTES = {
 } as const
 
 export const ADMIN_ROUTES = {
-  DASHBOARD: '/dashboard',
-  USERS: '/dashboard/users',
-  VIDEOS: '/dashboard/videos',
-  ANALYTICS: '/dashboard/analytics',
+  DASHBOARD: '/admin/dashboard',
+  USERS: '/admin/users',
+  VIDEOS: '/admin/videos',
+  ANALYTICS: '/admin/analytics',
 } as const
 
 export const REDIRECT_PATHS = {

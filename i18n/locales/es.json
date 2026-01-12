@@ -9,6 +9,9 @@
     "saving": "Guardando...",
     "delete": "Eliminar",
     "edit": "Editar",
+    "create": "Crear",
+    "update": "Actualizar",
+    "view": "Ver",
     "search": "Buscar",
     "filter": "Filtrar",
     "submit": "Enviar",
@@ -279,18 +282,16 @@
     "dashboard": {
       "title": "Panel de Administración",
       "subtitle": "Gestiona tu contenido y usuarios de VideoVision",
-      "totalVideos": "Total de Videos",
-      "activeUsers": "Usuarios Activos",
-      "totalViews": "Total de Vistas",
-      "revenue": "Ingresos",
       "quickActions": "Acciones Rápidas",
-      "addNewVideo": "Agregar Nuevo Video",
-      "manageUsers": "Gestionar Usuarios",
-      "viewAnalytics": "Ver Analíticas",
-      "recentActivity": "Actividad Reciente",
-      "newVideoUploaded": "Nuevo video subido",
-      "newUserRegistered": "Nuevo usuario registrado",
-      "hoursAgo": "hace {count} horas"
+      "stats": {
+        "totalVideos": "Total de Videos",
+        "activeUsers": "Usuarios Activos",
+        "totalViews": "Total de Vistas",
+        "revenue": "Ingresos"
+      }
+    },
+    "analytics": {
+      "title": "Analíticas"
     },
     "videos": {
       "title": "Videos",
@@ -320,6 +321,54 @@
       "enterCategory": "Acción, Drama, etc.",
       "enterTags": "etiqueta1, etiqueta2, etiqueta3",
       "required": "requerido"
+    },
+    "users": {
+      "title": "Gestión de Usuarios",
+      "subtitle": "Administrar usuarios del sistema",
+      "createUser": "Crear Usuario",
+      "editUser": "Editar Usuario",
+      "deleteUser": "Eliminar Usuario",
+      "confirmDelete": "¿Estás seguro de que deseas eliminar este usuario?",
+      "deleteWarning": "Esta acción no se puede deshacer.",
+      "userDeleted": "Usuario eliminado exitosamente",
+      "userCreated": "Usuario creado exitosamente",
+      "userUpdated": "Usuario actualizado exitosamente",
+      "roles": {
+        "user": "Usuario",
+        "admin": "Administrador",
+        "moderator": "Moderador"
+      },
+      "table": {
+        "user": "Usuario",
+        "email": "Correo",
+        "phone": "Teléfono",
+        "role": "Rol",
+        "createdAt": "Creado",
+        "actions": "Acciones",
+        "empty": "No se encontraron usuarios"
+      },
+      "form": {
+        "name": "Nombre Completo",
+        "namePlaceholder": "Ingresa el nombre completo",
+        "email": "Correo Electrónico",
+        "emailPlaceholder": "Ingresa el correo electrónico",
+        "password": "Contraseña",
+        "passwordPlaceholder": "Ingresa la contraseña",
+        "passwordOptional": "Dejar en blanco para mantener la actual",
+        "phone": "Número de Teléfono",
+        "phonePlaceholder": "+54 (11) 0000-0000",
+        "role": "Rol",
+        "avatar": "URL del Avatar",
+        "avatarPlaceholder": "https://ejemplo.com/avatar.jpg",
+        "errors": {
+          "nameRequired": "El nombre debe tener al menos 2 caracteres",
+          "emailInvalid": "Por favor ingresa un correo electrónico válido",
+          "passwordLength": "La contraseña debe tener al menos 8 caracteres"
+        }
+      },
+      "search": {
+        "placeholder": "Buscar usuarios por nombre, correo o teléfono..."
+      }
     }
   },
   "errors": {

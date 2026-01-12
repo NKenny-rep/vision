@@ -32,9 +32,11 @@ export default defineEventHandler(async (event) => {
       .where(eq(users.id, session.user.id))
     
     if (!userProfile) {
+      // Clear invalid session
+      await clearUserSession(event)
       throw createError({
-        statusCode: 404,
-        message: 'User not found'
+        statusCode: 401,
+        message: 'Unauthorized'
       })
     }
 

@@ -12,7 +12,7 @@ export interface RegistrationFormData {
 
 export const useRegistrationForm = () => {
   const { t } = useI18n()
-  const toast = useToast()
+  const { showSuccess, showError } = useToastNotification()
   const localePath = useLocalePath()
 
   // Form state
@@ -60,10 +60,7 @@ export const useRegistrationForm = () => {
     const validation = validate()
     
     if (!validation.success) {
-      toast.add({
-        title: t('common.error'),
-        description: validation.error
-      })
+      showError(validation.error)
       return { success: false }
     }
 
@@ -89,18 +86,12 @@ export const useRegistrationForm = () => {
       })
       emailCookie.value = validation.data.email
 
-      toast.add({
-        title: t('common.success'),
-        description: t('auth.register.success')
-      })
+      showSuccess(t('auth.register.success'))
 
       await navigateTo(localePath('/browse'))
       return { success: true }
     } catch (error: any) {
-      toast.add({
-        title: t('common.error'),
-        description: error.data?.message || t('auth.register.failed')
-      })
+      showError(error.data?.message || t('auth.register.failed'))
       return { success: false }
     } finally {
       isSubmitting.value = false

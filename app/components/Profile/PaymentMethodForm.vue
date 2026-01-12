@@ -26,7 +26,7 @@ interface Emits {
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 const { t } = useI18n()
-const toast = useToast()
+const { showError } = useToastNotification()
 
 const formData = ref({
   paymentTypeId: 1,
@@ -39,10 +39,7 @@ const formData = ref({
 
 const handleSubmit = () => {
   if (!formData.value.cardLast4 || !formData.value.cardBrand) {
-    toast.add({
-      title: t('common.error'),
-      description: 'Please fill all required fields'
-    })
+    showError('Please fill all required fields')
     return
   }
   

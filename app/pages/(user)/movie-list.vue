@@ -6,7 +6,7 @@ definePageMeta({
 
 const { t } = useI18n()
 const localePath = useLocalePath()
-const toast = useToast()
+const { showSuccess, showError } = useToastNotification()
 
 const { fetchMovieList, removeFromList } = useMovieList()
 
@@ -22,15 +22,9 @@ const handleRemove = async (omdbId: string) => {
     await removeFromList(omdbId)
     await refresh()
     
-    toast.add({
-      title: t('common.success'),
-      description: t('userPanel.movieList.messages.removed')
-    })
+    showSuccess(t('userPanel.movieList.messages.removed'))
   } catch (error) {
-    toast.add({
-      title: t('common.error'),
-      description: t('userPanel.movieList.errors.removeFailed')
-    })
+    showError(t('userPanel.movieList.errors.removeFailed'))
   }
 }
 </script>

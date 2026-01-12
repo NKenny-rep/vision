@@ -12,14 +12,46 @@ export interface User {
   email: string
   userName?: string
   fullName?: string
-  avatar?: string
-  roles: UserRole[]
+  name: string
+  avatar?: string | null
+  phone?: string | null
+  roleId: number
+  roleName?: string
+  roles?: UserRole[]
   subscription?: SubscriptionPlan
   createdAt: Date | string
   updatedAt?: Date | string
 }
 
 export type UserRole = 'admin' | 'user' | 'moderator'
+
+// User Management Types
+export interface UserFormData {
+  name: string
+  email: string
+  password?: string
+  phone?: string | null
+  avatar?: string | null
+  roleId: number
+}
+
+export interface UserFilters {
+  page?: number
+  limit?: number
+  search?: string
+  sortBy?: string
+  sortOrder?: 'asc' | 'desc'
+}
+
+export interface PaginatedResponse<T> {
+  data: T[]
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
+}
 
 export interface UserSession {
   user: {

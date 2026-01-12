@@ -2,7 +2,7 @@
 import type { UserProfile, ProfileUpdateData, PaymentMethodData, UserSubscription } from '~/composables/useProfile'
 
 const { t } = useI18n()
-const toast = useToast()
+const { showSuccess, showError } = useToastNotification()
 
 // Composables - following Nuxt patterns
 const { 
@@ -11,6 +11,7 @@ const {
   addPaymentMethod: addPaymentMethodApi,
   removePaymentMethod: removePaymentMethodApi,
   getSubscription,
+  getPaymentTypes,
   paymentTypes 
 } = useProfile()
 
@@ -27,14 +28,6 @@ const formData = ref<ProfileUpdateData>({
   avatar: ''
 })
 
-// Helper for toast notifications - keeps UI logic in component
-const showToast = (type: 'success' | 'error', message: string) => {
-  toast.add({
-    title: t(`common.${type}`),
-    description: message
-  })
-}
-
 // Data operations - delegate to composable (Separation of Concerns)
 const fetchProfile = async () => {
   loading.value = true
@@ -50,7 +43,7 @@ const fetchProfile = async () => {
       }
     }
   } catch (error) {
-    showToast('error', t('profile.errors.loadFailed'))
+    showError(t('profile.errors.loadFailed'))
   } finally {
     loading.value = false
   }
@@ -69,10 +62,10 @@ const handleUpdateProfile = async () => {
   saving.value = true
   try {
     await updateProfileApi(formData.value)
-    showToast('success', t('profile.messages.updateSuccess'))
+    showSuccess(t('profile.messages.updateSuccess'))
     await fetchProfile()
   } catch (error) {
-    showToast('error', t('profile.errors.updateFailed'))
+    showError(t('profile.errors.updateFailed'))
   } finally {
     saving.value = false
   }
@@ -81,26 +74,27 @@ const handleUpdateProfile = async () => {
 const handleAddPayment = async (paymentData: PaymentMethodData) => {
   try {
     await addPaymentMethodApi(paymentData)
-    showToast('success', t('profile.messages.paymentAdded'))
+    showSuccess(t('profile.messages.paymentAdded'))
     showAddPayment.value = false
     await fetchProfile()
   } catch (error) {
-    showToast('error', t('profile.errors.paymentAddFailed'))
+    showError(t('profile.errors.paymentAddFailed'))
   }
 }
 
 const handleRemovePayment = async (paymentMethodId: number) => {
   try {
     await removePaymentMethodApi(paymentMethodId)
-    showToast('success', t('profile.messages.paymentRemoved'))
+    showSuccess(t('profile.messages.paymentRemoved'))
     await fetchProfile()
   } catch (error) {
-    showToast('error', t('profile.errors.paymentRemoveFailed'))
+    showError(t('profile.errors.paymentRemoveFailed'))
   }
 }
 
 // Lifecycle
-onMounted(() => {
+onMounted(async () => {
+  await getPaymentTypes()
   fetchProfile()
   fetchSubscription()
 })

@@ -1,6 +1,25 @@
 /**
- * Date Utilities
+ * Date formatting utilities
+ * Centralized date formatting logic following DRY principle
  */
+
+export const formatShortDate = (date: Date | string, locale: string = 'en-US'): string => {
+  return new Date(date).toLocaleDateString(locale, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })
+}
+
+export const formatDateTime = (date: Date | string, locale: string = 'en-US'): string => {
+  return new Date(date).toLocaleString(locale, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
 
 export function formatRelativeTime(date: Date | string): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date

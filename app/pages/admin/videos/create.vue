@@ -6,7 +6,7 @@ definePageMeta({
   middleware: ['auth', 'admin']
 });
 
-const toast = useToast()
+const { showSuccess } = useToastNotification()
 
 const form = reactive({
   title: '',
@@ -19,11 +19,7 @@ const form = reactive({
 
 const handleSubmit = async () => {
   // TODO: Implement API call
-  toast.add({
-    title: 'Success',
-    description: 'Video created successfully',
-    color: 'green'
-  })
+  showSuccess('Video created successfully')
   navigateTo(localePath('/videos'))
 }
 </script>

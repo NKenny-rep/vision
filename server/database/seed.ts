@@ -33,25 +33,25 @@ async function seed() {
     await db.delete(schema.movieLists)
     await db.delete(schema.paymentMethods)
     await db.delete(schema.users)
-    await db.delete(schema.roles)
     await db.delete(schema.paymentTypes)
+    await db.delete(schema.roles)
     console.log('✓ Existing data cleared')
 
-    // 1. Create roles
+    // 1. Create roles with fixed IDs
     console.log('Creating roles...')
     const [userRole, adminRole] = await db.insert(schema.roles).values([
-      { name: 'user', description: 'Standard user with basic permissions' },
-      { name: 'admin', description: 'Administrator with full permissions' },
+      { id: 1, name: 'user', description: 'Standard user with basic permissions' },
+      { id: 2, name: 'admin', description: 'Administrator with full permissions' },
     ]).returning()
 
     console.log('✓ Roles created')
 
-    // 2. Create payment types
+    // 2. Create payment types with fixed IDs
     console.log('Creating payment types...')
     const [creditCardType, debitCardType, paypalType] = await db.insert(schema.paymentTypes).values([
-      { name: 'credit_card', displayName: 'Credit Card' },
-      { name: 'debit_card', displayName: 'Debit Card' },
-      { name: 'paypal', displayName: 'PayPal' },
+      { id: 1, name: 'credit_card', displayName: 'Credit Card' },
+      { id: 2, name: 'debit_card', displayName: 'Debit Card' },
+      { id: 3, name: 'paypal', displayName: 'PayPal' },
     ]).returning()
 
     console.log('✓ Payment types created')

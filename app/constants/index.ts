@@ -26,7 +26,6 @@ export const CARD_BRANDS = [
 export const NAV_LINKS = {
   AUTHENTICATED: [
     { path: USER_ROUTES.BROWSE, labelKey: 'nav.browse' },
-    { path: USER_ROUTES.MOVIES, labelKey: 'nav.movies' },
     { path: USER_ROUTES.MY_LIST, labelKey: 'nav.myList' },
   ],
   ADMIN: {

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { formatDate } from '~/utils/i18nHelpers'
+
 interface SubscriptionPlan {
   id: number
   name: string
@@ -30,7 +32,7 @@ interface Emits {
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 const { t } = useI18n()
-const toast = useToast()
+const { showSuccess, showError } = useToastNotification()
 
 const isChangingPlan = ref(false)
 const isCancelling = ref(false)
@@ -51,16 +53,9 @@ const parsedFeatures = (featuresJson: string) => {
   }
 }
 
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString()
-}
-
 const handleChangePlan = async () => {
   if (!selectedPlanId.value) {
-    toast.add({
-      title: t('common.error'),
-      description: t('profile.subscription.selectNewPlan')
-    })
+    showError(t('profile.subscription.selectNewPlan'))
     return
   }
 
@@ -71,18 +66,12 @@ const handleChangePlan = async () => {
       body: { planId: selectedPlanId.value }
     })
 
-    toast.add({
-      title: t('common.success'),
-      description: t('profile.subscription.planChanged')
-    })
+    showSuccess(t('profile.subscription.planChanged'))
 
     showPlanSelector.value = false
     emit('refresh')
   } catch (error: any) {
-    toast.add({
-      title: t('common.error'),
-      description: error.data?.message || t('profile.subscription.changeFailed')
-    })
+    showError(error.data?.message || t('profile.subscription.changeFailed'))
   } finally {
     isChangingPlan.value = false
   }
@@ -99,17 +88,11 @@ const handleCancelSubscription = async () => {
       method: 'POST'
     })
 
-    toast.add({
-      title: t('common.success'),
-      description: t('profile.subscription.cancelled')
-    })
+    showSuccess(t('profile.subscription.cancelled'))
 
     emit('refresh')
   } catch (error: any) {
-    toast.add({
-      title: t('common.error'),
-      description: error.data?.message || t('profile.subscription.cancelFailed')
-    })
+    showError(error.data?.message || t('profile.subscription.cancelFailed'))
   } finally {
     isCancelling.value = false
   }
