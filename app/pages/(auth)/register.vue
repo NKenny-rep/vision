@@ -30,7 +30,7 @@ const onSubmit = async () => {
         <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400">{{ t('auth.register.subtitle') }}</p>
       </div>
 
-      <form @submit.prevent="onSubmit" class="space-y-6 sm:space-y-8">
+      <form class="space-y-6 sm:space-y-8" @submit.prevent="onSubmit">
         <!-- Personal Information -->
         <UCard>
           <template #header>

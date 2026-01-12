@@ -63,8 +63,8 @@ const toggleLanguage = () => {
         <div class="border border-gray-700 rounded-lg overflow-hidden">
           <!-- Accordion Header -->
           <button
-            @click="toggleLanguage"
             class="w-full px-4 py-3 flex items-center justify-between bg-gray-800/50 hover:bg-gray-800 transition-colors"
+            @click="toggleLanguage"
           >
             <div class="flex items-center gap-2">
               <UIcon :name="languageIcons[locale]" class="w-5 h-5" />
@@ -83,8 +83,8 @@ const toggleLanguage = () => {
               <button
                 v-for="lang in availableLocales"
                 :key="lang.code"
-                @click="switchLanguage(lang.code)"
                 class="w-full px-3 py-2 flex items-center gap-2 rounded hover:bg-gray-800 transition-colors text-left"
+                @click="switchLanguage(lang.code)"
               >
                 <UIcon :name="languageIcons[lang.code]" class="w-5 h-5" />
                 <span class="text-sm">{{ lang.name }}</span>

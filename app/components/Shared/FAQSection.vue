@@ -13,7 +13,7 @@ interface Props {
   buttonText?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const _props = withDefaults(defineProps<Props>(), {
   heading: 'Frequently Asked Questions',
   items: () => [],
   showCta: true,
@@ -57,8 +57,8 @@ const handleSignup = () => {
           {{ ctaText }}
         </p>
         <form 
-          @submit.prevent="handleSignup" 
-          class="flex flex-col md:flex-row gap-4 justify-center items-center max-w-2xl mx-auto"
+          class="flex flex-col md:flex-row gap-4 justify-center items-center max-w-2xl mx-auto" 
+          @submit.prevent="handleSignup"
         >
           <div class="w-full md:flex-1">
             <UInput

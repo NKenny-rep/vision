@@ -136,8 +136,8 @@ const editFormData = computed(() => selectedUser.value ? {
       <UIButton
         variant="primary"
         size="lg"
-        @click="modals.create = true"
         icon="i-heroicons-plus"
+        @click="modals.create = true"
       >
         {{ t('admin.users.createUser') }}
       </UIButton>
@@ -229,8 +229,8 @@ const editFormData = computed(() => selectedUser.value ? {
           <UIButton
             variant="primary"
             :disabled="loading"
-            @click="confirmDelete"
             class="bg-red-600 hover:bg-red-700"
+            @click="confirmDelete"
           >
             <UIcon v-if="loading" name="i-heroicons-arrow-path" class="animate-spin" />
             {{ t('common.delete') }}

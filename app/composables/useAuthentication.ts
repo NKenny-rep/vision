@@ -90,11 +90,12 @@ export const useAuthentication = () => {
       await fetch()
       
       return { success: true }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Registration error:', error)
+      const errorMessage = (error as { data?: { message?: string } })?.data?.message || 'Registration failed';
       return { 
         success: false, 
-        error: error.data?.message || 'Registration failed' 
+        error: errorMessage
       }
     }
   }

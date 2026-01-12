@@ -23,7 +23,7 @@ export default defineTask({
 
       // 2. Create users
       console.log('Creating users...')
-      const [adminUser, user1, user2, user3, goku, tonymontana, aldebaran, shion, cloud] = await db.insert(schema.users).values([
+      const [_adminUser, user1, user2, user3, _goku, _tonymontana, _aldebaran, _shion, _cloud] = await db.insert(schema.users).values([
         {
           email: 'admin@videovision.com',
           password: '$2a$10$rQj5PqJYZ8J5qZ8J5qZ8JOZxK5K5K5K5K5K5K5K5K5K5K5K5K5K5K', // "admin123"

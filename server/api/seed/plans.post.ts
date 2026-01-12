@@ -63,7 +63,7 @@ export default defineEventHandler(async () => {
       success: true,
       message: 'Subscription plans seeded successfully'
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error seeding subscription plans:', error)
     throw createError({
       statusCode: 500,

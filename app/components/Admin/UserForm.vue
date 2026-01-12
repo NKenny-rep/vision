@@ -103,7 +103,7 @@ const roleSelectId = useId()
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit" class="space-y-6">
+  <form class="space-y-6" @submit.prevent="handleSubmit">
     <!-- Dynamic Form Fields -->
     <UIFormField
       v-for="field in formFields"

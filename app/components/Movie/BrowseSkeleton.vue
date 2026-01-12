@@ -10,7 +10,7 @@
     <!-- Hero Section Skeleton -->
     <section class="relative h-[50vh] mb-8">
       <UISkeleton class="absolute inset-0" animation="wave" />
-      <div class="absolute inset-0 bg-linear-to-r from-black via-black/70 to-transparent z-10"></div>
+      <div class="absolute inset-0 bg-linear-to-r from-black via-black/70 to-transparent z-10"/>
       <div class="relative z-20 container mx-auto px-4 h-full flex items-end pb-16">
         <div class="max-w-2xl space-y-4">
           <UISkeleton class="h-16 w-3/4" animation="wave" />

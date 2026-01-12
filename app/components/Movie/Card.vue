@@ -69,11 +69,11 @@ const toggleList = async () => {
     <template #action-button>
       <button
         v-if="loggedIn"
-        @click.stop.prevent="toggleList"
         :disabled="isLoading"
         class="w-8 h-8 rounded-full bg-black/80 hover:bg-orange-500 flex items-center justify-center transition-all"
         :class="{ 'opacity-50 cursor-not-allowed': isLoading, 'ring-2 ring-orange-500': isInList }"
         :title="isInList ? 'Remove from My List' : 'Add to My List'"
+        @click.stop.prevent="toggleList"
       >
         <UIcon
           :name="isInList ? 'i-heroicons-check' : 'i-heroicons-plus'"

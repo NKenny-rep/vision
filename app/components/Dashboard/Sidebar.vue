@@ -25,8 +25,8 @@
         <UIButton
           variant="soft"
           block
-          @click="handleLogout"
           icon="i-heroicons-arrow-left-on-rectangle"
+          @click="handleLogout"
         >
           {{ t('nav.signOut') }}
         </UIButton>

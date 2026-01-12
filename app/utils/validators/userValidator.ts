@@ -10,7 +10,7 @@ export interface ValidationErrors {
 
 export interface IUserValidator {
   validate(data: UserFormData, isEdit: boolean): ValidationErrors
-  validateField(field: keyof UserFormData, value: any, isEdit: boolean): string | undefined
+  validateField<K extends keyof UserFormData>(field: K, value: UserFormData[K], isEdit: boolean): string | undefined
 }
 
 export class UserFormValidator implements IUserValidator {
@@ -40,7 +40,7 @@ export class UserFormValidator implements IUserValidator {
     return errors
   }
 
-  validateField(field: keyof UserFormData, value: any, isEdit: boolean = false): string | undefined {
+  validateField<K extends keyof UserFormData>(field: K, value: UserFormData[K], isEdit: boolean = false): string | undefined {
     switch (field) {
       case 'name':
         return this.validateName(value)

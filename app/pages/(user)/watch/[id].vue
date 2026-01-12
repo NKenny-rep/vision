@@ -44,7 +44,7 @@ onMounted(() => {
 })
 
 const showReviewForm = ref(false)
-const showTrailer = ref(false)
+const _showTrailer = ref(false)
 const trailerUrl = ref('')
 
 const searchTrailer = () => {
@@ -167,7 +167,7 @@ watch(movie, () => {
                 :src="getPosterUrl(movie)" 
                 :alt="movie.Title"
                 class="w-full rounded-lg shadow-2xl"
-              />
+              >
               
               <!-- Action Buttons - Mobile -->
               <div class="flex flex-col gap-3 mt-6 md:hidden">

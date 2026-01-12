@@ -90,8 +90,9 @@ export const useRegistrationForm = () => {
 
       await navigateTo(localePath('/browse'))
       return { success: true }
-    } catch (error: any) {
-      showError(error.data?.message || t('auth.register.failed'))
+    } catch (error: unknown) {
+      const errorMessage = (error as { data?: { message?: string } })?.data?.message || t('auth.register.failed');
+      showError(errorMessage);
       return { success: false }
     } finally {
       isSubmitting.value = false

@@ -32,7 +32,8 @@ const videos = ref([
 
     <!-- Videos Table -->
     <UCard>
-      <UTable :rows="videos" :columns="[
+      <UTable
+:rows="videos" :columns="[
         { key: 'id', label: $t('admin.videos.id') },
         { key: 'title', label: $t('admin.videos.title') },
         { key: 'status', label: $t('admin.videos.status') },

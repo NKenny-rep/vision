@@ -56,7 +56,7 @@ export default defineEventHandler(async (event) => {
       })),
       total: items.length,
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Failed to fetch movie list:', error)
     throw createError({
       statusCode: 500,

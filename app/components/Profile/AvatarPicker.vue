@@ -65,15 +65,15 @@ watch(() => props.currentAvatar, (newAvatar) => {
     <div class="flex gap-4">
       <input
         :value="currentAvatar"
-        @input="emit('update:avatar', ($event.target as HTMLInputElement).value)"
         type="url"
         placeholder="https://example.com/avatar.jpg"
         class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary"
-      />
+        @input="emit('update:avatar', ($event.target as HTMLInputElement).value)"
+      >
       <button
         type="button"
-        @click="showPicker = !showPicker"
         class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+        @click="showPicker = !showPicker"
       >
         {{ showPicker ? 'Close' : 'Choose Avatar' }}
       </button>
@@ -86,13 +86,13 @@ watch(() => props.currentAvatar, (newAvatar) => {
         <div
           v-for="style in AVATAR_STYLES"
           :key="style"
-          @click="selectedStyle = style"
           :class="[
             'cursor-pointer p-2 rounded-lg border-2 transition',
             selectedStyle === style
               ? 'border-primary bg-primary/10'
               : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
           ]"
+          @click="selectedStyle = style"
         >
           <NuxtImg
             :src="generateAvatarUrl(style, avatarSeed)"
@@ -105,15 +105,15 @@ watch(() => props.currentAvatar, (newAvatar) => {
       <div class="flex gap-2">
         <button
           type="button"
-          @click="selectAvatar(selectedStyle)"
           class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark"
+          @click="selectAvatar(selectedStyle)"
         >
           Use This Avatar
         </button>
         <button
           type="button"
-          @click="randomizeAvatar"
           class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+          @click="randomizeAvatar"
         >
           🎲 Randomize
         </button>

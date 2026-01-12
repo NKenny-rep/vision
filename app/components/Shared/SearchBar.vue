@@ -92,17 +92,17 @@ const getPosterUrl = (poster: string) => {
           placeholder="Search movies..."
           size="lg"
           icon="i-heroicons-magnifying-glass"
+          :trailing="true"
           @input="handleSearch"
           @keyup.escape="toggleSearch"
-          :trailing="true"
         >
           <template #trailing>
             <UIButton
               variant="ghost"
               size="xs"
               icon="i-heroicons-x-mark"
-              @click="toggleSearch"
               aria-label="Close search"
+              @click="toggleSearch"
             />
           </template>
         </UInput>
@@ -122,7 +122,7 @@ const getPosterUrl = (poster: string) => {
               :src="getPosterUrl(movie.Poster)" 
               :alt="movie.Title"
               class="w-12 h-18 object-cover rounded"
-            />
+            >
             <div class="flex-1 min-w-0">
               <p class="text-white font-semibold truncate">{{ movie.Title }}</p>
               <p class="text-gray-400 text-sm">{{ movie.Year }} • {{ movie.Type }}</p>
@@ -135,8 +135,8 @@ const getPosterUrl = (poster: string) => {
               block
               variant="ghost"
               size="sm"
-              @click="viewAllResults"
               class="text-orange-500 hover:text-orange-400"
+              @click="viewAllResults"
             >
               View all results for "{{ query }}"
             </UIButton>

@@ -18,7 +18,7 @@ interface Emits {
   (e: 'update:modelValue', value: number): void
 }
 
-const props = defineProps<Props>()
+const _props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 const { t } = useI18n()
 
@@ -44,14 +44,13 @@ const selectPlan = (planId: number) => {
 <template>
   <div>
     <div v-if="pending" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"/>
     </div>
 
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
       <div
         v-for="(plan, index) in plans"
         :key="plan.id"
-        @click="selectPlan(plan.id)"
         :class="[
           'relative group cursor-pointer rounded-xl border-2 transition-all duration-300 overflow-hidden',
           'hover:shadow-2xl hover:-translate-y-1',
@@ -59,6 +58,7 @@ const selectPlan = (planId: number) => {
             ? 'border-primary bg-primary/5 shadow-xl shadow-primary/20 scale-[1.02]'
             : 'border-gray-200 dark:border-gray-700 hover:border-primary/50 bg-white dark:bg-gray-800/50'
         ]"
+        @click="selectPlan(plan.id)"
       >
         <!-- Popular Badge for middle plan -->
         <div 

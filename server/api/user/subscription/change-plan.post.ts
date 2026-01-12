@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const userId = (session.user as any).id as number
+  const userId = session.user.id
 
   const { planId } = await readBody(event)
 

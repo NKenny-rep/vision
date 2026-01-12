@@ -124,7 +124,7 @@ const ratingDistribution = computed(() => {
 
     <!-- Reviews List -->
     <div v-if="loading" class="space-y-4">
-      <USkeleton class="h-32" v-for="i in 3" :key="i" />
+      <USkeleton v-for="i in 3" :key="i" class="h-32" />
     </div>
 
     <div v-else-if="sortedReviews.length === 0" class="text-center py-12">

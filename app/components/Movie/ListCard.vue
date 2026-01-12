@@ -35,9 +35,9 @@ const handleRemove = () => {
   <MovieBaseCard :movie="movieData" :size="size">
     <template #action-button>
       <button
-        @click.stop="handleRemove"
         class="w-8 h-8 rounded-full bg-red-600/80 hover:bg-red-600 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
         :title="t('userPanel.movieList.removeButton')"
+        @click.stop="handleRemove"
       >
         <UIcon name="i-heroicons-x-mark" class="w-5 h-5 text-white" />
       </button>

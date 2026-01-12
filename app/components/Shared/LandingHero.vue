@@ -9,7 +9,7 @@ interface Props {
   showScrollIndicator?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const _props = withDefaults(defineProps<Props>(), {
   title: 'Unlimited movies, TV shows,',
   titleHighlight: 'more',
   subtitle: 'Watch anywhere. Cancel anytime.',
@@ -38,11 +38,11 @@ const handleSignup = () => {
     aria-labelledby="hero-heading"
   >
     <!-- Background Gradient -->
-    <div class="absolute inset-0 bg-linear-to-b from-black via-black/90 to-black"></div>
+    <div class="absolute inset-0 bg-linear-to-b from-black via-black/90 to-black"/>
     
     <!-- Animated Background Pattern -->
     <div class="absolute inset-0 opacity-10">
-      <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, rgb(249, 115, 22) 1px, transparent 0); background-size: 40px 40px;"></div>
+      <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, rgb(249, 115, 22) 1px, transparent 0); background-size: 40px 40px;"/>
     </div>
 
     <!-- Content -->
@@ -51,7 +51,7 @@ const handleSignup = () => {
         id="hero-heading" 
         class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 animate-fade-in"
       >
-        {{ title }}<br />
+        {{ title }}<br >
         and <span class="text-orange-500">{{ titleHighlight }}</span>
       </h1>
       
@@ -66,10 +66,10 @@ const handleSignup = () => {
       <!-- Email Signup Form -->
       <div class="max-w-2xl mx-auto">
         <form 
-          @submit.prevent="handleSignup" 
-          class="flex flex-col md:flex-row gap-4 justify-center items-center"
+          class="flex flex-col md:flex-row gap-4 justify-center items-center" 
           role="search"
           aria-label="Sign up for VideoVision"
+          @submit.prevent="handleSignup"
         >
           <div class="w-full md:flex-1">
             <UInput

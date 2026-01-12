@@ -1,5 +1,10 @@
 import type { OMDBSearchResponse, OMDBSearchParams } from '~/types'
 
+interface FetchError {
+  statusCode?: number;
+  message?: string;
+}
+
 export default defineEventHandler(async (event) => {
   const { omdbApiKey } = useRuntimeConfig(event)
   const { omdbBaseUrl } = useRuntimeConfig(event).public
@@ -45,10 +50,13 @@ export default defineEventHandler(async (event) => {
     }
     
     return response
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const fetchError = error as FetchError;
+    const statusCode = fetchError.statusCode || 500;
+    const message = fetchError.message || 'Failed to fetch movies from OMDB';
     throw createError({
-      statusCode: error.statusCode || 500,
-      message: error.message || 'Failed to fetch movies from OMDB'
+      statusCode,
+      message
     })
   }
 })

@@ -32,7 +32,7 @@ class UserApiAdapter implements IUserRepository {
       body: userData,
     })
 
-    return (response as any).data
+    return (response as { data: User }).data
   }
 
   async updateUser(id: number, userData: Partial<UserFormData>): Promise<User> {
@@ -41,7 +41,7 @@ class UserApiAdapter implements IUserRepository {
       body: userData,
     })
 
-    return (response as any).data
+    return (response as { data: User }).data
   }
 
   async deleteUser(id: number): Promise<void> {
@@ -143,7 +143,9 @@ export const useUserManagement = (repository: IUserRepository = new UserApiAdapt
       await repository.deleteUser(id)
       await fetchUsers() // Refresh list
       return true
-    } catch (e) {      // Extract error message from Error object      error.value = e instanceof Error ? e.message : 'An error occurred'
+    } catch (e) {
+      // Extract error message from Error object
+      error.value = e instanceof Error ? e.message : 'An error occurred'
       return false
     } finally {
       loading.value = false

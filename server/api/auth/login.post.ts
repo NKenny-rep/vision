@@ -71,9 +71,10 @@ export default defineEventHandler(async (event) => {
         avatar: user.avatar,
       },
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Fallback to mock data if database connection fails
-    console.warn('Database connection failed, using mock authentication:', error.message)
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    console.warn('Database connection failed, using mock authentication:', errorMessage)
     
     const validUsers = [
       { id: 'mock-admin', email: 'admin@test.com', password: 'password123', name: 'Admin User', roles: ['admin'] },

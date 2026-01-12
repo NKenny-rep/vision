@@ -59,14 +59,14 @@ export function sortByString<T>(
  * @param order - Sort order ('asc' or 'desc')
  * @returns Sorted array
  */
-export function sortByDate<T>(
+export function sortByDate<T, K extends keyof T>(
   items: T[],
-  key: keyof T,
+  key: K extends (T[K] extends Date | string | number ? K : never) ? K : never, // Ensure T[K] is date-like
   order: SortOrder = 'desc'
 ): T[] {
   return [...items].sort((a, b) => {
-    const aTime = new Date(a[key] as any).getTime()
-    const bTime = new Date(b[key] as any).getTime()
+    const aTime = new Date(a[key] as Date | string | number).getTime()
+    const bTime = new Date(b[key] as Date | string | number).getTime()
     return order === 'asc' ? aTime - bTime : bTime - aTime
   })
 }

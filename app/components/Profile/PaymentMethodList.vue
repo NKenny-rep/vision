@@ -24,7 +24,7 @@ interface Emits {
   (e: 'remove', id: number): void
 }
 
-const props = defineProps<Props>()
+const _props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 </script>
 
@@ -55,8 +55,8 @@ const emit = defineEmits<Emits>()
         </div>
       </div>
       <button
-        @click="emit('remove', payment.id)"
         class="px-4 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
+        @click="emit('remove', payment.id)"
       >
         Remove
       </button>

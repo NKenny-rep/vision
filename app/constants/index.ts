@@ -2,8 +2,8 @@
  * Application Constants
  */
 
-export * from './routes'
 import { AUTH_ROUTES, USER_ROUTES, ADMIN_ROUTES } from './routes'
+export * from './routes'
 
 export const AVATAR_STYLES = [
   'adventurer',

@@ -14,7 +14,7 @@ interface Props {
   size?: 'sm' | 'md' | 'lg';
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const _props = withDefaults(defineProps<Props>(), {
   size: 'md'
 })
 
@@ -64,7 +64,7 @@ const sizeClasses = {
 
     <!-- Action Button Slot -->
     <div class="absolute top-2 right-2 z-10">
-      <slot name="action-button"></slot>
+      <slot name="action-button"/>
     </div>
   </div>
 </template>

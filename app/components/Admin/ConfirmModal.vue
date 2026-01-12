@@ -12,7 +12,7 @@ interface Props {
   loading?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const _props = withDefaults(defineProps<Props>(), {
   confirmText: 'Confirm',
   confirmClass: '',
   icon: 'i-heroicons-exclamation-triangle',

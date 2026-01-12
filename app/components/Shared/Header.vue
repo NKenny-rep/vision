@@ -13,10 +13,10 @@
         variant="ghost" 
         icon="i-heroicons-bars-3"
         size="lg"
-        @click="isMenuOpen = !isMenuOpen"
         :aria-expanded="isMenuOpen"
         aria-label="Toggle mobile menu"
         class="text-white"
+        @click="isMenuOpen = !isMenuOpen"
       />
     </div>
 

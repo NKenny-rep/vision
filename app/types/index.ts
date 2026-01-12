@@ -344,7 +344,7 @@ export interface AuthResponse {
 // API RESPONSE TYPES
 // ==========================================
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean
   data?: T
   message?: string
@@ -370,7 +370,7 @@ export interface FormField {
   label: string
   placeholder?: string
   required?: boolean
-  defaultValue?: any
+  defaultValue?: unknown
   options?: FormFieldOption[]
   validation?: FormFieldValidation
 }
@@ -386,7 +386,7 @@ export interface FormFieldValidation {
   pattern?: RegExp
   min?: number
   max?: number
-  custom?: (value: any) => boolean | string
+  custom?: (value: unknown) => boolean | string
 }
 
 // ==========================================
@@ -412,7 +412,7 @@ export interface UserActivity {
   contentId: string
   contentType: ContentType
   timestamp: Date | string
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 // ==========================================

@@ -6,7 +6,7 @@ definePageMeta({
   middleware: ['auth', 'admin']
 })
 
-const { t } = useI18n()
+const { t: _t } = useI18n()
 const routes = useAppRoutes()
 
 // Admin quick actions configuration (SOLID: Open/Closed Principle)

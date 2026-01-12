@@ -55,7 +55,7 @@ const isStarFilled = (star: number): boolean => {
   return star <= displayRating
 }
 
-const isStarHalf = (star: number): boolean => {
+const _isStarHalf = (star: number): boolean => {
   const displayRating = hoveredStar.value ?? props.modelValue
   return star - 0.5 === displayRating
 }
@@ -65,18 +65,18 @@ const isStarHalf = (star: number): boolean => {
   <div class="flex items-center gap-2">
     <div 
       class="flex items-center gap-1"
-      @mouseleave="handleStarHover(null)"
       :class="{ 'cursor-pointer': !readonly }"
+      @mouseleave="handleStarHover(null)"
     >
       <button
         v-for="star in maxStars"
         :key="star"
         type="button"
         :disabled="readonly"
-        @click="handleStarClick(star)"
-        @mouseenter="handleStarHover(star)"
         class="transition-transform hover:scale-110 disabled:cursor-default"
         :aria-label="`Rate ${star} stars`"
+        @click="handleStarClick(star)"
+        @mouseenter="handleStarHover(star)"
       >
         <UIcon
           :name="isStarFilled(star) ? 'i-heroicons-star-solid' : 'i-heroicons-star'"

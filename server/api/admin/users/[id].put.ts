@@ -95,7 +95,7 @@ export default defineEventHandler(async (event) => {
       message: 'User updated successfully',
       data: updatedUser
     }
-  } catch (error) {
+  } catch (error: unknown) {
     if (error instanceof Error && 'statusCode' in error) {
       throw error
     }

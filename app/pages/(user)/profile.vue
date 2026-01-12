@@ -42,7 +42,7 @@ const fetchProfile = async () => {
         avatar: data.avatar || ''
       }
     }
-  } catch (error) {
+  } catch {
     showError(t('profile.errors.loadFailed'))
   } finally {
     loading.value = false
@@ -64,7 +64,7 @@ const handleUpdateProfile = async () => {
     await updateProfileApi(formData.value)
     showSuccess(t('profile.messages.updateSuccess'))
     await fetchProfile()
-  } catch (error) {
+  } catch {
     showError(t('profile.errors.updateFailed'))
   } finally {
     saving.value = false
@@ -77,7 +77,7 @@ const handleAddPayment = async (paymentData: PaymentMethodData) => {
     showSuccess(t('profile.messages.paymentAdded'))
     showAddPayment.value = false
     await fetchProfile()
-  } catch (error) {
+  } catch {
     showError(t('profile.errors.paymentAddFailed'))
   }
 }
@@ -87,7 +87,7 @@ const handleRemovePayment = async (paymentMethodId: number) => {
     await removePaymentMethodApi(paymentMethodId)
     showSuccess(t('profile.messages.paymentRemoved'))
     await fetchProfile()
-  } catch (error) {
+  } catch {
     showError(t('profile.errors.paymentRemoveFailed'))
   }
 }
@@ -103,7 +103,7 @@ onMounted(async () => {
 <template>
   <div class="container mx-auto px-4 py-8">
     <div v-if="loading" class="flex justify-center items-center min-h-100">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"/>
     </div>
 
     <div v-else-if="profile" class="max-w-4xl mx-auto space-y-8">
@@ -124,7 +124,7 @@ onMounted(async () => {
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <h2 class="text-2xl font-semibold mb-6">{{ t('common.profile') }}</h2>
         
-        <form @submit.prevent="handleUpdateProfile" class="space-y-4">
+        <form class="space-y-4" @submit.prevent="handleUpdateProfile">
           <div>
             <label class="block text-sm font-medium mb-2">{{ t('common.name') }}</label>
             <input
@@ -132,7 +132,7 @@ onMounted(async () => {
               type="text"
               required
               class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary"
-            />
+            >
           </div>
 
           <div>
@@ -142,7 +142,7 @@ onMounted(async () => {
               type="tel"
               placeholder="+1-555-0000"
               class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary"
-            />
+            >
           </div>
 
           <div>
@@ -171,8 +171,8 @@ onMounted(async () => {
         <div class="flex justify-between items-center mb-6">
           <h2 class="text-2xl font-semibold">{{ t('profile.paymentMethods') }}</h2>
           <button
-            @click="showAddPayment = !showAddPayment"
             class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark"
+            @click="showAddPayment = !showAddPayment"
           >
             {{ showAddPayment ? t('common.cancel') : t('profile.addPayment') }}
           </button>
@@ -182,9 +182,9 @@ onMounted(async () => {
         <ProfilePaymentMethodForm
           v-if="showAddPayment"
           :payment-types="paymentTypes"
+          class="mb-6"
           @submit="handleAddPayment"
           @cancel="showAddPayment = false"
-          class="mb-6"
         />
 
         <!-- Payment Methods List Component -->

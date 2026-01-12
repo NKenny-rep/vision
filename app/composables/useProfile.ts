@@ -96,9 +96,9 @@ export const useProfile = () => {
     try {
       const response = await $fetch<{ success: boolean; profile: UserProfile }>('/api/user/profile')
       return response.success ? response.profile : null
-    } catch (error: any) {
+    } catch (error: unknown) {
       // If unauthorized (401), redirect to login
-      if (error?.statusCode === 401) {
+      if (typeof error === 'object' && error !== null && 'statusCode' in error && (error as { statusCode: number }).statusCode === 401) {
         await navigateTo('/login')
         return null
       }

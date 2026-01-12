@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
     return {
       message: 'User deleted successfully'
     }
-  } catch (error) {
+  } catch (error: unknown) {
     if (error instanceof Error && 'statusCode' in error) {
       throw error
     }

@@ -29,7 +29,7 @@ interface Emits {
   (e: 'refresh'): void
 }
 
-const props = defineProps<Props>()
+const _props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 const { t } = useI18n()
 const { showSuccess, showError } = useToastNotification()
@@ -70,8 +70,9 @@ const handleChangePlan = async () => {
 
     showPlanSelector.value = false
     emit('refresh')
-  } catch (error: any) {
-    showError(error.data?.message || t('profile.subscription.changeFailed'))
+  } catch (error: unknown) {
+    const errorMessage = (error as { data?: { message?: string } })?.data?.message || t('profile.subscription.changeFailed');
+    showError(errorMessage);
   } finally {
     isChangingPlan.value = false
   }
@@ -91,8 +92,9 @@ const handleCancelSubscription = async () => {
     showSuccess(t('profile.subscription.cancelled'))
 
     emit('refresh')
-  } catch (error: any) {
-    showError(error.data?.message || t('profile.subscription.cancelFailed'))
+  } catch (error: unknown) {
+    const errorMessage = (error as { data?: { message?: string } })?.data?.message || t('profile.subscription.cancelFailed');
+    showError(errorMessage);
   } finally {
     isCancelling.value = false
   }
@@ -171,16 +173,16 @@ const openChangePlan = () => {
         <UButton
           color="primary"
           variant="outline"
-          @click="openChangePlan"
           :disabled="isChangingPlan || isCancelling"
+          @click="openChangePlan"
         >
           {{ t('profile.subscription.changePlan') }}
         </UButton>
         <UButton
           variant="outline"
-          @click="handleCancelSubscription"
           :loading="isCancelling"
           :disabled="isChangingPlan || isCancelling"
+          @click="handleCancelSubscription"
         >
           {{ t('profile.subscription.cancelSubscription') }}
         </UButton>
@@ -197,7 +199,6 @@ const openChangePlan = () => {
             <div
               v-for="plan in availablePlans"
               :key="plan.id"
-              @click="selectedPlanId = plan.id"
               :class="[
                 'cursor-pointer p-4 rounded-lg border-2 transition-all',
                 selectedPlanId === plan.id
@@ -205,6 +206,7 @@ const openChangePlan = () => {
                   : 'border-gray-300 dark:border-gray-600 hover:border-primary/50',
                 subscription.plan.id === plan.id ? 'opacity-50' : ''
               ]"
+              @click="selectedPlanId = plan.id"
             >
               <div class="flex justify-between items-start mb-2">
                 <div>
@@ -234,9 +236,9 @@ const openChangePlan = () => {
               </UButton>
               <UButton
                 color="primary"
-                @click="handleChangePlan"
                 :loading="isChangingPlan"
                 :disabled="!selectedPlanId || selectedPlanId === subscription.plan.id"
+                @click="handleChangePlan"
               >
                 {{ t('profile.subscription.confirmChange') }}
               </UButton>

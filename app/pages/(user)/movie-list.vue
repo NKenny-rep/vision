@@ -23,7 +23,7 @@ const handleRemove = async (omdbId: string) => {
     await refresh()
     
     showSuccess(t('userPanel.movieList.messages.removed'))
-  } catch (error) {
+  } catch {
     showError(t('userPanel.movieList.errors.removeFailed'))
   }
 }

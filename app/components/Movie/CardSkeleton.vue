@@ -9,7 +9,7 @@ interface Props {
   count?: number
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const _props = withDefaults(defineProps<Props>(), {
   size: 'md',
   count: 1
 })

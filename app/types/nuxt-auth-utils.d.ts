@@ -4,7 +4,7 @@
  * This ensures compatibility with userHelpers and other utilities
  */
 
-import type { UserRole } from './index'
+import type { UserRole as _UserRole } from './index'
 
 declare module '#auth-utils' {
   interface User {

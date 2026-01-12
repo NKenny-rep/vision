@@ -115,11 +115,11 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
         :providers="providers"
         :loading="isPosting"
         :disabled="isPosting"
-        @submit="onSubmit"
         :ui="{
           leadingIcon: 'text-5xl',
           root: 'w-full',
         }"
+        @submit="onSubmit"
       />
     </UPageCard>
 

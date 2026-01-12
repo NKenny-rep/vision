@@ -120,13 +120,16 @@ export default defineEventHandler(async (event) => {
         phone: newUser.phone,
       },
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Fallback to mock registration if database connection fails
-    if (error.statusCode === 409 || error.statusCode === 500 || error.statusCode === 400) {
-      throw error // Re-throw validation and conflict errors
+    if (error && typeof error === 'object' && 'statusCode' in error) {
+      if (error.statusCode === 409 || error.statusCode === 500 || error.statusCode === 400) {
+        throw error // Re-throw validation and conflict errors
+      }
     }
 
-    console.warn('Database connection failed, using mock registration:', error.message)
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.warn('Database connection failed, using mock registration:', errorMessage);
 
     // Create mock user
     const mockUser = {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { OMDBSearchParams, OMDBSearchResult, OMDBSearchItem } from '~/types'
+import type { OMDBSearchParams, OMDBSearchItem } from '~/types'
 
 const localePath = useLocalePath();
 
@@ -58,8 +58,12 @@ const performSearch = async () => {
       totalResults.value = 0
       error.value = data.value?.Error || 'No results found'
     }
-  } catch (err: any) {
-    error.value = err.message || 'Failed to search movies'
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      error.value = err.message || 'Failed to search movies';
+    } else {
+      error.value = 'Failed to search movies';
+    }
     movies.value = []
     totalResults.value = 0
   } finally {
@@ -102,7 +106,7 @@ const yearOptions = Array.from({ length: 50 }, (_, i) => currentYear - i)
 
       <!-- Search & Filters -->
       <div class="bg-gray-900 rounded-lg border border-gray-800 p-6 mb-6">
-        <form @submit.prevent="performSearch" class="space-y-4">
+        <form class="space-y-4" @submit.prevent="performSearch">
           <!-- Search Input -->
           <div class="flex gap-4">
             <div class="flex-1">
@@ -138,9 +142,9 @@ const yearOptions = Array.from({ length: 50 }, (_, i) => currentYear - i)
               </label>
               <select
                 v-model="selectedType"
-                @change="handleFilterChange"
                 :disabled="!searchQuery.trim()"
                 class="w-full px-3 py-2 bg-gray-800 border border-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                @change="handleFilterChange"
               >
                 <option value="">{{ $t('search.allTypes') }}</option>
                 <option value="movie">{{ $t('search.movie') }}</option>
@@ -157,9 +161,9 @@ const yearOptions = Array.from({ length: 50 }, (_, i) => currentYear - i)
               </label>
               <select
                 v-model="selectedYear"
-                @change="handleFilterChange"
                 :disabled="!searchQuery.trim()"
                 class="w-full px-3 py-2 bg-gray-800 border border-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                @change="handleFilterChange"
               >
                 <option value="">{{ $t('search.allYears') }}</option>
                 <option v-for="year in yearOptions" :key="year" :value="year.toString()">

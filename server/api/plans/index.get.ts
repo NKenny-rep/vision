@@ -1,7 +1,7 @@
 import { useDB, subscriptionPlans } from '../../database'
 import { eq } from 'drizzle-orm'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (_event) => {
   try {
     const db = useDB()
     const plans = await db
@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
       .orderBy(subscriptionPlans.price)
 
     return plans
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error fetching subscription plans:', error)
     throw createError({
       statusCode: 500,

@@ -61,7 +61,7 @@ export default defineEventHandler(async (event) => {
       message: 'Movie removed from list',
       inList: false,
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Failed to remove movie from list:', error)
     throw createError({
       statusCode: 500,

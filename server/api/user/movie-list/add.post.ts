@@ -86,7 +86,7 @@ export default defineEventHandler(async (event) => {
       message: 'Movie added to list',
       inList: true,
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Failed to add movie to list:', error)
     throw createError({
       statusCode: 500,

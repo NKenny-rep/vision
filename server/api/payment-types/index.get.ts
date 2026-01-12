@@ -1,6 +1,6 @@
 import { useDB, paymentTypes } from '../../database'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (_event) => {
   try {
     const db = useDB()
     const types = await db
@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
       .orderBy(paymentTypes.id)
 
     return types
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error fetching payment types:', error)
     throw createError({
       statusCode: 500,

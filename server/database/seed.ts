@@ -48,7 +48,7 @@ async function seed() {
 
     // 2. Create payment types with fixed IDs
     console.log('Creating payment types...')
-    const [creditCardType, debitCardType, paypalType] = await db.insert(schema.paymentTypes).values([
+    const [creditCardType, debitCardType, _paypalType] = await db.insert(schema.paymentTypes).values([
       { id: 1, name: 'credit_card', displayName: 'Credit Card' },
       { id: 2, name: 'debit_card', displayName: 'Debit Card' },
       { id: 3, name: 'paypal', displayName: 'PayPal' },
@@ -58,7 +58,7 @@ async function seed() {
 
     // 3. Create users
     console.log('Creating users...')
-    const [adminUser, user1, user2, user3, goku, tonymontana, aldebaran, shion, cloud] = await db.insert(schema.users).values([
+    const [adminUser, user1, user2, user3, goku, tonymontana, _aldebaran, _shion, _cloud] = await db.insert(schema.users).values([
       {
         email: 'admin@videovision.com',
           password: adminPassword,

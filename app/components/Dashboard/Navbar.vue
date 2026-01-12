@@ -45,7 +45,16 @@ const { t } = useI18n()
 const localePath = useLocalePath()
 const { user, logout } = useAuthentication()
 
-const userMenuItems: any[][] = [
+interface UserMenuItem {
+  label: string;
+  icon?: string;
+  to?: string;
+  type?: 'label';
+  disabled?: boolean;
+  onSelect?: () => void;
+}
+
+const userMenuItems: UserMenuItem[][] = [
   [{
     label: user.value?.email || t('common.user'),
     type: 'label',

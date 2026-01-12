@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
     return {
       inList: !!item,
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Failed to check movie list status:', error)
     return { inList: false }
   }

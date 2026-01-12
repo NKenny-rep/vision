@@ -79,7 +79,7 @@ export default defineEventHandler(async (event) => {
         totalPages: Math.ceil(total / limit),
       }
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error fetching users:', error)
     throw createError({
       statusCode: 500,

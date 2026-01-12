@@ -32,7 +32,7 @@ const handleSubmit = async () => {
     </div>
 
     <UCard>
-      <UForm :state="form" @submit="handleSubmit" class="space-y-4">
+      <UForm :state="form" class="space-y-4" @submit="handleSubmit">
         <UFormGroup :label="$t('admin.videos.videoTitle')" :required="true">
           <UInput v-model="form.title" :placeholder="$t('admin.videos.enterTitle')" />
         </UFormGroup>

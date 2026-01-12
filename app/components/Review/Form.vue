@@ -46,7 +46,7 @@ const handleSubmit = async () => {
         <p class="text-gray-400 text-sm">Share your thoughts about this content</p>
       </div>
 
-      <UForm @submit="handleSubmit" class="space-y-4">
+      <UForm class="space-y-4" @submit="handleSubmit">
         <!-- Rating Input -->
         <UFormGroup label="Your Rating" required>
           <div class="flex items-center gap-4">
@@ -95,8 +95,8 @@ const handleSubmit = async () => {
           <UIButton
             type="button"
             variant="secondary"
-            @click="emit('cancel')"
             :disabled="isSubmitting"
+            @click="emit('cancel')"
           >
             Cancel
           </UIButton>

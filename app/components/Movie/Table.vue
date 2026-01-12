@@ -116,9 +116,9 @@ const columns = computed(() => {
           :src="getPosterUrl(row.Poster)" 
           :alt="row.Title"
           class="w-12 h-16 object-cover rounded"
-          @error="handleImageError"
           loading="lazy"
-        />
+          @error="handleImageError"
+        >
       </template>
 
       <template #Title-data="{ row }">

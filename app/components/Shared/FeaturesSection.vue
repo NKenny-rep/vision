@@ -11,7 +11,7 @@ interface Props {
   headingText?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const _props = withDefaults(defineProps<Props>(), {
   features: () => [
     {
       icon: 'i-heroicons-tv',

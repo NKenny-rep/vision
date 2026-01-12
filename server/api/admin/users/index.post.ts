@@ -80,7 +80,7 @@ export default defineEventHandler(async (event) => {
       message: 'User created successfully',
       data: newUser
     }
-  } catch (error) {
+  } catch (error: unknown) {
     if (error instanceof Error && 'statusCode' in error) {
       throw error
     }

@@ -15,7 +15,7 @@ interface Props {
   animation?: 'pulse' | 'wave' | 'none'
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const _props = withDefaults(defineProps<Props>(), {
   variant: 'default',
   animation: 'pulse'
 })

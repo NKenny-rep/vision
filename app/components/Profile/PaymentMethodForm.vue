@@ -23,9 +23,8 @@ interface Emits {
   (e: 'cancel'): void
 }
 
-const props = defineProps<Props>()
+const _props = defineProps<Props>()
 const emit = defineEmits<Emits>()
-const { t } = useI18n()
 const { showError } = useToastNotification()
 
 const formData = ref({
@@ -60,7 +59,7 @@ const handleSubmit = () => {
 <template>
   <div class="p-4 border border-gray-300 dark:border-gray-600 rounded-lg">
     <h3 class="font-semibold mb-4">New Payment Method</h3>
-    <form @submit.prevent="handleSubmit" class="space-y-4">
+    <form class="space-y-4" @submit.prevent="handleSubmit">
       <div>
         <label class="block text-sm font-medium mb-2">Type</label>
         <select
@@ -84,7 +83,7 @@ const handleSubmit = () => {
             required
             placeholder="1234"
             class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700"
-          />
+          >
         </div>
 
         <div>
@@ -112,7 +111,7 @@ const handleSubmit = () => {
             pattern="(0[1-9]|1[0-2])"
             placeholder="12"
             class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700"
-          />
+          >
         </div>
 
         <div>
@@ -124,17 +123,17 @@ const handleSubmit = () => {
             pattern="[0-9]{4}"
             placeholder="2025"
             class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700"
-          />
+          >
         </div>
       </div>
 
       <div class="flex items-center">
         <input
+          id="isDefault"
           v-model="formData.isDefault"
           type="checkbox"
-          id="isDefault"
           class="mr-2"
-        />
+        >
         <label for="isDefault" class="text-sm">Set as default payment method</label>
       </div>
 
@@ -147,8 +146,8 @@ const handleSubmit = () => {
         </button>
         <button
           type="button"
-          @click="emit('cancel')"
           class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+          @click="emit('cancel')"
         >
           Cancel
         </button>

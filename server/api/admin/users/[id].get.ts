@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
     }
 
     return user
-  } catch (error) {
+  } catch (error: unknown) {
     if (error instanceof Error && 'statusCode' in error) {
       throw error
     }

@@ -3,6 +3,7 @@
  * Dropdown language selector with flag icons
  */
 <script setup lang="ts">
+import type { LocaleObject } from '@nuxtjs/i18n'
 const { locale, locales, setLocale } = useI18n()
 
 const languageIcons: Record<string, string> = {
@@ -11,7 +12,7 @@ const languageIcons: Record<string, string> = {
 }
 
 const languageItems = computed(() => 
-  (locales.value as any[]).map(loc => ({
+  (locales.value as LocaleObject[]).map(loc => ({
     label: loc.name,
     icon: languageIcons[loc.code] || 'i-heroicons-language',
     onSelect: () => setLocale(loc.code),
@@ -20,7 +21,7 @@ const languageItems = computed(() =>
 )
 
 const currentLanguage = computed(() => 
-  (locales.value as any[]).find(loc => loc.code === locale.value)
+  (locales.value as LocaleObject[]).find(loc => loc.code === locale.value)
 )
 </script>
 

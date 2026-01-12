@@ -16,7 +16,7 @@ interface Props {
   plans?: readonly PricingPlan[]
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const _props = withDefaults(defineProps<Props>(), {
   heading: 'Choose the plan that\'s right for you',
   subheading: 'Upgrade, downgrade, or cancel anytime.',
   plans: () => [

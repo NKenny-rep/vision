@@ -191,8 +191,8 @@ const table = useVueTable({
 
         <!-- User Rows -->
         <tr
-          v-else
           v-for="row in table.getRowModel().rows"
+          v-else
           :key="row.id"
           class="hover:bg-gray-800/50 transition-colors"
         >

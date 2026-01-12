@@ -79,14 +79,14 @@ const getPosterUrl = (movie: OMDBMovie) => {
       <!-- Hero Section -->
       <section v-if="featuredMovie" class="relative h-[50vh] -mt-24">
         <!-- Gradient Overlays -->
-        <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent z-10"></div>
-        <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black z-10"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent z-10"/>
+        <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black z-10"/>
         
         <img 
           :src="getPosterUrl(featuredMovie)" 
           :alt="featuredMovie.Title" 
           class="w-full h-full object-cover object-center"
-        />
+        >
         
         <div class="absolute inset-0 z-20 flex items-end pb-32">
           <div class="container mx-auto px-4">

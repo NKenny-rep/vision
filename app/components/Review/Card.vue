@@ -69,8 +69,8 @@ const handleReport = () => emit('report', props.review.id)
           variant="ghost"
           size="sm"
           :icon="review.isLiked ? 'i-heroicons-heart-solid' : 'i-heroicons-heart'"
-          @click="handleLike"
           :class="review.isLiked ? 'text-red-500' : ''"
+          @click="handleLike"
         >
           {{ review.likes || 0 }}
         </UIButton>
