@@ -13,7 +13,7 @@ interface SearchResult {
 }
 
 const { searchMovies } = useMovies()
-const router = useRouter()
+const localePath = useLocalePath()
 
 const isOpen = ref(false)
 const query = ref('')
@@ -35,7 +35,7 @@ const toggleSearch = () => {
 
 const viewAllResults = () => {
   if (query.value) {
-    router.push(`/movies?q=${encodeURIComponent(query.value)}`)
+    navigateTo(localePath(`/movies?q=${encodeURIComponent(query.value)}`))
     isOpen.value = false
     query.value = ''
     results.value = []
@@ -61,7 +61,7 @@ const handleSearch = async () => {
 }
 
 const selectMovie = (movie: SearchResult) => {
-  router.push(`/watch/${movie.imdbID}`)
+  navigateTo(localePath(`/watch/${movie.imdbID}`))
   isOpen.value = false
   query.value = ''
   results.value = []

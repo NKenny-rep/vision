@@ -1,5 +1,5 @@
-import { eq } from 'drizzle-orm'
-import { useDB, users, roles } from '../../../database'
+import { eq, desc } from 'drizzle-orm'
+import { useDB, users, roles, userSubscriptions, subscriptionPlans } from '../../../database'
 import { requireAdmin } from '../../../utils/auth'
 
 export default defineEventHandler(async (event) => {
@@ -17,6 +17,7 @@ export default defineEventHandler(async (event) => {
   const db = useDB()
 
   try {
+    // Fetch user with role
     const [user] = await db
       .select({
         id: users.id,
@@ -41,7 +42,28 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    return user
+    // Fetch user subscription
+    const [subscription] = await db
+      .select({
+        id: userSubscriptions.id,
+        status: userSubscriptions.status,
+        startDate: userSubscriptions.startDate,
+        endDate: userSubscriptions.endDate,
+        autoRenew: userSubscriptions.autoRenew,
+        name: subscriptionPlans.name,
+        price: subscriptionPlans.price,
+        quality: subscriptionPlans.maxQuality,
+      })
+      .from(userSubscriptions)
+      .innerJoin(subscriptionPlans, eq(userSubscriptions.planId, subscriptionPlans.id))
+      .where(eq(userSubscriptions.userId, userId))
+      .orderBy(desc(userSubscriptions.createdAt))
+      .limit(1)
+
+    return {
+      ...user,
+      subscription: subscription || null
+    }
   } catch (error: unknown) {
     if (error instanceof Error && 'statusCode' in error) {
       throw error

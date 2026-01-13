@@ -23,10 +23,13 @@ const {
   updateFilters,
 } = useUserManagement()
 
-// Modal state
-const showCreateModal = ref(false)
-const showEditModal = ref(false)
-const showDeleteModal = ref(false)
+// Modal state management
+const modals = reactive({
+  create: false,
+  edit: false,
+  delete: false,
+})
+
 const selectedUser = ref<User | null>(null)
 
 onMounted(async () => {
@@ -40,7 +43,7 @@ const handleSearch = async (query: string) => {
 const handleCreateUser = async (userData: UserFormData) => {
   const success = await createUser(userData)
   if (success) {
-    showCreateModal.value = false
+    modals.create = false
     showSuccess(t('admin.users.userCreated'))
   } else {
     showError(error.value || t('admin.users.createFailed'))
@@ -49,7 +52,7 @@ const handleCreateUser = async (userData: UserFormData) => {
 
 const handleEditClick = (user: User) => {
   selectedUser.value = user
-  showEditModal.value = true
+  modals.edit = true
 }
 
 const handleUpdateUser = async (userData: UserFormData) => {
@@ -57,7 +60,7 @@ const handleUpdateUser = async (userData: UserFormData) => {
 
   const success = await updateUser(selectedUser.value.id, userData)
   if (success) {
-    showEditModal.value = false
+    modals.edit = false
     selectedUser.value = null
     showSuccess(t('admin.users.userUpdated'))
   } else {
@@ -67,7 +70,7 @@ const handleUpdateUser = async (userData: UserFormData) => {
 
 const handleDeleteClick = (user: User) => {
   selectedUser.value = user
-  showDeleteModal.value = true
+  modals.delete = true
 }
 
 const confirmDelete = async () => {
@@ -75,7 +78,7 @@ const confirmDelete = async () => {
 
   const success = await deleteUser(selectedUser.value.id)
   if (success) {
-    showDeleteModal.value = false
+    modals.delete = false
     selectedUser.value = null
     showSuccess(t('admin.users.userDeleted'))
   } else {
@@ -99,10 +102,6 @@ const editFormData = computed(() => selectedUser.value ? {
   avatar: selectedUser.value.avatar,
   roleId: selectedUser.value.roleId,
 } : undefined)
-
-const deleteUserInfo = computed(() => 
-  selectedUser.value ? `${selectedUser.value.name} (${selectedUser.value.email})` : ''
-)
 </script>
 
 <template>
@@ -119,14 +118,17 @@ const deleteUserInfo = computed(() =>
 
     <!-- Actions Bar -->
     <div class="flex flex-col md:flex-row gap-4 mb-6 items-start md:items-center justify-between">
+      <!-- Search -->
       <div class="w-full md:w-96">
         <AdminUserSearchBar @search="handleSearch" />
       </div>
+
+      <!-- Create Button -->
       <UIButton
         variant="primary"
         size="lg"
         icon="i-heroicons-plus"
-        @click="showCreateModal = true"
+        @click="modals.create = true"
       >
         {{ t('admin.users.createUser') }}
       </UIButton>
@@ -157,16 +159,17 @@ const deleteUserInfo = computed(() =>
       />
     </div>
 
-    <!-- Form Modal (Create/Edit) -->
+    <!-- Create User Modal -->
     <AdminUserFormModal
-      v-model:open="showCreateModal"
+      v-model:open="modals.create"
       :title="t('admin.users.createUser')"
       :loading="loading"
       @submit="handleCreateUser"
     />
 
+    <!-- Edit User Modal -->
     <AdminUserFormModal
-      v-model:open="showEditModal"
+      v-model:open="modals.edit"
       :title="t('admin.users.editUser')"
       :initial-data="editFormData"
       :is-edit="true"
@@ -174,15 +177,15 @@ const deleteUserInfo = computed(() =>
       @submit="handleUpdateUser"
     />
 
-    <!-- Confirmation Modal (Delete) -->
+    <!-- Delete Confirmation Modal -->
     <AdminConfirmModal
-      v-model:open="showDeleteModal"
+      v-model:open="modals.delete"
       :title="t('admin.users.deleteUser')"
       :message="t('admin.users.confirmDelete')"
       :warning="t('admin.users.deleteWarning')"
-      :user-info="deleteUserInfo"
+      :user-info="selectedUser ? `${selectedUser.name} (${selectedUser.email})` : ''"
       :confirm-text="t('common.delete')"
-      confirm-class="bg-red-600 hover:bg-red-700"
+      confirm-class="bg-red-600 hover:bg-red-700 text-white"
       :loading="loading"
       @confirm="confirmDelete"
     />

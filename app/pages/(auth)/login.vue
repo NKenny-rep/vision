@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import * as z from 'zod';
-
 definePageMeta({
   layout: 'login-layout',
   middleware: 'not-auth',
