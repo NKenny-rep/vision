@@ -4,6 +4,7 @@ Complete guide for developing and extending the VideoVision platform.
 
 ## Table of Contents
 - [Development Setup](#development-setup)
+- [Project Structure](#project-structure)
 - [Architecture Overview](#architecture-overview)
 - [Adding New Features](#adding-new-features)
 - [Component Development](#component-development)
@@ -12,6 +13,7 @@ Complete guide for developing and extending the VideoVision platform.
 - [Testing Guidelines](#testing-guidelines)
 - [Internationalization](#internationalization)
 - [Best Practices](#best-practices)
+- [Common Development Tasks](#common-development-tasks)
 
 ## Development Setup
 
@@ -25,7 +27,7 @@ npm install
 
 ### 2. Configure Environment
 
-Create `.env` file:
+Create `.env` file based on `.env.example`:
 
 ```env
 # Database
@@ -34,19 +36,38 @@ DATABASE_URL=postgresql://user:password@localhost:5432/videovision
 # Session Secret (min 32 characters)
 NUXT_SESSION_PASSWORD=your-very-secure-session-password-here-min-32-chars
 
-# OMDB API
+# OMDB API Key (get from https://www.omdbapi.com/apikey.aspx)
 OMDB_API_KEY=your-omdb-api-key
 
 # Optional
 NUXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
+**Note**: For testing purposes, a Neon PostgreSQL database and OMDB API key are pre-configured. For production, use your own credentials.
+
 ### 3. Database Setup
 
-```bash
-# Generate migrations
-npm run db:generate
+#### Option A: Using Docker (Recommended)
 
+```bash
+# Start PostgreSQL container
+docker-compose up -d
+
+# Apply migrations
+npm run db:migrate
+
+# Seed database with sample data
+npm run db:seed
+```
+
+#### Option B: Local PostgreSQL
+
+```bash
+# Install PostgreSQL locally
+# Create database
+createdb videovision
+
+# Update DATABASE_URL in .env
 # Apply migrations
 npm run db:migrate
 

@@ -1,11 +1,4 @@
 <script setup lang="ts">
-/**
- * StarRating Component
- * A reusable star rating component that can be:
- * - Read-only (display rating)
- * - Interactive (allow user to select rating)
- */
-
 interface Props {
   modelValue?: number
   maxStars?: number
@@ -50,15 +43,8 @@ const handleStarHover = (star: number | null) => {
   }
 }
 
-const isStarFilled = (star: number): boolean => {
-  const displayRating = hoveredStar.value ?? props.modelValue
-  return star <= displayRating
-}
-
-const _isStarHalf = (star: number): boolean => {
-  const displayRating = hoveredStar.value ?? props.modelValue
-  return star - 0.5 === displayRating
-}
+const displayRating = computed(() => hoveredStar.value ?? props.modelValue)
+const isStarFilled = (star: number): boolean => star <= displayRating.value
 </script>
 
 <template>

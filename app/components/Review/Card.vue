@@ -1,12 +1,6 @@
 <script setup lang="ts">
 import type { Review } from '~/types'
 
-/**
- * ReviewCard Component
- * Displays a user review/comment with rating
- * Composition: Uses StarRating component
- */
-
 interface Props {
   review: Review
   showActions?: boolean
@@ -20,17 +14,11 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   like: [reviewId: string | number]
-  reply: [reviewId: string | number]
   report: [reviewId: string | number]
-  edit: [reviewId: string | number]
-  delete: [reviewId: string | number]
 }>()
 
+const { t } = useI18n()
 const formattedDate = computed(() => formatRelativeTime(props.review.createdAt))
-
-const handleLike = () => emit('like', props.review.id)
-const handleReply = () => emit('reply', props.review.id)
-const handleReport = () => emit('report', props.review.id)
 </script>
 
 <template>
@@ -70,31 +58,22 @@ const handleReport = () => emit('report', props.review.id)
           size="sm"
           :icon="review.isLiked ? 'i-heroicons-heart-solid' : 'i-heroicons-heart'"
           :class="review.isLiked ? 'text-red-500' : ''"
-          @click="handleLike"
+          @click="emit('like', review.id)"
         >
           {{ review.likes || 0 }}
-        </UIButton>
-        
-        <UIButton
-          variant="ghost"
-          size="sm"
-          icon="i-heroicons-chat-bubble-left"
-          @click="handleReply"
-        >
-          Reply
         </UIButton>
 
         <div class="ml-auto">
           <UDropdownMenu
             :items="[
-              [{ label: 'Report', icon: 'i-heroicons-flag', click: handleReport }]
+              [{ label: t('reviews.report'), icon: 'i-heroicons-flag', click: () => emit('report', review.id) }]
             ]"
           >
             <UIButton
               variant="ghost"
               size="sm"
               icon="i-heroicons-ellipsis-vertical"
-              :aria-label="'More actions'"
+              :aria-label="t('reviews.moreActions')"
             />
           </UDropdownMenu>
         </div>

@@ -2,7 +2,21 @@
   <UDashboardNavbar>
     <template #left>
       <div class="flex items-center gap-4">
-        <h1 class="text-xl font-semibold text-white">{{ $t('nav.dashboard') }}</h1>
+        <h1 class="text-xl font-semibold text-orange-500">{{ $t('nav.dashboard') }}</h1>
+        <NuxtLink 
+          :to="localePath('/browse')" 
+          class="text-white hover:text-orange-500 transition-colors font-medium"
+          active-class="text-orange-500"
+        >
+          {{ $t('nav.browse') }}
+        </NuxtLink>
+        <NuxtLink 
+          :to="localePath('/movie-list')" 
+          class="text-white hover:text-orange-500 transition-colors font-medium"
+          active-class="text-orange-500"
+        >
+          {{ $t('nav.myList') }}
+        </NuxtLink>
       </div>
     </template>
 
@@ -42,8 +56,8 @@
 
 <script setup lang="ts">
 const { t } = useI18n()
-const localePath = useLocalePath()
 const { user, logout } = useAuthentication()
+const localePath = useLocalePath()
 
 interface UserMenuItem {
   label: string;
@@ -63,7 +77,7 @@ const userMenuItems: UserMenuItem[][] = [
   [{
     label: t('nav.profile'),
     icon: 'i-heroicons-user',
-    to: localePath('/user-panel')
+    to: localePath('/profile')
   }],
   [{
     label: t('nav.signOut'),

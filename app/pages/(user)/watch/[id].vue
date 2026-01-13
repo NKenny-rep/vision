@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { OMDBMovie, Review } from '~/types'
 
-const localePath = useLocalePath();
+const localePath = useLocalePath()
+const router = useRouter()
 
 definePageMeta({
   layout: 'default',
@@ -14,6 +15,8 @@ const { getMovie } = useMovies()
 const { user } = useAuthentication()
 const { getReviews, createReview, toggleLike } = useReviews()
 const movieList = useMovieList()
+
+const goBack = () => router.back()
 
 // Fetch movie data
 const { data: movie, pending: isLoading } = await useAsyncData(
@@ -140,6 +143,18 @@ watch(movie, () => {
 
 <template>
   <div class="min-h-screen bg-black">
+    <!-- Back Button -->
+    <div class="container mx-auto px-4 pt-6">
+      <UIButton
+        variant="ghost"
+        size="sm"
+        icon="i-heroicons-arrow-left"
+        @click="goBack"
+      >
+        {{ $t('common.back') }}
+      </UIButton>
+    </div>
+
     <!-- Skeleton Loading State -->
     <MovieDetailsSkeleton v-if="isLoading" />
 
@@ -190,6 +205,7 @@ watch(movie, () => {
                   {{ isInList ? $t('common.inMyList') : $t('watch.addToMyList') }}
                 </UIButton>
                 <UIButton
+                  v-if="false"
                   variant="secondary"
                   icon="i-heroicons-share"
                   block
@@ -262,6 +278,7 @@ watch(movie, () => {
                   {{ isInList ? $t('common.inMyList') : $t('watch.addToMyList') }}
                 </UIButton>
                 <UIButton
+                  v-if="false"
                   variant="secondary"
                   icon="i-heroicons-share"
                   size="lg"

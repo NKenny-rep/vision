@@ -13,13 +13,12 @@ const emit = defineEmits<{
   cancel: []
 }>()
 
+const { t } = useI18n()
 const rating = ref(props.initialRating || 0)
 const comment = ref('')
 const isSubmitting = ref(false)
 
-const isValid = computed(() => {
-  return rating.value > 0 && comment.value.trim().length >= 10
-})
+const isValid = computed(() => rating.value > 0 && comment.value.trim().length >= 10)
 
 const handleSubmit = async () => {
   if (!isValid.value) return
@@ -31,7 +30,6 @@ const handleSubmit = async () => {
     comment: comment.value.trim()
   })
 
-  // Reset form
   rating.value = 0
   comment.value = ''
   isSubmitting.value = false
@@ -42,13 +40,12 @@ const handleSubmit = async () => {
   <UCard class="bg-gray-900 border border-gray-800">
     <div class="space-y-6">
       <div>
-        <h3 class="text-xl font-semibold text-white mb-4">Write a Review</h3>
-        <p class="text-gray-400 text-sm">Share your thoughts about this content</p>
+        <h3 class="text-xl font-semibold text-white mb-4">{{ t('reviews.writeReview') }}</h3>
+        <p class="text-gray-400 text-sm">{{ t('reviews.shareYourThoughts') }}</p>
       </div>
 
       <UForm class="space-y-4" @submit="handleSubmit">
-        <!-- Rating Input -->
-        <UFormGroup label="Your Rating" required>
+        <UFormGroup :label="t('reviews.yourRating')" required>
           <div class="flex items-center gap-4">
             <UIStarRating
               v-model="rating"
@@ -58,16 +55,15 @@ const handleSubmit = async () => {
             />
           </div>
           <template #help>
-            <span v-if="rating === 0" class="text-gray-500">Click to rate</span>
-            <span v-else class="text-orange-500">{{ rating }} stars selected</span>
+            <span v-if="rating === 0" class="text-gray-500">{{ t('reviews.clickToRate') }}</span>
+            <span v-else class="text-orange-500">{{ t('reviews.starsSelected', { count: rating }) }}</span>
           </template>
         </UFormGroup>
 
-        <!-- Comment Input -->
-        <UFormGroup label="Your Review" required>
+        <UFormGroup :label="t('reviews.yourReview')" required>
           <UTextarea
             v-model="comment"
-            placeholder="Tell us what you think... (minimum 10 characters)"
+            :placeholder="t('reviews.tellUsWhatYouThink')"
             :rows="5"
             :maxlength="1000"
             autoresize
@@ -75,14 +71,13 @@ const handleSubmit = async () => {
           <template #help>
             <div class="flex justify-between text-sm">
               <span :class="comment.length >= 10 ? 'text-green-500' : 'text-gray-500'">
-                {{ comment.length >= 10 ? '✓' : '✗' }} Minimum 10 characters
+                {{ comment.length >= 10 ? '✓' : '✗' }} {{ t('reviews.minimumCharacters') }}
               </span>
               <span class="text-gray-500">{{ comment.length }} / 1000</span>
             </div>
           </template>
         </UFormGroup>
 
-        <!-- Actions -->
         <div class="flex gap-3 pt-4">
           <UIButton
             type="submit"
@@ -90,7 +85,7 @@ const handleSubmit = async () => {
             :disabled="!isValid || isSubmitting"
             :loading="isSubmitting"
           >
-            Submit Review
+            {{ t('reviews.submitReview') }}
           </UIButton>
           <UIButton
             type="button"

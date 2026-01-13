@@ -26,6 +26,7 @@ const emit = defineEmits<{
   addReview: []
 }>()
 
+const { t } = useI18n()
 const sortBy = ref<'recent' | 'rating' | 'helpful' | 'oldest'>('recent')
 
 const sortedReviews = computed(() => sortReviews(props.reviews, sortBy.value))
@@ -67,7 +68,7 @@ const ratingDistribution = computed(() => {
               :show-label="false"
               class="mt-2"
             />
-            <p class="text-gray-400 mt-2">Based on {{ reviews.length }} reviews</p>
+            <p class="text-gray-400 mt-2">{{ t('reviews.basedOnReviews', { count: reviews.length }) }}</p>
           </div>
         </div>
 
@@ -78,7 +79,7 @@ const ratingDistribution = computed(() => {
             :key="star"
             class="flex items-center gap-3"
           >
-            <span class="text-sm text-gray-400 w-12">{{ star }} star</span>
+            <span class="text-sm text-gray-400 w-12">{{ t('reviews.starCount', { count: star }) }}</span>
             <div class="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
               <div 
                 class="h-full bg-orange-500 transition-all duration-300"
@@ -98,13 +99,13 @@ const ratingDistribution = computed(() => {
     <!-- Controls -->
     <div class="flex items-center justify-between gap-4 flex-wrap">
       <div v-if="showFilters" class="flex items-center gap-3">
-        <span class="text-sm text-gray-400">Sort by:</span>
+        <span class="text-sm text-gray-400">{{ t('reviews.sortBy') }}:</span>
         <USelectMenu
           v-model="sortBy"
           :options="[
-            { label: 'Most Recent', value: 'recent' },
-            { label: 'Highest Rating', value: 'rating' },
-            { label: 'Most Helpful', value: 'helpful' }
+            { label: t('reviews.mostRecent'), value: 'recent' },
+            { label: t('reviews.highestRating'), value: 'rating' },
+            { label: t('reviews.mostHelpful'), value: 'helpful' }
           ]"
           option-attribute="label"
           value-attribute="value"
@@ -118,7 +119,7 @@ const ratingDistribution = computed(() => {
         icon="i-heroicons-pencil-square"
         @click="emit('addReview')"
       >
-        Write a Review
+        {{ t('reviews.writeReview') }}
       </UIButton>
     </div>
 
@@ -129,14 +130,14 @@ const ratingDistribution = computed(() => {
 
     <div v-else-if="sortedReviews.length === 0" class="text-center py-12">
       <UIcon name="i-heroicons-chat-bubble-left-right" class="w-16 h-16 text-gray-600 mx-auto mb-4" />
-      <h3 class="text-xl font-semibold text-white mb-2">No reviews yet</h3>
-      <p class="text-gray-400 mb-6">Be the first to share your thoughts!</p>
+      <h3 class="text-xl font-semibold text-white mb-2">{{ t('reviews.noReviews') }}</h3>
+      <p class="text-gray-400 mb-6">{{ t('reviews.beTheFirst') }}</p>
       <UIButton
         v-if="showAddReview"
         variant="primary"
         @click="emit('addReview')"
       >
-        Write the First Review
+        {{ t('reviews.writeFirstReview') }}
       </UIButton>
     </div>
 

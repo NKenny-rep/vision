@@ -2,18 +2,74 @@
 
 A modern video streaming platform built with Nuxt 4, featuring multi-language support, subscription management, and a comprehensive movie library.
 
-## Quick Start
+
+Note: for testing local development there is already a neon postgre database connection working out of the box same as omdb
+
+
+## Getting Started with Docker
+
+### Prerequisites
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running
+- Git (to clone the repository)
+
+### Step-by-Step Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd videoVision
+   ```
+
+2. **Start Docker Desktop**
+   - Ensure Docker Desktop is running (check system tray for Docker icon)
+   - Wait until Docker is fully started (icon stops animating)
+
+3. **Build and start containers**
+   ```bash
+   docker-compose up --build -d
+   ```
+   
+   This will:
+   - Build the Nuxt application
+   - Pull PostgreSQL 16 image
+   - Create and start both containers
+   - Automatically create database schema
+   - Seed the database with sample data
+
+4. **Verify containers are running**
+   ```bash
+   docker-compose ps
+   ```
+   
+   You should see:
+   - `videovision-app` - Running on port 3000
+   - `videovision-db` - Running on port 5432
+
+5. **View application logs**
+   ```bash
+   docker-compose logs -f app
+   ```
+   
+   Look for: `Listening on http://0.0.0.0:3000`
+
+6. **Access the application**
+   - Open browser: `http://localhost:3000`
+   - Login with default credentials:
+     - **Admin**: `admin@videovision.com` / `password123`
+     - **User**: `john.doe@example.com` / `password123`
+     - **User**: `goku@videovision.com` / `password123`
+     - **User**: `Tarantino@vision.com` / `tarantino`
+
+
+## Local evelopment
 
 ### Prerequisites
 For non-containerized deployment:
 - Node.js 20+ 
 - PostgreSQL database
-OR
-- Docker
-(a dockerized project with database setup is provided)
 
-Note: for testing purposes there is already a neon postgre database connection working out of the box same as omdb
-### Installation
+
+Installation
 
 ```bash
 # Install dependencies
@@ -50,6 +106,8 @@ npm run build        # Build for production
 npm run preview      # Preview production build
 npm test             # Run all tests
 npm run test:watch   # Run tests in watch mode
+npm run lint         # Lint code
+npm run format       # Format code
 npm run db:migrate   # Run database migrations
 npm run db:seed      # Seed database with sample data
 ```
@@ -154,7 +212,7 @@ i18n/
 
 ## Environment Variables
 
-Create a `.env` file with:
+Create a `.env` file (is provided in a .env.example file) with: 
 
 ```env
 DATABASE_URL=postgresql://user:password@localhost:5432/videovision
@@ -217,59 +275,6 @@ docker run -p 3000:3000 \
 
 ---
 
-## Getting Started with Docker
-
-### Prerequisites
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running
-- Git (to clone the repository)
-
-### Step-by-Step Setup
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd videoVision
-   ```
-
-2. **Start Docker Desktop**
-   - Ensure Docker Desktop is running (check system tray for Docker icon)
-   - Wait until Docker is fully started (icon stops animating)
-
-3. **Build and start containers**
-   ```bash
-   docker-compose up --build -d
-   ```
-   
-   This will:
-   - Build the Nuxt application
-   - Pull PostgreSQL 16 image
-   - Create and start both containers
-   - Automatically create database schema
-   - Seed the database with sample data
-
-4. **Verify containers are running**
-   ```bash
-   docker-compose ps
-   ```
-   
-   You should see:
-   - `videovision-app` - Running on port 3000
-   - `videovision-db` - Running on port 5432
-
-5. **View application logs**
-   ```bash
-   docker-compose logs -f app
-   ```
-   
-   Look for: `Listening on http://0.0.0.0:3000`
-
-6. **Access the application**
-   - Open browser: `http://localhost:3000`
-   - Login with default credentials:
-     - **Admin**: `admin@videovision.com` / `password123`
-     - **User**: `john.doe@example.com` / `password123`
-     - **User**: `goku@videovision.com` / `password123`
-     - **User**: `Tarantino@vision.com` / `tarantino`
 
 ### Common Docker Commands
 
