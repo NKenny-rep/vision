@@ -116,7 +116,7 @@ export const useAuthentication = () => {
     isAdmin: computed(() => {
       const roleId = session.value?.user?.roleId
       // Debug log
-      if (process.client && session.value?.user) {
+      if (import.meta.client && session.value?.user) {
         console.log('[useAuthentication] User roleId:', roleId, 'isAdmin:', roleId === 2)
       }
       return roleId === 2

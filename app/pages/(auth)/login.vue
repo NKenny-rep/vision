@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import * as z from 'zod';
-import type { FormSubmitEvent, AuthFormField } from '@nuxt/ui';
 
 definePageMeta({
   layout: 'login-layout',
@@ -9,7 +8,7 @@ definePageMeta({
 
 const { t } = useI18n();
 const localePath = useLocalePath();
-const { showInfo: _showInfo, showError, showSuccess } = useToastNotification();
+const { showError, showSuccess } = useToastNotification();
 const route = useRoute();
 
 const cookieLoginEmail = useCookie<string|null>('login_email', {
@@ -27,43 +26,17 @@ const redirectPath = computed(() => {
   }
   return '/'; // Default redirect
 });
-const isPosting = ref(false);
-const fields: AuthFormField[] = [
-  {
-    name: 'email',
-    type: 'email',
-    label: t('auth.login.email'),
-    placeholder: t('auth.login.emailPlaceholder'),
-    required: true,
-    defaultValue: cookieLoginEmail.value || '',
-  },
-  {
-    name: 'password',
-    label: t('auth.login.password'),
-    type: 'password',
-    placeholder: t('auth.login.passwordPlaceholder'),
-    required: true,
-  },
-  {
-    name: 'remember',
-    label: t('auth.login.rememberMe'),
-    type: 'checkbox',
-    defaultValue: Boolean(cookieLoginEmail.value),
-  },
-];
 
-const schema = z.object({
-  email: z.email(t('auth.login.emailInvalid')),
-  password: z
-    .string(t('auth.login.passwordRequired'))
-    .min(8, t('auth.login.passwordMinLength')),
-  remember: z.boolean().optional(),
+const isPosting = ref(false);
+
+const formData = reactive({
+  email: cookieLoginEmail.value || '',
+  password: '',
+  remember: Boolean(cookieLoginEmail.value),
 });
 
-type Schema = z.output<typeof schema>;
-
-async function onSubmit(payload: FormSubmitEvent<Schema>) {
-  const { email, password, remember } = payload.data;
+async function onSubmit() {
+  const { email, password, remember } = formData;
   isPosting.value = true;
 
   if (remember) {
@@ -72,10 +45,9 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
     cookieLoginEmail.value = null;
   }
 
-  //el login devuelve booleano no vale la pena try catch
   const isSuccessful = await login(email, password, redirectPath.value);
 
-  if ( !isSuccessful) {
+  if (!isSuccessful) {
     showError(t('auth.login.invalidCredentials'));
     isPosting.value = false;
     return;
@@ -87,28 +59,82 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center gap-4 p-4">
-    <UPageCard class="w-full max-w-xl lg:max-w-xl flex items-center justify-center h-[50vh]">
-      <UAuthForm
-        :schema="schema"
-        :title="$t('auth.login.title')"
-        :description="$t('auth.login.emailPlaceholder')"
-        icon="i-lucide-user"
-        :fields="fields"
-        :loading="isPosting"
-        :disabled="isPosting"
-        :ui="{
-          leadingIcon: 'text-5xl',
-          root: 'w-full',
-        }"
-        @submit="onSubmit"
-      />
-    </UPageCard>
+  <div class="container mx-auto px-4 py-8">
+    <div class="max-w-md mx-auto space-y-8">
+      <!-- Page Header -->
+      <div class="text-center">
+        <h1 class="text-3xl font-bold mb-2">
+          {{ t('auth.login.title') }}
+        </h1>
+        <p class="text-gray-600 dark:text-gray-400">{{ t('auth.login.emailPlaceholder') }}</p>
+      </div>
 
-    <UIButton
-      variant="ghost"
-      :label="$t('auth.login.noAccount') + ' ' + $t('auth.login.signUpLink')"
-      :to="localePath('/register')"
-    />
+      <form class="space-y-6" @submit.prevent="onSubmit">
+        <!-- Login Form -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium mb-2">
+                {{ t('auth.login.email') }} <span class="text-red-500">*</span>
+              </label>
+              <input
+                v-model="formData.email"
+                type="email"
+                required
+                :placeholder="t('auth.login.emailPlaceholder')"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary"
+              >
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-2">
+                {{ t('auth.login.password') }} <span class="text-red-500">*</span>
+              </label>
+              <input
+                v-model="formData.password"
+                type="password"
+                required
+                :placeholder="t('auth.login.passwordPlaceholder')"
+                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary"
+              >
+            </div>
+
+            <div class="flex items-center">
+              <input
+                id="remember"
+                v-model="formData.remember"
+                type="checkbox"
+                class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+              >
+              <label for="remember" class="ml-2 block text-sm">
+                {{ t('auth.login.rememberMe') }}
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Section -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div class="flex flex-col gap-4">
+            <button
+              type="submit"
+              :disabled="isPosting"
+              class="w-full px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              <UIcon v-if="!isPosting" name="i-heroicons-arrow-right-on-rectangle-20-solid" />
+              <span v-if="isPosting" class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+              {{ isPosting ? t('common.pleaseWait') : t('auth.login.signInButton') }}
+            </button>
+
+            <NuxtLink
+              :to="localePath('/register')"
+              class="text-center text-primary hover:underline"
+            >
+              {{ t('auth.login.noAccount') }} {{ t('auth.login.signUpLink') }}
+            </NuxtLink>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
 </template>

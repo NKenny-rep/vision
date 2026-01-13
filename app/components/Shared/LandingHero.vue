@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const routes = useAppRoutes()
+
 interface Props {
   title?: string
   titleHighlight?: string
@@ -18,18 +20,6 @@ const _props = withDefaults(defineProps<Props>(), {
   emailPlaceholder: 'Email address',
   showScrollIndicator: true
 })
-
-const email = ref('')
-
-const emit = defineEmits<{
-  signup: [email: string]
-}>()
-
-const handleSignup = () => {
-  if (email.value) {
-    emit('signup', email.value)
-  }
-}
 </script>
 
 <template>
@@ -65,22 +55,14 @@ const handleSignup = () => {
 
       <!-- Email Signup Form -->
       <div class="max-w-2xl mx-auto">
-        <form 
-          class="flex flex-col md:flex-row gap-4 justify-center items-center" 
-          role="search"
-          aria-label="Sign up for VideoVision"
-          @submit.prevent="handleSignup"
+        <UIButton 
+          :to="routes.auth.login()"
+          variant="primary"
+          size="xl"
+          trailing-icon="i-heroicons-chevron-right"
         >
-
-          <UIButton 
-            type="submit"
-            variant="primary"
-            size="xl"
-            trailing-icon="i-heroicons-chevron-right"
-          >
-            {{ buttonText }}
-          </UIButton>
-        </form>
+          {{ buttonText }}
+        </UIButton>
       </div>
     </div>
 

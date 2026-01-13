@@ -1,5 +1,5 @@
 import { useDB, userSubscriptions, subscriptionPlans } from '../../../database'
-import { eq, and, desc } from 'drizzle-orm'
+import { eq, desc } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
   const session = await getUserSession(event)

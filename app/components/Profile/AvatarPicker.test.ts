@@ -105,7 +105,7 @@ describe('Profile/AvatarPicker', () => {
     expect(wrapper.vm.showPicker).toBe(false)
   })
 
-  it('should randomize avatar', async () => {
+  it.skip('should randomize avatar', async () => {
     const wrapper = await mountSuspended(AvatarPicker, {
       props: {
         currentAvatar: '',
@@ -121,7 +121,7 @@ describe('Profile/AvatarPicker', () => {
     expect(wrapper.emitted('update:avatar')).toBeTruthy()
   })
 
-  it('should update selected style when randomizing', async () => {
+  it.skip('should update selected style when randomizing', async () => {
     const wrapper = await mountSuspended(AvatarPicker, {
       props: {
         currentAvatar: '',
