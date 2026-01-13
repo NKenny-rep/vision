@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: videovision-db
+    environment:
+      POSTGRES_USER: videovision
+      POSTGRES_PASSWORD: videovision_password
+      POSTGRES_DB: videovision
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U videovision"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: videovision-app
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://videovision:videovision_password@postgres:5432/videovision
+      NUXT_SESSION_PASSWORD: ${NUXT_SESSION_PASSWORD:-your-secret-session-password-change-in-production}
+      NODE_ENV: production
+      DOCKER_ENV: "true"
+      NUXT_OMDB_API_KEY: ${OMDB_API:-bda24db}
+      NUXT_PUBLIC_OMDB_BASE_URL: ${OMDB_URL:-http://www.omdbapi.com/}
+      NUXT_PUBLIC_OMDB_POSTER_URL: ${OMDB_POSTER_URL:-http://img.omdbapi.com/}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "npx drizzle-kit push --config=drizzle.docker.config.ts --force && npm run db:seed && node .output/server/index.mjs"
+
+volumes:
+  postgres_data:

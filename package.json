@@ -1,0 +1,50 @@
+{
+  "name": "videoVision",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "db:seed": "tsx server/database/seed.ts",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "@nuxt/eslint": "^1.12.1",
+    "@nuxt/image": "^2.0.0",
+    "@nuxt/ui": "^4.3.0",
+    "@nuxtjs/i18n": "^10.2.1",
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.45.1",
+    "eslint": "^9.39.2",
+    "nuxt": "^4.2.2",
+    "nuxt-auth-utils": "^0.5.26",
+    "pg": "^8.13.1",
+    "typescript": "^5.9.3",
+    "vue": "^3.5.26",
+    "vue-router": "^4.6.4",
+    "zod": "^4.3.5"
+  },
+  "devDependencies": {
+    "@iconify-json/heroicons": "^1.2.3",
+    "@nuxt/test-utils": "^3.23.0",
+    "@types/bcrypt": "^6.0.0",
+    "@types/node": "^25.0.3",
+    "@vue/test-utils": "^2.4.6",
+    "drizzle-kit": "^0.31.8",
+    "happy-dom": "^20.1.0",
+    "jsdom": "^27.4.0",
+    "tsx": "^4.21.0",
+    "vitest": "^3.2.4"
+  }
+}

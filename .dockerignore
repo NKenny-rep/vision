@@ -1,0 +1,10 @@
+.nuxt
+.output
+node_modules
+.env
+.env.example
+Dockerfile
+.dockerignore
+README.md
+package-lock.json
+*.log
