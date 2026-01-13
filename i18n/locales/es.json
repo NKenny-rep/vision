@@ -33,7 +33,11 @@
     "user": "Usuario",
     "selected": "Seleccionado",
     "select": "Seleccionar Plan",
-    "popular": "POPULAR"
+    "popular": "POPULAR",
+    "isRequired": "es requerido",
+    "pleaseWait": "Por favor espere...",
+    "validating": "Validando...",
+    "remove": "Quitar"
   },
   "meta": {
     "title": "VideoVision - Transmite Películas y Series Ilimitadas",
@@ -74,9 +78,10 @@
     },
     "register": {
       "title": "Registrarse",
-      "subtitle": "Crea tu cuenta y comienza a ver",
+      "subtitle": "Crea tu cuenta para comenzar a transmitir",
       "personalInfo": "Información Personal",
       "choosePlan": "Elige Tu Plan",
+      "choosePlanDescription": "Selecciona tu plan y agrega un método de pago para completar el registro",
       "name": "Nombre completo",
       "email": "Correo electrónico",
       "password": "Contraseña",
@@ -93,8 +98,10 @@
       "passwordsNotMatch": "Las contraseñas no coinciden",
       "selectPlan": "Selecciona un plan de suscripción",
       "planRequired": "Por favor selecciona un plan de suscripción",
-      "success": "¡Cuenta creada exitosamente!",
-      "failed": "Registro fallido. Por favor intenta de nuevo."
+      "paymentRequired": "El método de pago es requerido para completar el registro",
+      "completePaymentFirst": "Por favor completa la información de pago para seleccionar un plan",
+      "success": "¡Cuenta creada exitosamente! Bienvenido a VideoVision.",
+      "failed": "Error al crear la cuenta. Por favor intenta de nuevo."
     },
     "providers": {
       "google": "Google",
@@ -242,7 +249,14 @@
     "title": "Perfil",
     "personalInfo": "Información Personal",
     "paymentMethods": "Métodos de Pago",
+    "paymentMethod": "Método de Pago",
     "addPayment": "Agregar Método de Pago",
+    "paymentType": "Tipo de Pago",
+    "cardBrand": "Marca de Tarjeta",
+    "cardLast4": "Últimos 4 Dígitos",
+    "expiryMonth": "Mes de Expiración",
+    "expiryYear": "Año de Expiración",
+    "setAsDefault": "Establecer como método de pago predeterminado",
     "subscription": {
       "title": "Suscripción",
       "noSubscription": "Sin suscripción activa",

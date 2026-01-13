@@ -25,7 +25,7 @@ const displayedMovies = computed(() => {
 </script>
 
 <template>
-  <section class="space-y-4">
+  <section class="space-y-4 mx-16">
     <!-- Section Header -->
     <div class="flex items-center justify-between">
       <h2 class="text-2xl font-bold text-white">{{ title }}</h2>
@@ -45,26 +45,28 @@ const displayedMovies = computed(() => {
     </template>
 
     <!-- Carousel for default view, Grid for show all -->
-    <UCarousel
-      v-else-if="!showAll"
-      :items="displayedMovies"
-      :ui="{
-        item: 'basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 snap-start',
-        container: 'gap-4 snap-x snap-mandatory',
-        prev: 'start-4 sm:-start-12 top-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-white carousel-arrow',
-        next: 'end-4 sm:-end-12 top-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-white carousel-arrow'
-      }"
-      arrows
-      class="overflow-visible relative carousel-container"
-    >
-      <template #default="{ item }">
-        <MovieCard
-          :movie="item"
-          size="md"
-          class="h-full"
-        />
-      </template>
-    </UCarousel>
+    <div v-if="!showAll" class="relative">
+      <UCarousel
+        :items="displayedMovies"
+        contain-scroll="trimSnaps"
+        :ui="{
+          item: 'basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 snap-start shrink-0',
+          container: 'gap-4 snap-x snap-mandatory',
+          prev: 'hidden md:flex absolute -left-20 top-1/2 -translate-y-1/2 bg-orange-500/90 hover:bg-orange-600 text-white z-10 shadow-lg',
+          next: 'hidden md:flex absolute -right-20 top-1/2 -translate-y-1/2 bg-orange-500/90 hover:bg-orange-600 text-white z-10 shadow-lg'
+        }"
+        arrows
+        class="relative"
+      >
+        <template #default="{ item }">
+          <MovieCard
+            :movie="item"
+            size="md"
+            class="h-full"
+          />
+        </template>
+      </UCarousel>
+    </div>
 
     <!-- Grid for show all view -->
     <div v-else class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">

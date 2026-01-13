@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { t } = useI18n()
+
 interface Feature {
   icon: string
   title: string
@@ -11,27 +13,30 @@ interface Props {
   headingText?: string
 }
 
-const _props = withDefaults(defineProps<Props>(), {
-  features: () => [
-    {
-      icon: 'i-heroicons-tv',
-      title: 'Enjoy on your TV',
-      description: 'Watch on Smart TVs, PlayStation, Xbox, Chromecast, Apple TV, Blu-ray players, and more.'
-    },
-    {
-      icon: 'i-heroicons-arrow-down-tray',
-      title: 'Download your shows',
-      description: 'Save your favorites easily and always have something to watch offline.'
-    },
-    {
-      icon: 'i-heroicons-device-phone-mobile',
-      title: 'Watch everywhere',
-      description: 'Stream unlimited movies and TV shows on your phone, tablet, laptop, and TV.'
-    }
-  ],
-  showHeading: false,
-  headingText: 'Features'
+const props = withDefaults(defineProps<Props>(), {
+  showHeading: false
 })
+
+const defaultFeatures = [
+  {
+    icon: 'i-heroicons-tv',
+    title: 'Enjoy on your TV',
+    description: 'Watch on Smart TVs, PlayStation, Xbox, Chromecast, Apple TV, Blu-ray players, and more.'
+  },
+  {
+    icon: 'i-heroicons-arrow-down-tray',
+    title: 'Download your shows',
+    description: 'Save your favorites easily and always have something to watch offline.'
+  },
+  {
+    icon: 'i-heroicons-device-phone-mobile',
+    title: 'Watch everywhere',
+    description: 'Stream unlimited movies and TV shows on your phone, tablet, laptop, and TV.'
+  }
+] as const
+
+const displayFeatures = computed(() => props.features || defaultFeatures)
+const displayHeading = computed(() => props.headingText || t('landing.features.heading'))
 </script>
 
 <template>
@@ -42,13 +47,13 @@ const _props = withDefaults(defineProps<Props>(), {
         id="features-heading" 
         class="text-4xl md:text-5xl font-bold text-white text-center mb-12"
       >
-        {{ headingText }}
+        {{ displayHeading }}
       </h2>
       <h2 v-else id="features-heading" class="sr-only">Features</h2>
       
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <SharedFeatureCard
-          v-for="(feature, index) in features"
+          v-for="(feature, index) in displayFeatures"
           :key="index"
           :icon="feature.icon"
           :title="feature.title"

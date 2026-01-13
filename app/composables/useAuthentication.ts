@@ -113,7 +113,14 @@ export const useAuthentication = () => {
     user,
     isLoggedIn: computed(() => loggedIn.value && !!session.value?.user),
     isSessionReady,
-    isAdmin: computed(() => session.value?.user?.roleId === 2),
+    isAdmin: computed(() => {
+      const roleId = session.value?.user?.roleId
+      // Debug log
+      if (process.client && session.value?.user) {
+        console.log('[useAuthentication] User roleId:', roleId, 'isAdmin:', roleId === 2)
+      }
+      return roleId === 2
+    }),
     ensureAuthenticated,
     fetch,
     login,

@@ -1,19 +1,10 @@
 <template>
-  <UDashboardGroup
-    storage="local"
-    storage-key="dashboard-sidebar"
-    :persistent="true"
-  >
-    <DashboardSidebar />
-
-    <UDashboardPanel>
-      <DashboardNavbar />
-
-      <div class="flex-1 overflow-auto p-6">
-        <slot />
-      </div>
-    </UDashboardPanel>
-  </UDashboardGroup>
+  <div class="min-h-screen bg-gray-950">
+    <DashboardNavbar />
+    <main class="p-6">
+      <slot />
+    </main>
+  </div>
 </template>
 
 <script setup lang="ts">

@@ -5,7 +5,7 @@
     :style="!isScrolled ? 'background: linear-gradient(to bottom, rgb(0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0) 100%)' : ''"
   >
     <!-- Desktop Navbar -->
-    <SharedNavbar :is-logged-in="isLoggedIn" :is-admin="isAdmin" />
+    <SharedNavbar :is-logged-in="isLoggedIn" :is-admin="isAdmin" :hide-auth-buttons="props.hideAuthButtons" />
 
     <!-- Mobile Menu Button -->
     <div class="md:hidden absolute right-4 top-6">
@@ -36,6 +36,14 @@
  * Sticky header wrapper with navbar and mobile menu
  * Atomic Design: Organism composed of Navbar and MobileMenu molecules
  */
+
+interface Props {
+  hideAuthButtons?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  hideAuthButtons: false
+})
 
 const { isLoggedIn, isAdmin, logout } = useAuthentication()
 const isMenuOpen = ref(false)

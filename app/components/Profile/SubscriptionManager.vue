@@ -43,15 +43,9 @@ const showPlanSelector = ref(false)
 const showConfirmModal = ref(false)
 const showCancelModal = ref(false)
 const selectedPlanId = ref<number | null>(null)
-
-// Data fetching
-const { data: availablePlans } = await useFetch<SubscriptionPlan[]>('/api/plans')
+const selectedPlan = ref<SubscriptionPlan | null>(null)
 
 // Computed
-const selectedPlan = computed(() => 
-  availablePlans.value?.find(p => p.id === selectedPlanId.value) || null
-)
-
 const isLoading = computed(() => 
   subscription.value ? isChangingPlan.value : isSubscribing.value
 )
@@ -74,11 +68,10 @@ const confirmButtonText = computed(() =>
     : t('profile.subscription.confirmSubscribe')
 )
 
-const selectedPlanInfo = computed(() =>
-  selectedPlan.value 
-    ? `${selectedPlan.value.name} - $${formatPrice(selectedPlan.value.price)}/${selectedPlan.value.billingPeriod}`
-    : ''
-)
+const selectedPlanInfo = computed(() => {
+  if (!selectedPlan.value) return ''
+  return `${selectedPlan.value.name} - $${formatPrice(selectedPlan.value.price)}/${selectedPlan.value.billingPeriod}`
+})
 
 const currentPlanInfo = computed(() =>
   subscription.value 
@@ -178,13 +171,19 @@ const handleCancelSubscription = async () => {
 
 const openPlanSelector = () => {
   selectedPlanId.value = null
+  selectedPlan.value = null
   showPlanSelector.value = true
 }
+
+// Fetch plans to get selected plan details
+const { data: availablePlans } = await useFetch<SubscriptionPlan[]>('/api/plans')
 
 const handlePlanSelection = (planId: number) => {
   if (subscription.value?.plan.id === planId) return
   
   selectedPlanId.value = planId
+  // Get the full plan object
+  selectedPlan.value = availablePlans.value?.find(p => p.id === planId) || null
   showPlanSelector.value = false
   showConfirmModal.value = true
 }
@@ -276,6 +275,7 @@ const handleConfirm = async () => {
         </UButton>
         <UButton
           variant="outline"
+          color="gray"
           :loading="isCancelling"
           :disabled="isChangingPlan || isCancelling"
           @click="showCancelModal = true"
@@ -291,43 +291,18 @@ const handleConfirm = async () => {
         {{ subscription ? t('profile.subscription.selectNewPlan') : t('profile.subscription.selectPlan') }}
       </h3>
 
-      <div class="space-y-4">
-          <div
-            v-for="plan in availablePlans"
-            :key="plan.id"
-            :class="[
-              'cursor-pointer p-4 rounded-lg border-2 transition-all',
-              selectedPlanId === plan.id
-                ? 'border-primary bg-primary/10'
-                : 'border-gray-300 dark:border-gray-600 hover:border-primary/50',
-              subscription?.plan.id === plan.id ? 'opacity-50 cursor-not-allowed' : ''
-            ]"
-            @click="handlePlanSelection(plan.id)"
-          >
-            <div class="flex justify-between items-start mb-2">
-              <div>
-                <h4 class="font-bold">{{ plan.name }}</h4>
-                <p class="text-sm text-gray-600 dark:text-gray-400">{{ plan.description }}</p>
-              </div>
-              <div class="text-right">
-                <div class="text-xl font-bold text-primary">
-                  ${{ formatPrice(plan.price) }}
-                </div>
-                <div class="text-xs text-gray-600 dark:text-gray-400">/{{ plan.billingPeriod }}</div>
-              </div>
-            </div>
-            <div v-if="subscription?.plan.id === plan.id" class="text-xs text-gray-500">
-              {{ t('profile.subscription.currentPlan') }}
-            </div>
-          </div>
-        </div>
+      <SubscriptionPlanWithPayment
+        v-model="selectedPlanId"
+        :show-payment-form="false"
+        @update:model-value="handlePlanSelection"
+      />
 
-        <div class="flex justify-end gap-3 mt-6">
-          <UButton variant="outline" @click="showPlanSelector = false">
-            {{ t('common.cancel') }}
-          </UButton>
-        </div>
+      <div class="flex justify-end gap-3 mt-6">
+        <UButton variant="outline" @click="showPlanSelector = false">
+          {{ t('common.cancel') }}
+        </UButton>
       </div>
+    </div>
 
     <!-- Confirmation Modal -->
     <AdminConfirmModal

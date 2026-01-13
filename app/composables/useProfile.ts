@@ -9,6 +9,8 @@
  * - Easy to test and maintain
  */
 
+import type { PaymentMethodData } from '~/composables/usePaymentValidation'
+
 export interface PaymentType {
   id: number
   name: string
@@ -41,15 +43,6 @@ export interface ProfileUpdateData {
   name: string
   phone?: string
   avatar?: string
-}
-
-export interface PaymentMethodData {
-  paymentTypeId: number
-  cardLast4: string
-  cardBrand: string
-  expiryMonth: string
-  expiryYear: string
-  isDefault: boolean
 }
 
 export interface SubscriptionPlan {

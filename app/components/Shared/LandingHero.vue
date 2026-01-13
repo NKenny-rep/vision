@@ -71,20 +71,7 @@ const handleSignup = () => {
           aria-label="Sign up for VideoVision"
           @submit.prevent="handleSignup"
         >
-          <div class="w-full md:flex-1">
-            <UInput
-              v-model="email"
-              type="email"
-              :placeholder="emailPlaceholder"
-              size="xl"
-              required
-              :aria-label="`Enter your ${emailPlaceholder.toLowerCase()}`"
-              class="w-full rounded-md"
-              :ui="{ 
-                base: 'bg-white/10 border-gray-600 text-white placeholder-gray-400 px-4 py-4'
-              }"
-            />
-          </div>
+
           <UIButton 
             type="submit"
             variant="primary"

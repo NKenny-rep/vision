@@ -37,7 +37,7 @@ const handleCancel = () => {
 </script>
 
 <template>
-  <UModal :open="open" @update:open="emit('update:open', $event)">
+  <UModal :open="open" :title="title" :description="message" @update:open="emit('update:open', $event)">
     <template #body>
       <div class="flex items-start gap-4">
         <div class="shrink-0">

@@ -9,7 +9,7 @@ definePageMeta({
 
 const { t } = useI18n();
 const localePath = useLocalePath();
-const { showInfo, showError, showSuccess } = useToastNotification();
+const { showInfo: _showInfo, showError, showSuccess } = useToastNotification();
 const route = useRoute();
 
 const cookieLoginEmail = useCookie<string|null>('login_email', {
@@ -52,23 +52,6 @@ const fields: AuthFormField[] = [
   },
 ];
 
-const providers = [
-  {
-    label: t('auth.providers.google'),
-    icon: 'i-simple-icons-google',
-    onClick: () => {
-      showInfo(t('auth.providers.continueWith', { provider: 'Google' }), t('auth.providers.google'));
-    },
-  },
-  {
-    label: t('auth.providers.github'),
-    icon: 'i-simple-icons-github',
-    onClick: () => {
-      showInfo(t('auth.providers.continueWith', { provider: 'GitHub' }), t('auth.providers.github'));
-    },
-  },
-];
-
 const schema = z.object({
   email: z.email(t('auth.login.emailInvalid')),
   password: z
@@ -105,14 +88,13 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
 
 <template>
   <div class="flex flex-col items-center justify-center gap-4 p-4">
-    <UPageCard class="w-full max-w-2xl lg:max-w-4xl">
+    <UPageCard class="w-full max-w-xl lg:max-w-xl flex items-center justify-center h-[50vh]">
       <UAuthForm
         :schema="schema"
         :title="$t('auth.login.title')"
         :description="$t('auth.login.emailPlaceholder')"
         icon="i-lucide-user"
         :fields="fields"
-        :providers="providers"
         :loading="isPosting"
         :disabled="isPosting"
         :ui="{

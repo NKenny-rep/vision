@@ -32,27 +32,24 @@ const { data: moviesData, pending: isLoading, error } = await useAsyncData(
 const movies = computed(() => moviesData.value || [])
 const featuredMovie = computed(() => movies.value[0] || null)
 
-// Organize movies by genre (Single Responsibility: genre organization)
+// Custom categories with specific labels
 const categories = computed(() => {
-  const genreMap = new Map<string, OMDBMovie[]>()
+  const allMovies = movies.value
+  if (allMovies.length === 0) return []
   
-  movies.value.forEach(movie => {
-    if (movie.Genre) {
-      const genres = movie.Genre.split(',').map(g => g.trim())
-      
-      genres.forEach(genre => {
-        if (!genreMap.has(genre)) {
-          genreMap.set(genre, [])
-        }
-        genreMap.get(genre)!.push(movie)
-      })
-    }
-  })
+  // Helper to get a subset of movies
+  const getMovies = (start: number, count: number) => 
+    allMovies.slice(start, Math.min(start + count, allMovies.length))
   
-  return Array.from(genreMap.entries())
-    .map(([title, videos]) => ({ title, videos }))
-    .sort((a, b) => b.videos.length - a.videos.length)
-    .slice(0, BROWSE.MAX_GENRE_CATEGORIES)
+  return [
+    { title: 'Featured Movies', videos: getMovies(0, 10) },
+    { title: 'TOP 10 Movies', videos: getMovies(0, 10).sort((a, b) => parseFloat(b.imdbRating || '0') - parseFloat(a.imdbRating || '0')).slice(0, 10) },
+    { title: 'TOP 10 Series', videos: getMovies(0, 10).filter(m => m.Type === 'series').slice(0, 10) },
+    { title: 'Hollywood Selection', videos: getMovies(10, 10) },
+    { title: 'Asian Selection', videos: getMovies(20, 10) },
+    { title: 'Latin Selection', videos: getMovies(30, 10) },
+    { title: 'Oldie Goldies', videos: allMovies.filter(m => parseInt(m.Year) < 2000).slice(0, 10) }
+  ].filter(cat => cat.videos.length > 0)
 })
 
 // Helper: Get poster URL with fallback (Single Responsibility: image handling)
@@ -96,25 +93,27 @@ const getPosterUrl = (movie: OMDBMovie) => {
             <p class="text-base md:text-lg text-gray-200 mb-6 max-w-2xl line-clamp-3">
               {{ featuredMovie.Plot }}
             </p>
-            <div class="flex flex-wrap gap-3 mb-4">
-              <UIButton
-                :to="localePath(`/watch/${featuredMovie.imdbID}`)"
-                variant="primary"
-                size="xl"
-                icon="i-heroicons-play"
-                :aria-label="$t('movies.playNow')"
-              >
-                {{ $t('movies.playNow') }}
-              </UIButton>
-              <UIButton
-                variant="secondary"
-                size="xl"
-                icon="i-heroicons-information-circle"
-                :aria-label="$t('movies.moreInfo')"
-              >
-                {{ $t('movies.moreInfo') }}
-              </UIButton>
-            </div>
+            <ClientOnly>
+              <div class="flex flex-wrap gap-3 mb-4">
+                <UIButton
+                  :to="localePath(`/watch/${featuredMovie.imdbID}`)"
+                  variant="primary"
+                  size="xl"
+                  icon="i-heroicons-play"
+                  :aria-label="$t('movies.playNow')"
+                >
+                  {{ $t('movies.playNow') }}
+                </UIButton>
+                <UIButton
+                  variant="secondary"
+                  size="xl"
+                  icon="i-heroicons-information-circle"
+                  :aria-label="$t('movies.moreInfo')"
+                >
+                  {{ $t('movies.moreInfo') }}
+                </UIButton>
+              </div>
+            </ClientOnly>
             <div class="flex flex-wrap gap-3 text-sm text-gray-300">
               <span>{{ featuredMovie.Year }}</span>
               <span>•</span>
@@ -132,7 +131,7 @@ const getPosterUrl = (movie: OMDBMovie) => {
       </section>
 
       <!-- Categories -->
-      <div v-if="categories.length > 0" class="container mx-auto px-4 pb-20 space-y-12">
+      <div v-if="categories.length > 0" class="container mx-auto pb-20 space-y-12 overflow-visible">
         <MovieGenreSection
           v-for="category in categories"
           :key="category.title"

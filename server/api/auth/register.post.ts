@@ -1,13 +1,13 @@
 import bcrypt from 'bcrypt'
 import { eq } from 'drizzle-orm'
-import { useDB, users, roles, userSubscriptions } from '../../database'
+import { useDB, users, roles, userSubscriptions, paymentMethods } from '../../database'
 
 /**
  * Register API Endpoint
- * Creates a new user account with subscription
+ * Creates a new user account with subscription and optional payment method
  */
 export default defineEventHandler(async (event) => {
-  const { email, password, name, phone, avatar, planId } = await readBody(event)
+  const { email, password, name, phone, avatar, planId, paymentMethod } = await readBody(event)
 
   // Validation
   if (!email || !password || !name) {
@@ -96,6 +96,21 @@ export default defineEventHandler(async (event) => {
         startDate: new Date(),
         autoRenew: true,
       })
+
+    // Create payment method if provided
+    if (paymentMethod && paymentMethod.cardLast4 && paymentMethod.cardBrand) {
+      await db
+        .insert(paymentMethods)
+        .values({
+          userId: newUser.id,
+          paymentTypeId: paymentMethod.paymentTypeId,
+          cardLast4: paymentMethod.cardLast4,
+          cardBrand: paymentMethod.cardBrand,
+          expiryMonth: paymentMethod.expiryMonth,
+          expiryYear: paymentMethod.expiryYear,
+          isDefault: paymentMethod.isDefault ?? true,
+        })
+    }
 
     // Set user session
     await setUserSession(event, {

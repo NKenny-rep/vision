@@ -25,7 +25,11 @@
     "name": "Name",
     "phone": "Phone",
     "avatar": "Avatar",
-    "user": "User"
+    "user": "User",
+    "isRequired": "is required",
+    "pleaseWait": "Please wait...",
+    "validating": "Validating...",
+    "remove": "Remove"
   },
   "meta": {
     "title": "VideoVision - Stream Unlimited Movies & TV Shows",
@@ -66,10 +70,15 @@
     },
     "register": {
       "title": "Sign Up",
+      "subtitle": "Create your account to start streaming",
       "name": "Full name",
       "email": "Email address",
       "password": "Password",
       "confirmPassword": "Confirm password",
+      "personalInfo": "Personal Information",
+      "choosePlan": "Choose Your Plan",
+      "choosePlanDescription": "Select your plan and add payment method to complete registration",
+      "submit": "Create Account",
       "signUpButton": "Create Account",
       "haveAccount": "Already have an account?",
       "signInLink": "Sign in",
@@ -78,7 +87,12 @@
       "passwordPlaceholder": "Create a password",
       "confirmPasswordPlaceholder": "Confirm your password",
       "nameRequired": "Name is required",
-      "passwordsNotMatch": "Passwords do not match"
+      "passwordsNotMatch": "Passwords do not match",
+      "planRequired": "Please select a subscription plan",
+      "paymentRequired": "Payment method is required to complete registration",
+      "completePaymentFirst": "Please complete payment information to select a plan",
+      "success": "Account created successfully! Welcome to VideoVision.",
+      "failed": "Failed to create account. Please try again."
     },
     "providers": {
       "google": "Google",
@@ -224,7 +238,14 @@
     "title": "Profile",
     "personalInfo": "Personal Information",
     "paymentMethods": "Payment Methods",
+    "paymentMethod": "Payment Method",
     "addPayment": "Add Payment Method",
+    "paymentType": "Payment Type",
+    "cardBrand": "Card Brand",
+    "cardLast4": "Last 4 Digits",
+    "expiryMonth": "Expiry Month",
+    "expiryYear": "Expiry Year",
+    "setAsDefault": "Set as default payment method",
     "messages": {
       "updateSuccess": "Profile updated successfully",
       "paymentAdded": "Payment method added successfully",
@@ -235,6 +256,32 @@
       "updateFailed": "Failed to update profile",
       "paymentAddFailed": "Failed to add payment method",
       "paymentRemoveFailed": "Failed to remove payment method"
+    },
+    "subscription": {
+      "title": "Subscription",
+      "noSubscription": "No active subscription",
+      "subscribe": "Subscribe Now",
+      "changePlan": "Change Plan",
+      "cancelSubscription": "Cancel Subscription",
+      "selectPlan": "Select a Plan",
+      "selectNewPlan": "Select New Plan",
+      "currentPlan": "Current Plan",
+      "confirmChangeTitle": "Confirm Plan Change",
+      "confirmSubscribeTitle": "Confirm Subscription",
+      "confirmChangeMessage": "Are you sure you want to change your plan?",
+      "confirmSubscribeMessage": "Are you sure you want to subscribe to this plan?",
+      "confirmChange": "Change Plan",
+      "confirmSubscribe": "Subscribe",
+      "cancelConfirm": "Are you sure you want to cancel your subscription?",
+      "subscribed": "Successfully subscribed",
+      "planChanged": "Plan changed successfully",
+      "cancelled": "Subscription cancelled",
+      "subscribeFailed": "Failed to subscribe",
+      "changeFailed": "Failed to change plan",
+      "cancelFailed": "Failed to cancel subscription",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "autoRenew": "Auto Renew"
     }
   },
   "admin": {

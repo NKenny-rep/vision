@@ -33,12 +33,7 @@ export default defineEventHandler(async (event) => {
       })
       .from(userSubscriptions)
       .innerJoin(subscriptionPlans, eq(userSubscriptions.planId, subscriptionPlans.id))
-      .where(
-        and(
-          eq(userSubscriptions.userId, session.user.id),
-          eq(userSubscriptions.status, 'active')
-        )
-      )
+      .where(eq(userSubscriptions.userId, session.user.id))
       .orderBy(desc(userSubscriptions.createdAt))
       .limit(1)
 

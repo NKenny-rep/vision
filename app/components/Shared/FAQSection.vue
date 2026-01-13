@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { t } = useI18n()
+
 interface FAQItem {
   label: string
   content: string
@@ -13,14 +15,15 @@ interface Props {
   buttonText?: string
 }
 
-const _props = withDefaults(defineProps<Props>(), {
-  heading: 'Frequently Asked Questions',
+const props = withDefaults(defineProps<Props>(), {
   items: () => [],
-  showCta: true,
-  ctaText: 'Ready to watch? Enter your email to create or restart your membership.',
-  emailPlaceholder: 'Email address',
-  buttonText: 'Get Started'
+  showCta: true
 })
+
+const displayHeading = computed(() => props.heading || t('landing.faq.heading'))
+const displayCtaText = computed(() => props.ctaText || 'Ready to watch? Enter your email to create or restart your membership.')
+const displayEmailPlaceholder = computed(() => props.emailPlaceholder || 'Email address')
+const displayButtonText = computed(() => props.buttonText || 'Get Started')
 
 const email = ref('')
 
@@ -39,7 +42,7 @@ const handleSignup = () => {
   <section class="py-20 bg-black" aria-labelledby="faq-heading">
     <div class="container mx-auto px-4 max-w-4xl">
       <h2 id="faq-heading" class="text-4xl md:text-5xl font-bold text-white text-center mb-12">
-        {{ heading.split('Questions')[0] }}<span class="text-orange-500">Questions</span>
+        {{ displayHeading }}
       </h2>
 
       <UAccordion 
@@ -54,7 +57,7 @@ const handleSignup = () => {
       <!-- CTA after FAQ -->
       <div v-if="showCta" class="text-center mt-16">
         <p class="text-lg text-gray-400 mb-6">
-          {{ ctaText }}
+          {{ displayCtaText }}
         </p>
         <form 
           class="flex flex-col md:flex-row gap-4 justify-center items-center max-w-2xl mx-auto" 
@@ -64,7 +67,7 @@ const handleSignup = () => {
             <UInput
               v-model="email"
               type="email"
-              :placeholder="emailPlaceholder"
+              :placeholder="displayEmailPlaceholder"
               size="xl"
               required
               class="w-full rounded-md"
@@ -79,7 +82,7 @@ const handleSignup = () => {
             size="xl"
             trailing-icon="i-heroicons-chevron-right"
           >
-            {{ buttonText }}
+            {{ displayButtonText }}
           </UIButton>
         </form>
       </div>

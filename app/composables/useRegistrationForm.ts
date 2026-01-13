@@ -1,4 +1,5 @@
 import * as z from 'zod'
+import type { PaymentMethodData } from '~/composables/usePaymentValidation'
 
 export interface RegistrationFormData {
   name: string
@@ -8,6 +9,7 @@ export interface RegistrationFormData {
   confirmPassword: string
   avatar: string
   planId: number | null
+  paymentMethod: PaymentMethodData | null
 }
 
 export const useRegistrationForm = () => {
@@ -24,6 +26,7 @@ export const useRegistrationForm = () => {
     confirmPassword: '',
     avatar: '',
     planId: null,
+    paymentMethod: null,
   })
 
   const isSubmitting = ref(false)
@@ -76,6 +79,7 @@ export const useRegistrationForm = () => {
           password: validation.data.password,
           avatar: validation.data.avatar || undefined,
           planId: validation.data.planId,
+          paymentMethod: formData.value.paymentMethod || undefined,
         }
       })
 

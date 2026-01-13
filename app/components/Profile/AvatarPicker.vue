@@ -4,13 +4,16 @@ import { AVATAR_STYLES } from '~/constants'
 interface Props {
   currentAvatar: string
   userName: string
+  compact?: boolean
 }
 
 interface Emits {
   (e: 'update:avatar', value: string): void
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  compact: false
+})
 const emit = defineEmits<Emits>()
 
 const showPicker = ref(false)
@@ -37,13 +40,6 @@ const selectAvatar = (style: string) => {
   showPicker.value = false
 }
 
-const randomizeAvatar = () => {
-  const newSeed = 'user' + Date.now() + Math.random()
-  avatarSeed.value = newSeed
-  const newUrl = generateAvatarUrl(selectedStyle.value, newSeed)
-  emit('update:avatar', newUrl)
-}
-
 // Initialize seed from current avatar or username
 watch(() => props.currentAvatar, (newAvatar) => {
   if (newAvatar) {
@@ -62,32 +58,47 @@ watch(() => props.currentAvatar, (newAvatar) => {
 
 <template>
   <div>
-    <div class="flex gap-4">
+    <div :class="compact ? 'flex gap-2' : 'flex gap-4'">
       <input
         :value="currentAvatar"
         type="url"
         placeholder="https://example.com/avatar.jpg"
-        class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary"
+        :class="[
+          'flex-1 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary',
+          compact ? 'px-2 py-1.5 text-sm' : 'px-4 py-2'
+        ]"
         @input="emit('update:avatar', ($event.target as HTMLInputElement).value)"
       >
       <button
         type="button"
-        class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+        :class="[
+          'border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 whitespace-nowrap',
+          compact ? 'px-2 py-1.5 text-xs' : 'px-4 py-2'
+        ]"
         @click="showPicker = !showPicker"
       >
-        {{ showPicker ? 'Close' : 'Choose Avatar' }}
+        {{ showPicker ? 'Close' : (compact ? 'Choose' : 'Choose Avatar') }}
       </button>
     </div>
 
     <!-- Avatar Picker -->
-    <div v-if="showPicker" class="mt-4 p-4 border border-gray-300 dark:border-gray-600 rounded-lg">
-      <h3 class="font-semibold mb-4">Choose Avatar Style</h3>
-      <div class="grid grid-cols-4 gap-4 mb-4">
+    <div
+v-if="showPicker" :class="[
+      'mt-3 border border-gray-300 dark:border-gray-600 rounded-lg',
+      compact ? 'p-2' : 'p-4'
+    ]">
+      <h3 :class="compact ? 'text-sm font-semibold mb-2' : 'font-semibold mb-4'">Choose Avatar Style</h3>
+      <div
+:class="[
+        'grid mb-3',
+        compact ? 'grid-cols-3 gap-2' : 'grid-cols-4 gap-4 mb-4'
+      ]">
         <div
           v-for="style in AVATAR_STYLES"
           :key="style"
           :class="[
-            'cursor-pointer p-2 rounded-lg border-2 transition',
+            'cursor-pointer rounded-lg border-2 transition',
+            compact ? 'p-1' : 'p-2',
             selectedStyle === style
               ? 'border-primary bg-primary/10'
               : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
@@ -97,25 +108,21 @@ watch(() => props.currentAvatar, (newAvatar) => {
           <NuxtImg
             :src="generateAvatarUrl(style, avatarSeed)"
             :alt="style"
-            class="w-full aspect-square rounded-lg mb-2"
+            :class="compact ? 'w-full aspect-square rounded mb-1' : 'w-full aspect-square rounded-lg mb-2'"
           />
-          <p class="text-xs text-center capitalize">{{ style.replace('-', ' ') }}</p>
+          <p :class="compact ? 'text-[10px] text-center capitalize' : 'text-xs text-center capitalize'">{{ style.replace('-', ' ') }}</p>
         </div>
       </div>
-      <div class="flex gap-2">
+      <div :class="compact ? 'flex gap-1.5' : 'flex gap-2'">
         <button
           type="button"
-          class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark"
+          :class="[
+            'w-full bg-primary text-white rounded-lg hover:bg-primary-dark',
+            compact ? 'px-2 py-1.5 text-xs' : 'px-4 py-2'
+          ]"
           @click="selectAvatar(selectedStyle)"
         >
           Use This Avatar
-        </button>
-        <button
-          type="button"
-          class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
-          @click="randomizeAvatar"
-        >
-          🎲 Randomize
         </button>
       </div>
     </div>

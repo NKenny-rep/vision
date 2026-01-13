@@ -169,7 +169,7 @@ const editFormData = computed(() => selectedUser.value ? {
       />
     </div>
 
-    <UModal v-model="modals.create" class="sm:max-w-2xl">
+    <UModal v-model="modals.create" :title="t('admin.users.createUser')" class="sm:max-w-2xl">
       <div class="p-6">
         <h2 class="text-2xl font-bold text-white mb-6">
           {{ t('admin.users.createUser') }}
@@ -182,7 +182,7 @@ const editFormData = computed(() => selectedUser.value ? {
       </div>
     </UModal>
 
-    <UModal v-model="modals.edit" class="sm:max-w-2xl">
+    <UModal v-model="modals.edit" :title="t('admin.users.editUser')" class="sm:max-w-2xl">
       <div class="p-6">
         <h2 class="text-2xl font-bold text-white mb-6">
           {{ t('admin.users.editUser') }}
@@ -197,7 +197,7 @@ const editFormData = computed(() => selectedUser.value ? {
       </div>
     </UModal>
 
-    <UModal v-model="modals.delete">
+    <UModal v-model="modals.delete" :title="t('admin.users.deleteUser')" :description="t('admin.users.confirmDelete')">
       <div class="p-6">
         <div class="flex items-start gap-4">
           <div class="shrink-0">

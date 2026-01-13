@@ -29,6 +29,21 @@ export function getUserInitials(user: UserLike | null | undefined): string {
     .slice(0, 2)
 }
 
+/**
+ * Get initials from a name string
+ */
+export function getInitialsFromName(name: string | null | undefined): string {
+  if (!name) return 'U'
+  return name
+    .trim()
+    .split(' ')
+    .filter(word => word.length > 0)
+    .map(word => word[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
+}
+
 export function getUserAvatar(user: UserLike | null | undefined): string | null {
   if (!user?.avatar) return null
   return user.avatar

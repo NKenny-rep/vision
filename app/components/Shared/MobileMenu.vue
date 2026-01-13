@@ -122,16 +122,18 @@ const toggleLanguage = () => {
             {{ $t(link.labelKey) }}
           </UIButton>
           
-          <UIButton 
-            v-if="isAdmin"
-            :to="routes.admin.dashboard()" 
-            variant="soft"
-            size="lg"
-            block
-            :icon="NAV_LINKS.ADMIN.icon"
-          >
-            {{ $t(NAV_LINKS.ADMIN.labelKey) }}
-          </UIButton>
+          <ClientOnly>
+            <UIButton 
+              v-if="isAdmin"
+              :to="routes.admin.dashboard()" 
+              variant="soft"
+              size="lg"
+              block
+              :icon="NAV_LINKS.ADMIN.icon"
+            >
+              {{ $t(NAV_LINKS.ADMIN.labelKey) }}
+            </UIButton>
+          </ClientOnly>
           
           <UIButton 
             :variant="NAV_LINKS.LOGOUT.variant"

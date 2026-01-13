@@ -33,7 +33,11 @@
     "user": "User",
     "selected": "Selected",
     "select": "Select Plan",
-    "popular": "POPULAR"
+    "popular": "POPULAR",
+    "isRequired": "is required",
+    "pleaseWait": "Please wait...",
+    "validating": "Validating...",
+    "remove": "Remove"
   },
   "meta": {
     "title": "VideoVision - Stream Unlimited Movies & TV Shows",
@@ -74,9 +78,10 @@
     },
     "register": {
       "title": "Sign Up",
-      "subtitle": "Create your account and start watching",
+      "subtitle": "Create your account to start streaming",
       "personalInfo": "Personal Information",
       "choosePlan": "Choose Your Plan",
+      "choosePlanDescription": "Select your plan and add payment method to complete registration",
       "name": "Full name",
       "email": "Email address",
       "password": "Password",
@@ -93,8 +98,10 @@
       "passwordsNotMatch": "Passwords do not match",
       "selectPlan": "Select a subscription plan",
       "planRequired": "Please select a subscription plan",
-      "success": "Account created successfully!",
-      "failed": "Registration failed. Please try again."
+      "paymentRequired": "Payment method is required to complete registration",
+      "completePaymentFirst": "Please complete payment information to select a plan",
+      "success": "Account created successfully! Welcome to VideoVision.",
+      "failed": "Failed to create account. Please try again."
     },
     "providers": {
       "google": "Google",
@@ -242,7 +249,14 @@
     "title": "Profile",
     "personalInfo": "Personal Information",
     "paymentMethods": "Payment Methods",
+    "paymentMethod": "Payment Method",
     "addPayment": "Add Payment Method",
+    "paymentType": "Payment Type",
+    "cardBrand": "Card Brand",
+    "cardLast4": "Last 4 Digits",
+    "expiryMonth": "Expiry Month",
+    "expiryYear": "Expiry Year",
+    "setAsDefault": "Set as default payment method",
     "subscription": {
       "title": "Subscription",
       "noSubscription": "No active subscription",
@@ -298,7 +312,10 @@
         "totalVideos": "Total Videos",
         "activeUsers": "Active Users",
         "totalViews": "Total Views",
-        "revenue": "Revenue"
+        "revenue": "Revenue",
+        "totalUsers": "Total Users",
+        "mostUsedPlan": "Most Used Plan",
+        "mostSavedMovie": "Most Saved Movie"
       }
     },
     "analytics": {

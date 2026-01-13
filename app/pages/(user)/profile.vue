@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { UserProfile, ProfileUpdateData, PaymentMethodData, UserSubscription } from '~/composables/useProfile'
+import { getInitialsFromName } from '~/utils/userHelpers'
 
 const { t } = useI18n()
 const { showSuccess, showError } = useToastNotification()
@@ -109,11 +110,19 @@ onMounted(async () => {
     <div v-else-if="profile" class="max-w-4xl mx-auto space-y-8">
       <!-- Profile Header -->
       <div class="flex items-center gap-6">
-        <NuxtImg
-          :src="profile.avatar || '/default-avatar.png'"
-          :alt="profile.name"
-          class="w-24 h-24 rounded-full object-cover"
-        />
+        <div v-if="profile.avatar" class="w-24 h-24 rounded-full overflow-hidden">
+          <NuxtImg
+            :src="profile.avatar"
+            :alt="profile.name"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <div
+          v-else
+          class="w-24 h-24 rounded-full bg-primary text-white flex items-center justify-center text-3xl font-bold"
+        >
+          {{ getInitialsFromName(profile.name) }}
+        </div>
         <div>
           <h1 class="text-3xl font-bold">{{ profile.name }}</h1>
           <p class="text-gray-600 dark:text-gray-400">{{ profile.email }}</p>

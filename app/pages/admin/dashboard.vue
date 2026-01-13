@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ADMIN_ROUTES } from '~/constants/routes'
-
 definePageMeta({
   layout: 'dashboard-layout',
   middleware: ['auth', 'admin']
@@ -10,54 +8,78 @@ const { t: _t } = useI18n()
 const routes = useAppRoutes()
 
 // Admin quick actions configuration (SOLID: Open/Closed Principle)
+
+// Only enable user management quick action
 const adminActions = [
   {
     to: routes.admin.users(),
     icon: 'i-heroicons-users',
     labelKey: 'admin.users.title',
     variant: 'primary' as const
-  },
-  {
-    to: ADMIN_ROUTES.VIDEOS,
-    icon: 'i-heroicons-film',
-    labelKey: 'admin.videos.title',
-    variant: 'secondary' as const
-  },
-  {
-    to: ADMIN_ROUTES.ANALYTICS,
-    icon: 'i-heroicons-chart-bar',
-    labelKey: 'admin.analytics.title',
-    variant: 'secondary' as const
   }
 ]
 
-// Dashboard stats configuration (DRY principle)
-const stats = [
-  {
-    icon: 'i-heroicons-film',
-    labelKey: 'admin.dashboard.stats.totalVideos',
-    value: '128',
-    color: 'orange'
-  },
-  {
-    icon: 'i-heroicons-users',
-    labelKey: 'admin.dashboard.stats.activeUsers',
-    value: '1,234',
-    color: 'orange'
-  },
-  {
-    icon: 'i-heroicons-eye',
-    labelKey: 'admin.dashboard.stats.totalViews',
-    value: '45.2K',
-    color: 'orange'
-  },
-  {
-    icon: 'i-heroicons-currency-dollar',
-    labelKey: 'admin.dashboard.stats.revenue',
-    value: '$12.5K',
-    color: 'orange'
+// Fetch stats on client side after authentication
+interface StatsData {
+  totalUsers: number
+  totalRevenue: number
+  mostUsedPlan: { name: string; planId: number; count: number } | null
+  mostSavedMovie: { title: string; omdbId: string; count: number } | null
+}
+
+const statsData = ref<StatsData | null>(null)
+const loading = ref(true)
+
+// Computed stats based on fetched data
+const stats = computed(() => {
+  if (!statsData.value) {
+    return [
+      { icon: 'i-heroicons-users', labelKey: 'admin.dashboard.stats.totalUsers', value: '...', color: 'orange' },
+      { icon: 'i-heroicons-currency-dollar', labelKey: 'admin.dashboard.stats.revenue', value: '...', color: 'orange' },
+      { icon: 'i-heroicons-cog-6-tooth', labelKey: 'admin.dashboard.stats.mostUsedPlan', value: '...', color: 'orange' },
+      { icon: 'i-heroicons-bookmark', labelKey: 'admin.dashboard.stats.mostSavedMovie', value: '...', color: 'orange' },
+    ]
   }
-]
+
+  return [
+    {
+      icon: 'i-heroicons-users',
+      labelKey: 'admin.dashboard.stats.totalUsers',
+      value: statsData.value.totalUsers,
+      color: 'orange',
+    },
+    {
+      icon: 'i-heroicons-currency-dollar',
+      labelKey: 'admin.dashboard.stats.revenue',
+      value: `$${(Number(statsData.value.totalRevenue) / 100).toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
+      color: 'orange',
+    },
+    {
+      icon: 'i-heroicons-cog-6-tooth',
+      labelKey: 'admin.dashboard.stats.mostUsedPlan',
+      value: statsData.value.mostUsedPlan?.name || '-',
+      color: 'orange',
+    },
+    {
+      icon: 'i-heroicons-bookmark',
+      labelKey: 'admin.dashboard.stats.mostSavedMovie',
+      value: statsData.value.mostSavedMovie?.title || '-',
+      color: 'orange',
+    },
+  ]
+})
+
+// Fetch stats after component is mounted
+onMounted(async () => {
+  try {
+    const data = await $fetch<StatsData>('/api/admin/stats')
+    statsData.value = data
+  } catch (error) {
+    console.error('Failed to fetch admin stats:', error)
+  } finally {
+    loading.value = false
+  }
+})
 </script>
 
 <template>

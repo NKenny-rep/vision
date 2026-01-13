@@ -6,9 +6,15 @@ const routes = useAppRoutes()
 interface Props {
   isLoggedIn: boolean
   isAdmin: boolean
+  hideAuthButtons?: boolean
 }
 
-defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  hideAuthButtons: false
+})
+// Ensure stable value during hydration
+
+const shouldShowAuthButtons = computed(() => !props.hideAuthButtons)
 </script>
 
 <template>
@@ -27,7 +33,7 @@ defineProps<Props>()
         <NuxtLink 
           v-for="link in NAV_LINKS.AUTHENTICATED"
           :key="link.path"
-          :to="link.path" 
+          :to="$localePath(link.path)" 
           class="text-white hover:text-orange-500 transition-colors font-medium"
           active-class="text-orange-500"
         >
@@ -41,11 +47,13 @@ defineProps<Props>()
       <!-- Language Switcher -->
       <SharedLanguageSwitcher />
 
+      <!-- TEMPORARILY COMMENTED FOR DEBUGGING HYDRATION -->
       <!-- Search -->
-      <SharedSearchBar v-if="isLoggedIn" />
+      <SharedSearchBar v-if="isLoggedIn && shouldShowAuthButtons" />
 
+      <!-- Auth Buttons (mutually exclusive) -->
       <!-- Not logged in -->
-      <template v-if="!isLoggedIn">
+      <template v-if="!isLoggedIn && shouldShowAuthButtons">
         <UIButton 
           v-for="(button, index) in NAV_LINKS.GUEST"
           :key="index"
@@ -59,19 +67,19 @@ defineProps<Props>()
       </template>
 
       <!-- Logged in -->
-      <template v-else>
-        <!-- Admin Dashboard Button (only for admins) -->
-        <UIButton 
-          v-if="isAdmin"
-          :to="routes.admin.dashboard()" 
-          variant="soft"
-          size="lg"
-          :icon="NAV_LINKS.ADMIN.icon"
-        >
-          {{ $t(NAV_LINKS.ADMIN.labelKey) }}
-        </UIButton>
+      <template v-else-if="isLoggedIn && shouldShowAuthButtons">
+        <ClientOnly>
+          <UIButton 
+            v-if="isAdmin"
+            :to="routes.admin.dashboard()" 
+            variant="primary"
+            size="lg"
+            :icon="NAV_LINKS.ADMIN.icon"
+          >
+            {{ $t(NAV_LINKS.ADMIN.labelKey) }}
+          </UIButton>
+        </ClientOnly>
 
-        <!-- User Menu -->
         <SharedUserMenu />
       </template>
     </div>
