@@ -1,25 +1,24 @@
 <script setup lang="ts">
-import type { UserProfile, ProfileUpdateData, PaymentMethodData, UserSubscription } from '~/composables/useProfile'
+import type { ProfileUpdateData } from '~/composables/useProfile'
+import type { PaymentMethodData } from '~/composables/usePaymentValidation'
 import { getInitialsFromName } from '~/utils/userHelpers'
 
 const { t } = useI18n()
 const { showSuccess, showError } = useToastNotification()
 
-// Composables - following Nuxt patterns
 const { 
-  getProfile, 
-  updateProfile: updateProfileApi, 
+  profile,
+  subscription,
+  paymentTypes,
+  loading,
+  fetchProfile,
+  fetchSubscription,
+  updateProfile: updateProfileApi,
   addPaymentMethod: addPaymentMethodApi,
   removePaymentMethod: removePaymentMethodApi,
-  getSubscription,
-  getPaymentTypes,
-  paymentTypes 
+  getPaymentTypes
 } = useProfile()
 
-// State
-const profile = ref<UserProfile | null>(null)
-const subscription = ref<UserSubscription | null>(null)
-const loading = ref(true)
 const saving = ref(false)
 const showAddPayment = ref(false)
 
@@ -29,42 +28,22 @@ const formData = ref<ProfileUpdateData>({
   avatar: ''
 })
 
-// Data operations - delegate to composable (Separation of Concerns)
-const fetchProfile = async () => {
-  loading.value = true
-  try {
-    const data = await getProfile()
-    
-    if (data) {
-      profile.value = data
-      formData.value = {
-        name: data.name,
-        phone: data.phone || '',
-        avatar: data.avatar || ''
-      }
+watch(profile, (newProfile) => {
+  if (newProfile) {
+    formData.value = {
+      name: newProfile.name,
+      phone: newProfile.phone || '',
+      avatar: newProfile.avatar || ''
     }
-  } catch {
-    showError(t('profile.errors.loadFailed'))
-  } finally {
-    loading.value = false
   }
-}
-
-const fetchSubscription = async () => {
-  try {
-    const data = await getSubscription()
-    subscription.value = data
-  } catch (error) {
-    console.error('Failed to load subscription:', error)
-  }
-}
+})
 
 const handleUpdateProfile = async () => {
   saving.value = true
   try {
     await updateProfileApi(formData.value)
-    showSuccess(t('profile.messages.updateSuccess'))
     await fetchProfile()
+    showSuccess(t('profile.messages.updateSuccess'))
   } catch {
     showError(t('profile.errors.updateFailed'))
   } finally {
@@ -75,9 +54,9 @@ const handleUpdateProfile = async () => {
 const handleAddPayment = async (paymentData: PaymentMethodData) => {
   try {
     await addPaymentMethodApi(paymentData)
+    await fetchProfile()
     showSuccess(t('profile.messages.paymentAdded'))
     showAddPayment.value = false
-    await fetchProfile()
   } catch {
     showError(t('profile.errors.paymentAddFailed'))
   }
@@ -86,14 +65,13 @@ const handleAddPayment = async (paymentData: PaymentMethodData) => {
 const handleRemovePayment = async (paymentMethodId: number) => {
   try {
     await removePaymentMethodApi(paymentMethodId)
-    showSuccess(t('profile.messages.paymentRemoved'))
     await fetchProfile()
+    showSuccess(t('profile.messages.paymentRemoved'))
   } catch {
     showError(t('profile.errors.paymentRemoveFailed'))
   }
 }
 
-// Lifecycle
 onMounted(async () => {
   await getPaymentTypes()
   fetchProfile()
@@ -190,15 +168,15 @@ onMounted(async () => {
         <!-- Add Payment Form Component -->
         <ProfilePaymentMethodForm
           v-if="showAddPayment"
-          :payment-types="paymentTypes"
+          :payment-types="[...(paymentTypes || [])]"
           class="mb-6"
           @submit="handleAddPayment"
           @cancel="showAddPayment = false"
         />
 
         <!-- Payment Methods List Component -->
-        <ProfilePaymentMethodList
-          :payment-methods="profile.paymentMethods"
+        <ProfilePaymentMethodsList
+          :payment-methods="[...(profile?.paymentMethods || [])]"
           @remove="handleRemovePayment"
         />
       </div>

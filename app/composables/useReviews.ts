@@ -1,42 +1,118 @@
-/**
- * useReviews Composable
- * Adapter for review data management
- * 
- * Follows the same pattern as useAuthentication and useMovies:
- * - Abstracts data access layer
- * - Uses $fetch instead of useFetch (not tied to component lifecycle)
- * - Centralizes review business logic
- * - Easy to switch from mock to real API
- */
-
 import type { Review, CreateReviewDTO, ContentType } from '~/types'
 import { SKELETON_TESTING_DELAY_MS, applyTestingDelay } from '~/utils/testing'
 
-export const useReviews = () => {
-  /**
-   * Get all reviews for a specific content item
-   * @param contentId - IMDb ID or content identifier
-   */
+export interface IReviewRepository {
+  getReviews(contentId: string): Promise<Review[]>
+  createReview(data: CreateReviewDTO): Promise<Review>
+  updateReview(id: string, data: Partial<CreateReviewDTO>): Promise<Review>
+  deleteReview(id: string): Promise<void>
+  toggleLike(reviewId: string): Promise<boolean>
+}
+
+class MockReviewRepository implements IReviewRepository {
+  async getReviews(contentId: string): Promise<Review[]> {
+    if (SKELETON_TESTING_DELAY_MS > 0) await applyTestingDelay()
+    return initializeMockReviews(contentId)
+  }
+
+  async createReview(data: CreateReviewDTO): Promise<Review> {
+    const reviews = initializeMockReviews(data.contentId)
+    const newReview: Review = {
+      id: Date.now().toString(),
+      userId: 'current-user',
+      userName: 'Current User',
+      userAvatar: '',
+      contentId: data.contentId,
+      contentType: 'movie',
+      rating: data.rating,
+      comment: data.comment,
+      likes: 0,
+      dislikes: 0,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+    reviews.push(newReview)
+    return newReview
+  }
+
+  async updateReview(id: string, data: Partial<CreateReviewDTO>): Promise<Review> {
+    // Find review across all content IDs
+    for (const reviews of mockReviewsStore.values()) {
+      const existingReview = reviews.find(r => r.id === id)
+      if (existingReview) {
+        Object.assign(existingReview, data, { updatedAt: new Date() })
+        return existingReview
+      }
+    }
+    throw new Error('Review not found')
+  }
+
+  async deleteReview(id: string): Promise<void> {
+    // Find and delete review across all content IDs
+    for (const reviews of mockReviewsStore.values()) {
+      const index = reviews.findIndex(r => r.id === id)
+      if (index !== -1) {
+        reviews.splice(index, 1)
+        return
+      }
+    }
+    throw new Error('Review not found')
+  }
+
+  async toggleLike(reviewId: string): Promise<boolean> {
+    // Find review across all content IDs
+    for (const reviews of mockReviewsStore.values()) {
+      const review = reviews.find(r => r.id === reviewId)
+      if (review) {
+        review.likes = review.likes > 0 ? 0 : 1
+        return review.likes > 0
+      }
+    }
+    throw new Error('Review not found')
+  }
+}
+
+// class ReviewApiAdapter implements IReviewRepository {
+//   async getReviews(contentId: string): Promise<Review[]> {
+//     return await $fetch(`/api/reviews/${contentId}`)
+//   }
+//
+//   async createReview(data: CreateReviewDTO): Promise<Review> {
+//     return await $fetch('/api/reviews', {
+//       method: 'POST',
+//       body: data
+//     })
+//   }
+//
+//   async updateReview(id: string, data: Partial<CreateReviewDTO>): Promise<Review> {
+//     return await $fetch(`/api/reviews/${id}`, {
+//       method: 'PUT',
+//       body: data
+//     })
+//   }
+//
+//   async deleteReview(id: string): Promise<void> {
+//     await $fetch(`/api/reviews/${id}`, { method: 'DELETE' })
+//   }
+//
+//   async toggleLike(reviewId: string): Promise<boolean> {
+//     const result = await $fetch(`/api/reviews/${reviewId}/like`, {
+//       method: 'POST'
+//     })
+//     return result.success
+//   }
+// }
+
+export const useReviews = (repository: IReviewRepository = new MockReviewRepository()) => {
   const getReviews = async (contentId: string): Promise<Review[]> => {
     try {
-      // 🧪 TESTING: Delay to see skeleton
-      if (SKELETON_TESTING_DELAY_MS > 0) await applyTestingDelay()
-      
-      // TODO: Replace with real API call when backend is ready
-      // return await $fetch(`/api/reviews/${contentId}`)
-      
-      // Mock data for now
-      return getMockReviews(contentId)
+      return await repository.getReviews(contentId)
     } catch (error) {
       console.error('Failed to fetch reviews:', error)
       return []
     }
   }
 
-  /**
-   * Create a new review
-   * @param data - Review data (rating, comment, contentId)
-   */
   const createReview = async (
     data: CreateReviewDTO & { 
       userId?: string
@@ -45,71 +121,28 @@ export const useReviews = () => {
     }
   ): Promise<Review | null> => {
     try {
-      // TODO: Replace with real API call
-      // return await $fetch('/api/reviews', {
-      //   method: 'POST',
-      //   body: data
-      // })
-
-      // Mock: Create review locally
-      const newReview: Review = {
-        id: Date.now().toString(),
-        userId: data.userId || 'current-user',
-        userName: data.userName || 'Anonymous',
-        userAvatar: data.userAvatar || '',
-        contentId: data.contentId,
-        contentType: 'movie',
-        rating: data.rating,
-        comment: data.comment,
-        likes: 0,
-        dislikes: 0,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
-
-      return newReview
+      return await repository.createReview(data)
     } catch (error) {
       console.error('Failed to create review:', error)
       return null
     }
   }
 
-  /**
-   * Update an existing review
-   * @param id - Review ID
-   * @param data - Updated review data
-   */
   const updateReview = async (
     id: string, 
     data: Partial<Pick<Review, 'rating' | 'comment'>>
-  ): Promise<boolean> => {
+  ): Promise<Review | null> => {
     try {
-      // TODO: Replace with real API call
-      // await $fetch(`/api/reviews/${id}`, {
-      //   method: 'PUT',
-      //   body: data
-      // })
-
-      console.log('Update review:', id, data)
-      return true
+      return await repository.updateReview(id, data)
     } catch (error) {
       console.error('Failed to update review:', error)
-      return false
+      return null
     }
   }
 
-  /**
-   * Delete a review
-   * @param id - Review ID
-   */
   const deleteReview = async (id: string): Promise<boolean> => {
     try {
-      // TODO: Replace with real API call
-      // await $fetch(`/api/reviews/${id}`, {
-      //   method: 'DELETE'
-      // })
-
-      console.log('Delete review:', id)
+      await repository.deleteReview(id)
       return true
     } catch (error) {
       console.error('Failed to delete review:', error)
@@ -117,19 +150,9 @@ export const useReviews = () => {
     }
   }
 
-  /**
-   * Like/unlike a review
-   * @param id - Review ID
-   */
   const toggleLike = async (id: string): Promise<boolean> => {
     try {
-      // TODO: Replace with real API call
-      // await $fetch(`/api/reviews/${id}/like`, {
-      //   method: 'POST'
-      // })
-
-      console.log('Toggle like on review:', id)
-      return true
+      return await repository.toggleLike(id)
     } catch (error) {
       console.error('Failed to toggle like:', error)
       return false
@@ -145,12 +168,14 @@ export const useReviews = () => {
   }
 }
 
-/**
- * Mock data generator
- * Remove this when real API is implemented
- */
-function getMockReviews(contentId: string): Review[] {
-  return [
+const mockReviewsStore = new Map<string, Review[]>()
+
+function initializeMockReviews(contentId: string): Review[] {
+  if (mockReviewsStore.has(contentId)) {
+    return mockReviewsStore.get(contentId)!
+  }
+  
+  const reviews = [
     {
       id: '1',
       userId: 'user1',
@@ -194,4 +219,7 @@ function getMockReviews(contentId: string): Review[] {
       updatedAt: new Date('2024-01-07')
     }
   ]
+  
+  mockReviewsStore.set(contentId, reviews)
+  return reviews
 }
