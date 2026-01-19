@@ -1,7 +1,4 @@
-/**
- * Authentication Composable (Adapter Pattern)
- * Wraps useUserSession with custom behavior for login, register, logout
- */
+import { API_ROUTES } from '~/constants/apiRoutes'
 
 export const AUTH_REDIRECT_PATHS = {
   LOGIN_SUCCESS: '/browse',
@@ -49,7 +46,7 @@ export const useAuthentication = () => {
     redirectTo: string | null = null
   ) => {
     try {
-      await $fetch('/api/auth/login', {
+      await $fetch(API_ROUTES.AUTH.LOGIN, {
         method: 'POST',
         body: { email, password }
       })
@@ -81,7 +78,7 @@ export const useAuthentication = () => {
     planId?: number
   ) => {
     try {
-      await $fetch('/api/auth/register', {
+      await $fetch(API_ROUTES.AUTH.REGISTER, {
         method: 'POST',
         body: { name, email, password, phone, avatar, planId }
       })

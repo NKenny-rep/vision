@@ -60,6 +60,10 @@
     "userPanel": "User Panel",
     "admin": "Admin"
   },
+  "browse": {
+    "title": "Browse Movies & TV Shows",
+    "description": "Discover thousands of movies and TV shows. Stream unlimited entertainment."
+  },
   "auth": {
     "login": {
       "title": "Sign In",

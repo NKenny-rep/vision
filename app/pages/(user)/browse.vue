@@ -3,10 +3,21 @@ import type { OMDBMovie } from '~/types'
 import { BROWSE } from '~/constants'
 
 const localePath = useLocalePath();
+const { t } = useI18n();
 
 definePageMeta({
   layout: 'default',
   middleware: ['auth']
+})
+
+// SEO Meta Tags
+useSeoMeta({
+  title: `${t('browse.title') || 'Browse Movies & TV Shows'} - ${t('common.appName')}`,
+  description: t('browse.description') || 'Discover thousands of movies and TV shows. Stream unlimited entertainment on VideoVision.',
+  ogTitle: `Browse Movies - ${t('common.appName')}`,
+  ogDescription: 'Explore our extensive library of movies and TV shows',
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
 })
 
 const { getMovie } = useMovies()

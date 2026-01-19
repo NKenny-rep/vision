@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getPosterUrl } from '~/utils/image'
+import { getPosterUrl, MOVIE_PLACEHOLDER_URL } from '~/utils/image'
 
 interface MovieData {
   id: string;
@@ -25,6 +25,21 @@ const sizeClasses = {
   md: 'h-60',
   lg: 'h-72'
 }
+
+// Use a reactive poster source that can be updated on error
+const posterSrc = ref(getPosterUrl(_props.movie.poster))
+const imageLoaded = ref(false)
+const imageError = ref(false)
+
+const handleImageError = () => {
+  console.log('Image load error for:', _props.movie.title)
+  imageError.value = true
+  posterSrc.value = MOVIE_PLACEHOLDER_URL
+}
+
+const handleImageLoad = () => {
+  imageLoaded.value = true
+}
 </script>
 
 <template>
@@ -34,13 +49,15 @@ const sizeClasses = {
       class="block relative rounded-md overflow-hidden transition-all duration-300 hover:scale-105 hover:z-10"
     >
       <NuxtImg
-        :src="getPosterUrl(movie.poster)"
+        :src="posterSrc"
         :alt="movie.title"
-        class="w-full object-cover"
-        :class="sizeClasses[size]"
+        class="w-full object-cover transition-opacity duration-300"
+        :class="[sizeClasses[size], { 'opacity-0': !imageLoaded && !imageError }]"
         loading="lazy"
         width="300"
         height="450"
+        @error="handleImageError"
+        @load="handleImageLoad"
       />
       
       <div class="absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">

@@ -3,6 +3,7 @@ import type { OMDBMovie, Review } from '~/types'
 
 const localePath = useLocalePath()
 const router = useRouter()
+const { t } = useI18n()
 
 definePageMeta({
   layout: 'default',
@@ -30,6 +31,33 @@ const { data: movie, pending: isLoading } = await useAsyncData(
     lazy: true
   }
 )
+
+// SEO Meta Tags
+watchEffect(() => {
+  if (movie.value) {
+    const title = `${movie.value.Title} (${movie.value.Year}) - ${t('common.appName')}`
+    const description = movie.value.Plot && movie.value.Plot !== 'N/A' 
+      ? movie.value.Plot 
+      : `Watch ${movie.value.Title} on ${t('common.appName')}`
+    const poster = movie.value.Poster && movie.value.Poster !== 'N/A' 
+      ? movie.value.Poster 
+      : '/images/default-poster.jpg'
+
+    useSeoMeta({
+      title,
+      description,
+      ogTitle: title,
+      ogDescription: description,
+      ogImage: poster,
+      ogType: 'video.movie',
+      ogUrl: `https://videovision.com/watch/${videoId}`,
+      twitterCard: 'summary_large_image',
+      twitterTitle: title,
+      twitterDescription: description,
+      twitterImage: poster,
+    })
+  }
+})
 
 // Fetch reviews using adapter
 const reviews = ref<Review[]>([])

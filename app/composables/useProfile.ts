@@ -1,15 +1,5 @@
-/**
- * useProfile Composable
- * Adapter for user profile and payment methods management
- * 
- * Follows Nuxt patterns:
- * - Uses $fetch (not tied to component lifecycle)
- * - Centralizes profile business logic
- * - Single Responsibility: profile data operations
- * - Easy to test and maintain
- */
-
 import type { PaymentMethodData } from '~/composables/usePaymentValidation'
+import { API_ROUTES } from '~/constants/apiRoutes'
 
 export interface PaymentType {
   id: number
@@ -66,61 +56,69 @@ export interface UserSubscription {
 }
 
 export const useProfile = () => {
+  const profile = ref<UserProfile | null>(null)
+  const subscription = ref<UserSubscription | null>(null)
   const paymentTypes = ref<PaymentType[]>([])
+  const loading = ref(false)
+  const error = ref<string | null>(null)
 
-  /**
-   * Get available payment types
-   */
   const getPaymentTypes = async (): Promise<PaymentType[]> => {
     try {
-      const types = await $fetch<PaymentType[]>('/api/payment-types')
+      const types = await $fetch<PaymentType[]>(API_ROUTES.USER.PAYMENT_TYPES)
       paymentTypes.value = types
       return types
-    } catch (error) {
-      console.error('Failed to fetch payment types:', error)
+    } catch (err) {
+      console.error('Failed to fetch payment types:', err)
       return []
     }
   }
 
-  /**
-   * Get user profile with payment methods
-   */
-  const getProfile = async (): Promise<UserProfile | null> => {
+  const fetchProfile = async (): Promise<UserProfile | null> => {
+    loading.value = true
+    error.value = null
+    
     try {
-      const response = await $fetch<{ success: boolean; profile: UserProfile }>('/api/user/profile')
-      return response.success ? response.profile : null
-    } catch (error: unknown) {
+      const response = await $fetch<{ success: boolean; profile: UserProfile }>(API_ROUTES.USER.PROFILE)
+      if (response.success) {
+        profile.value = response.profile
+        return response.profile
+      }
+      return null
+    } catch (err: unknown) {
       // If unauthorized (401), redirect to login
-      if (typeof error === 'object' && error !== null && 'statusCode' in error && (error as { statusCode: number }).statusCode === 401) {
+      if (typeof err === 'object' && err !== null && 'statusCode' in err && (err as { statusCode: number }).statusCode === 401) {
         await navigateTo('/login')
         return null
       }
-      console.error('Failed to fetch profile:', error)
-      throw error
+      error.value = err instanceof Error ? err.message : 'Failed to fetch profile'
+      console.error('Failed to fetch profile:', err)
+      throw err
+    } finally {
+      loading.value = false
     }
   }
 
-  /**
-   * Update user profile information
-   */
+  const getProfile = fetchProfile
+
   const updateProfile = async (data: ProfileUpdateData): Promise<void> => {
+    loading.value = true
     try {
-      await $fetch('/api/user/profile/update', {
+      await $fetch(API_ROUTES.USER.PROFILE_UPDATE, {
         method: 'POST',
         body: data
       })
-    } catch (error) {
-      console.error('Failed to update profile:', error)
-      throw error
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to update profile'
+      console.error('Failed to update profile:', err)
+      throw err
+    } finally {
+      loading.value = false
     }
   }
 
-  /**
-   * Add a new payment method
-   */
   const addPaymentMethod = async (data: PaymentMethodData): Promise<void> => {
     try {
-      await $fetch('/api/user/payment-methods/add', {
+      await $fetch(API_ROUTES.USER.PAYMENT_METHODS_ADD, {
         method: 'POST',
         body: data
       })
@@ -130,12 +128,9 @@ export const useProfile = () => {
     }
   }
 
-  /**
-   * Remove a payment method
-   */
   const removePaymentMethod = async (paymentMethodId: number): Promise<void> => {
     try {
-      await $fetch('/api/user/payment-methods/remove', {
+      await $fetch(API_ROUTES.USER.PAYMENT_METHODS_REMOVE, {
         method: 'POST',
         body: { paymentMethodId }
       })
@@ -145,25 +140,25 @@ export const useProfile = () => {
     }
   }
 
-  /**
-   * Get current user subscription
-   */
-  const getSubscription = async (): Promise<UserSubscription | null> => {
+  const fetchSubscription = async (): Promise<UserSubscription | null> => {
     try {
-      const response = await $fetch<{ success: boolean; subscription: UserSubscription | null }>('/api/user/subscription')
-      return response.success ? response.subscription : null
+      const response = await $fetch<{ success: boolean; subscription: UserSubscription | null }>(API_ROUTES.USER.SUBSCRIPTION)
+      if (response.success) {
+        subscription.value = response.subscription
+        return response.subscription
+      }
+      return null
     } catch (error) {
       console.error('Failed to fetch subscription:', error)
       throw error
     }
   }
 
-  /**
-   * Change subscription plan
-   */
+  const getSubscription = fetchSubscription
+
   const changePlan = async (planId: number): Promise<void> => {
     try {
-      await $fetch('/api/user/subscription/change-plan', {
+      await $fetch(API_ROUTES.USER.SUBSCRIPTION_CHANGE_PLAN, {
         method: 'POST',
         body: { planId }
       })
@@ -173,12 +168,9 @@ export const useProfile = () => {
     }
   }
 
-  /**
-   * Cancel subscription
-   */
   const cancelSubscription = async (): Promise<void> => {
     try {
-      await $fetch('/api/user/subscription/cancel', {
+      await $fetch(API_ROUTES.USER.SUBSCRIPTION_CANCEL, {
         method: 'POST'
       })
     } catch (error) {
@@ -188,16 +180,19 @@ export const useProfile = () => {
   }
 
   return {
-    // Data
-    paymentTypes,
-    
-    // Methods
+    profile: readonly(profile),
+    subscription: readonly(subscription),
+    paymentTypes: readonly(paymentTypes),
+    loading: readonly(loading),
+    error: readonly(error),
+    fetchProfile,
+    fetchSubscription,
     getProfile,
+    getSubscription,
     updateProfile,
     addPaymentMethod,
     removePaymentMethod,
     getPaymentTypes,
-    getSubscription,
     changePlan,
     cancelSubscription
   }

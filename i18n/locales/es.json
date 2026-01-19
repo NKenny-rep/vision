@@ -60,6 +60,10 @@
     "userPanel": "Panel de Usuario",
     "admin": "Administrador"
   },
+  "browse": {
+    "title": "Explorar Películas y Series",
+    "description": "Descubre miles de películas y series. Entretenimiento ilimitado."
+  },
   "auth": {
     "login": {
       "title": "Iniciar Sesión",

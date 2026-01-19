@@ -24,19 +24,26 @@ const _props = withDefaults(defineProps<Props>(), {
 
 <template>
   <section 
-    class="relative min-h-screen flex items-center justify-center overflow-hidden"
+    class="relative min-h-screen flex items-center justify-center overflow-hidden bg-black"
     aria-labelledby="hero-heading"
   >
-    <!-- Background Gradient -->
-    <div class="absolute inset-0 bg-linear-to-b from-black via-black/90 to-black"/>
+    <!-- Background Image - Optimized with scale for overflow effect -->
+    <NuxtImg
+      src="/images/landing1.jpg"
+      alt="VideoVision streaming background"
+      class="absolute inset-0 w-full h-full object-cover"
+      width="1920"
+      height="1080"
+      quality="85"
+      provider="ipx"
+    />
     
-    <!-- Animated Background Pattern -->
-    <div class="absolute inset-0 opacity-10">
-      <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, rgb(249, 115, 22) 1px, transparent 0); background-size: 40px 40px;"/>
-    </div>
+    <!-- Gradient Overlay - Stronger fade at top to blend with navbar -->
+    <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/70"/>
+    <div class="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40"/>
 
     <!-- Content -->
-    <div class="relative z-10 container mx-auto px-4 py-32 text-center">
+    <div class="relative z-20 container mx-auto px-4 py-32 text-center">
       <h1 
         id="hero-heading" 
         class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 animate-fade-in"

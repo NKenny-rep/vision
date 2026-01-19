@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { User } from '~/types'
-
 definePageMeta({
   middleware: ['auth', 'admin'],
   layout: 'dashboard-layout'
@@ -11,21 +9,7 @@ const localePath = useLocalePath()
 const { t } = useI18n()
 const userId = computed(() => Number(route.params.id))
 
-const { getUserDetails } = useUserDetails()
-
-const user = ref<User | null>(null)
-const loading = ref(true)
-const error = ref(false)
-
-onMounted(async () => {
-  try {
-    user.value = await getUserDetails(userId.value)
-  } catch (_e) {
-    error.value = true
-  } finally {
-    loading.value = false
-  }
-})
+const { user, loading, error } = useUserDetails(userId.value)
 
 const goBack = () => navigateTo(localePath('/admin/users'))
 
