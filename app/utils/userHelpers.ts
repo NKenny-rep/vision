@@ -9,7 +9,7 @@ type UserLike = {
   email?: string
   userName?: string
   fullName?: string
-  avatar?: string
+  avatar?: string | null
   roles?: string[]
 }
 

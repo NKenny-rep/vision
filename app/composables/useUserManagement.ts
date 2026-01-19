@@ -1,4 +1,5 @@
 import type { User, UserFormData, UserFilters, PaginatedResponse } from '~/types'
+import { API_ROUTES } from '~/constants/apiRoutes'
 
 export interface IUserRepository {
   getUsers(filters: UserFilters): Promise<PaginatedResponse<User>>
@@ -12,22 +13,22 @@ class UserApiAdapter implements IUserRepository {
   async getUsers(filters: UserFilters): Promise<PaginatedResponse<User>> {
     const queryParams = new URLSearchParams()
     
-    // Build query string from filters
     if (filters.page) queryParams.append('page', filters.page.toString())
     if (filters.limit) queryParams.append('limit', filters.limit.toString())
     if (filters.search) queryParams.append('search', filters.search)
     if (filters.sortBy) queryParams.append('sortBy', filters.sortBy)
     if (filters.sortOrder) queryParams.append('sortOrder', filters.sortOrder)
 
-    return await $fetch(`/api/admin/users?${queryParams.toString()}`)
+    const url: string = `${API_ROUTES.ADMIN.USERS}?${queryParams.toString()}`
+    return await $fetch<PaginatedResponse<User>>(url)
   }
 
   async getUser(id: number): Promise<User> {
-    return await $fetch(`/api/admin/users/${id}`)
+    return await $fetch<User>(API_ROUTES.ADMIN.USER_DETAIL(id))
   }
 
   async createUser(userData: UserFormData): Promise<User> {
-    const response = await $fetch('/api/admin/users', {
+    const response = await $fetch<{ data: User }>(API_ROUTES.ADMIN.USERS, {
       method: 'POST',
       body: userData,
     })
@@ -36,7 +37,7 @@ class UserApiAdapter implements IUserRepository {
   }
 
   async updateUser(id: number, userData: Partial<UserFormData>): Promise<User> {
-    const response = await $fetch(`/api/admin/users/${id}`, {
+    const response = await $fetch<{ data: User }>(API_ROUTES.ADMIN.USER_DETAIL(id), {
       method: 'PUT',
       body: userData,
     })
@@ -45,7 +46,7 @@ class UserApiAdapter implements IUserRepository {
   }
 
   async deleteUser(id: number): Promise<void> {
-    await $fetch(`/api/admin/users/${id}`, {
+    await $fetch(API_ROUTES.ADMIN.USER_DETAIL(id), {
       method: 'DELETE',
     })
   }

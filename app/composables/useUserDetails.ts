@@ -1,18 +1,43 @@
-export const useUserDetails = () => {
-  const getUserDetails = async (userId: number) => {
-    const { data, error } = await useFetch(`/api/admin/users/${userId}`)
+import type { User } from '~/types'
+import { API_ROUTES } from '~/constants/apiRoutes'
+
+export const useUserDetails = (userId?: number) => {
+  const user = ref<User | null>(null)
+  const loading = ref(false)
+  const error = ref(false)
+
+  const getUserDetails = async (id: number) => {
+    loading.value = true
+    error.value = false
     
-    if (error.value) {
-      throw createError({
-        statusCode: error.value.statusCode || 404,
-        message: error.value.message || 'User not found'
-      })
+    try {
+      const { data, error: fetchError } = await useFetch<User>(API_ROUTES.ADMIN.USER_DETAIL(id))
+      
+      if (fetchError.value) {
+        throw createError({
+          statusCode: fetchError.value.statusCode || 404,
+          message: fetchError.value.message || 'User not found'
+        })
+      }
+      
+      user.value = data.value ?? null
+      return data.value
+    } catch (e) {
+      error.value = true
+      throw e
+    } finally {
+      loading.value = false
     }
-    
-    return data.value
+  }
+
+  if (userId) {
+    getUserDetails(userId)
   }
 
   return {
+    user: readonly(user),
+    loading: readonly(loading),
+    error: readonly(error),
     getUserDetails
   }
 }

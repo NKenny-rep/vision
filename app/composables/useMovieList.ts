@@ -1,6 +1,4 @@
-/**
- * Movie List Composable
- */
+import { API_ROUTES } from '~/constants/apiRoutes'
 
 export interface MovieListItem {
   id: number
@@ -26,7 +24,7 @@ export const useMovieList = () => {
     try {
       await ensureAuthenticated()
       
-      const { inList } = await $fetch('/api/user/movie-list/check', {
+      const { inList } = await $fetch<{ inList: boolean }>(API_ROUTES.USER.MOVIE_LIST_CHECK, {
         query: { omdbId },
       })
       return inList
@@ -46,7 +44,7 @@ export const useMovieList = () => {
     await ensureAuthenticated()
 
     try {
-      const result = await $fetch('/api/user/movie-list/add', {
+      const result = await $fetch<{ success: boolean; item: MovieListItem }>(API_ROUTES.USER.MOVIE_LIST_ADD, {
         method: 'POST',
         body: movie,
       })
@@ -61,7 +59,7 @@ export const useMovieList = () => {
     await ensureAuthenticated()
 
     try {
-      const result = await $fetch('/api/user/movie-list/remove', {
+      const result = await $fetch<{ success: boolean }>(API_ROUTES.USER.MOVIE_LIST_REMOVE, {
         method: 'POST',
         body: { omdbId },
       })

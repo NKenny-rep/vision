@@ -4,16 +4,24 @@ import { mountSuspended, mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { defineComponent, ref } from 'vue'
 import { useMovies } from './useMovies'
 
-const { useFetchMock } = vi.hoisted(() => ({
-  useFetchMock: vi.fn()
+const { useFetchMock, useAsyncDataMock } = vi.hoisted(() => ({
+  useFetchMock: vi.fn(),
+  useAsyncDataMock: vi.fn()
 }))
 
 mockNuxtImport('useFetch', () => useFetchMock)
+mockNuxtImport('useAsyncData', () => useAsyncDataMock)
 
 describe('useMovies', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     useFetchMock.mockReturnValue({
+      data: ref(null),
+      error: ref(null),
+      status: ref('idle'),
+      refresh: vi.fn(),
+    })
+    useAsyncDataMock.mockReturnValue({
       data: ref(null),
       error: ref(null),
       status: ref('idle'),
@@ -83,7 +91,7 @@ describe('useMovies', () => {
       Response: 'True',
     }
     
-    useFetchMock.mockReturnValueOnce({
+    useAsyncDataMock.mockReturnValueOnce({
       data: ref(mockResponse),
       error: ref(null),
       status: ref('success'),
@@ -93,7 +101,7 @@ describe('useMovies', () => {
     const { result } = await mountComposable()
     const { data, error } = await result.getMovie('tt789')
 
-    expect(useFetchMock).toHaveBeenCalled()
+    expect(useAsyncDataMock).toHaveBeenCalled()
     expect(data.value).toEqual(mockResponse)
     expect(error.value).toBeNull()
   })
@@ -105,7 +113,7 @@ describe('useMovies', () => {
       Response: 'True',
     }
     
-    useFetchMock.mockReturnValueOnce({
+    useAsyncDataMock.mockReturnValueOnce({
       data: ref(mockResponse),
       error: ref(null),
       status: ref('success'),
@@ -115,13 +123,13 @@ describe('useMovies', () => {
     const { result } = await mountComposable()
     await result.getMovie('Detailed Movie')
 
-    expect(useFetchMock).toHaveBeenCalled()
+    expect(useAsyncDataMock).toHaveBeenCalled()
   })
 
   it('should handle movie details fetch error', async () => {
     const mockError = new Error('Movie not found!')
     
-    useFetchMock.mockReturnValueOnce({
+    useAsyncDataMock.mockReturnValueOnce({
       data: ref(null),
       error: ref(mockError),
       status: ref('error'),

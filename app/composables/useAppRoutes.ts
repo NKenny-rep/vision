@@ -1,8 +1,4 @@
-/**
- * Routes Composable
- * Provides type-safe, i18n-aware route navigation helpers
- * Combines centralized routes with Nuxt's localePath
- */
+
 
 import { ROUTES, buildRoute } from '~/constants/routes'
 
@@ -17,7 +13,6 @@ export const useAppRoutes = () => {
     },
     user: {
       browse: () => localePath(ROUTES.BROWSE),
-      movies: () => localePath(ROUTES.MOVIES),
       search: () => localePath(ROUTES.SEARCH),
       myList: () => localePath(ROUTES.MY_LIST),
       profile: () => localePath(ROUTES.PROFILE),

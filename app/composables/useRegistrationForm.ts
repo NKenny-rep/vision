@@ -1,5 +1,6 @@
 import * as z from 'zod'
 import type { PaymentMethodData } from '~/composables/usePaymentValidation'
+import { API_ROUTES } from '~/constants/apiRoutes'
 
 export interface RegistrationFormData {
   name: string
@@ -70,7 +71,7 @@ export const useRegistrationForm = () => {
     isSubmitting.value = true
 
     try {
-      await $fetch('/api/auth/register', {
+      await $fetch(API_ROUTES.AUTH.REGISTER, {
         method: 'POST',
         body: {
           name: validation.data.name,

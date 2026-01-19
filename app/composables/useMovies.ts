@@ -1,22 +1,58 @@
 import type { OMDBSearchResponse, OMDBMovie, OMDBSearchParams, OMDBMovieParams } from '~/types'
+import { API_ROUTES } from '~/constants/apiRoutes'
 
-export const useMovies = () => {
+/**
+ * Movie Repository Interface
+ * Defines contract for movie data access
+ */
+export interface IMovieRepository {
+  search(params: OMDBSearchParams): Promise<OMDBSearchResponse>
+  getById(idOrTitle: string, params?: Omit<OMDBMovieParams, 'i' | 't'>): Promise<OMDBMovie>
+}
+
+/**
+ * API Adapter Implementation
+ * Implements IMovieRepository using Nuxt API routes
+ */
+class MovieApiAdapter implements IMovieRepository {
+  async search(params: OMDBSearchParams): Promise<OMDBSearchResponse> {
+    return await $fetch<OMDBSearchResponse>(API_ROUTES.MOVIES.SEARCH, {
+      query: params,
+    })
+  }
+
+  async getById(idOrTitle: string, params?: Omit<OMDBMovieParams, 'i' | 't'>): Promise<OMDBMovie> {
+    return await $fetch<OMDBMovie>(API_ROUTES.MOVIES.DETAIL(idOrTitle), {
+      query: params,
+    })
+  }
+}
+
+/**
+ * Movies Composable with Repository Pattern
+ * @param repository Optional repository implementation (enables dependency injection for testing)
+ */
+export const useMovies = (repository: IMovieRepository = new MovieApiAdapter()) => {
   /**
    * Search for movies by title
    * @param params Search parameters
    * @returns Search results with movies array
    */
   const searchMovies = async (params: OMDBSearchParams) => {
-    const { data, error, status } = await useFetch<OMDBSearchResponse>('/api/movies/search', {
-      query: params,
-      key: `movies-search-${params.s}-${params.page || 1}`
-    })
+    const { data, error, status } = await useFetch<OMDBSearchResponse>(
+      `/api/movies/search`,
+      {
+        query: params,
+        key: `movies-search-${params.s}-${params.page || 1}`,
+        getCachedData: (key) => useNuxtApp().payload.data[key] || useNuxtApp().static.data[key],
+      }
+    )
     
     return { data, error, status }
   }
 
   /**
-   * Get a single movie by IMDb ID or title
+   * Get a single movie by IMDb ID or title (using repository)
    * @param idOrTitle IMDb ID (e.g., 'tt1285016') or movie title (e.g., 'The Matrix')
    * @param params Optional additional parameters
    * @returns Movie details
@@ -25,13 +61,29 @@ export const useMovies = () => {
     idOrTitle: string, 
     params?: Omit<OMDBMovieParams, 'i' | 't'>
   ) => {
-    const { data, error, status } = await useFetch<OMDBMovie>(`/api/movies/${encodeURIComponent(idOrTitle)}`, {
-      query: params,
-      key: `movie-${idOrTitle}-${params?.plot || 'short'}`
-    })
-    
+    const { data, error, status } = await useAsyncData<OMDBMovie>(
+      `movie-${idOrTitle}-${params?.plot || 'short'}`,
+      async () => repository.getById(idOrTitle, params),
+      {
+        getCachedData: (key) => useNuxtApp().payload.data[key] || useNuxtApp().static.data[key],
+      }
+    )
 
     return { data, error, status }
+  }
+
+  /**
+   * Direct repository access for non-reactive operations
+   */
+  const fetchMovie = async (
+    idOrTitle: string,
+    params?: Omit<OMDBMovieParams, 'i' | 't'>
+  ): Promise<OMDBMovie> => {
+    return await repository.getById(idOrTitle, params)
+  }
+
+  const fetchMovies = async (params: OMDBSearchParams): Promise<OMDBSearchResponse> => {
+    return await repository.search(params)
   }
 
   /**
@@ -78,6 +130,8 @@ export const useMovies = () => {
   return {
     searchMovies,
     getMovie,
-    useMovieSearch
+    useMovieSearch,
+    fetchMovie,
+    fetchMovies,
   }
 }
