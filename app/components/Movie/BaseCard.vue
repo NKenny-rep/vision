@@ -61,18 +61,18 @@ const handleImageLoad = () => {
       />
       
       <div class="absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <div class="absolute bottom-0 left-0 right-0 p-3 space-y-1">
+        <div class="absolute bottom-0 left-0 right-0 p-3 stack-2">
           <h4 class="text-white font-semibold text-sm line-clamp-2">
             {{ movie.title }}
           </h4>
-          <div class="flex items-center gap-2 text-xs text-gray-400">
+          <div class="flex-start gap-2 text-xs text-muted">
             <span v-if="movie.year">{{ movie.year }}</span>
             <span v-if="movie.type" class="capitalize">{{ movie.type }}</span>
           </div>
         </div>
         
         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div class="w-12 h-12 rounded-full bg-orange-500/90 flex items-center justify-center">
+          <div class="w-12 h-12 rounded-full bg-orange-500/90 flex-center">
             <UIcon name="i-heroicons-play-solid" class="w-6 h-6 text-white ml-0.5" />
           </div>
         </div>

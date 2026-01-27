@@ -17,17 +17,13 @@
   --ui-radius: 0.5rem;
 }
 
-/* body {
-  background-color: #020420;
-  font-family: 'Roboto', sans-serif;
-  color: #fff;
+@layer utilities {
+  .text-muted {
+    @apply text-gray-600 dark:text-gray-400;
+  }
+  
+  .border-default {
+    @apply border-gray-200 dark:border-gray-700;
+  }
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: #00dc82;
-} */
