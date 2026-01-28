@@ -59,11 +59,16 @@ const toggleLanguage = () => {
       role="menu"
     >
       <div class="container mx-auto px-4 py-4 flex flex-col gap-3">
+        <!-- Search Bar (Always visible on mobile) -->
+        <div class="mb-2">
+          <SharedSearchBar :always-open="true" />
+        </div>
+
         <!-- Language Accordion -->
         <div class="border border-gray-700 rounded-lg overflow-hidden">
           <!-- Accordion Header -->
           <button
-            class="w-full px-4 py-3 flex items-center justify-between bg-gray-800/50 hover:bg-gray-800 transition-colors"
+            class="w-full px-4 py-3 flex items-center justify-between bg-surface/50 hover:bg-surface transition-colors"
             @click="toggleLanguage"
           >
             <div class="flex items-center gap-2">
@@ -83,7 +88,7 @@ const toggleLanguage = () => {
               <button
                 v-for="lang in availableLocales"
                 :key="lang.code"
-                class="w-full px-3 py-2 flex items-center gap-2 rounded hover:bg-gray-800 transition-colors text-left"
+                class="w-full px-3 py-2 flex items-center gap-2 rounded hover:bg-surface transition-colors text-left"
                 @click="switchLanguage(lang.code)"
               >
                 <UIcon :name="languageIcons[lang.code]" class="w-5 h-5" />

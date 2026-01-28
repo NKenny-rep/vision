@@ -97,10 +97,10 @@ const columns = computed(() => {
       }"
       :ui="{
         base: 'bg-gray-900',
-        divide: 'divide-gray-800',
-        thead: 'bg-gray-800 border-b border-gray-700',
-        tbody: 'divide-y divide-gray-800',
-        tr: 'hover:bg-gray-800/50 transition-colors',
+        divide: 'divide-surface',
+        thead: 'bg-surface border-b border-gray-700',
+        tbody: 'divide-y divide-surface',
+        tr: 'hover:bg-surface/50 transition-colors',
         th: {
           base: 'text-left text-xs font-medium text-gray-400 uppercase',
           padding: 'px-4 py-3'
@@ -129,7 +129,7 @@ const columns = computed(() => {
         <span 
           class="px-2 py-1 text-xs font-medium rounded-full capitalize"
           :class="{
-            'bg-orange-500/20 text-orange-400': row.Type === 'movie',
+            'bg-primary/20 text-primary-400': row.Type === 'movie',
             'bg-blue-500/20 text-blue-400': row.Type === 'series',
             'bg-purple-500/20 text-purple-400': row.Type === 'episode'
           }"

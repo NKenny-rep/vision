@@ -137,7 +137,7 @@ const handleMobileToggleExpand = async (userId: number) => {
         <!-- Loading State -->
         <tr v-if="loading">
           <td :colspan="tableColumns.length" class="px-6 py-8 text-center">
-            <UIcon name="i-heroicons-arrow-path" class="animate-spin w-8 h-8 text-orange-500 mx-auto" />
+            <UIcon name="i-heroicons-arrow-path" class="animate-spin w-8 h-8 text-primary mx-auto" />
           </td>
         </tr>
 
@@ -182,7 +182,7 @@ const handleMobileToggleExpand = async (userId: number) => {
   <div class="md:hidden space-y-4 p-4">
     <!-- Loading State -->
     <div v-if="loading" class="flex justify-center py-8">
-      <UIcon name="i-heroicons-arrow-path" class="animate-spin w-8 h-8 text-orange-500" />
+      <UIcon name="i-heroicons-arrow-path" class="animate-spin w-8 h-8 text-primary" />
     </div>
 
     <!-- Empty State -->

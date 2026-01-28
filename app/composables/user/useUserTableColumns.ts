@@ -8,6 +8,7 @@ export const useUserTableColumns = () => {
 
   const columns: ColumnDef<User>[] = [
     {
+      id: 'name',
       accessorKey: 'name',
       header: () => t('admin.users.table.user'),
       cell: ({ row }) => {
@@ -30,16 +31,19 @@ export const useUserTableColumns = () => {
       },
     },
     {
+      id: 'email',
       accessorKey: 'email',
       header: () => t('admin.users.table.email'),
       cell: ({ getValue }) => h('span', { class: 'text-sm text-gray-300' }, getValue() as string),
     },
     {
+      id: 'phone',
       accessorKey: 'phone',
       header: () => t('admin.users.table.phone'),
       cell: ({ getValue }) => h('span', { class: 'text-sm text-gray-300' }, (getValue() as string) || '-'),
     },
     {
+      id: 'roleName',
       accessorKey: 'roleName',
       header: () => t('admin.users.table.role'),
       cell: ({ getValue }) => {
@@ -50,6 +54,7 @@ export const useUserTableColumns = () => {
       },
     },
     {
+      id: 'createdAt',
       accessorKey: 'createdAt',
       header: () => t('admin.users.table.createdAt'),
       cell: ({ getValue }) => h('span', { class: 'text-sm text-gray-300' }, formatDate(getValue() as Date)),

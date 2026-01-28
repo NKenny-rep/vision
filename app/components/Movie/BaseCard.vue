@@ -71,9 +71,9 @@ const handleImageLoad = () => {
           </div>
         </div>
         
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div class="w-12 h-12 rounded-full bg-orange-500/90 flex-center">
-            <UIcon name="i-heroicons-play-solid" class="w-6 h-6 text-white ml-0.5" />
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="w-14 h-14 rounded-full bg-primary/90 flex items-center justify-center">
+            <UIcon name="i-heroicons-play-solid" class="w-7 h-7 text-white ml-0.5" />
           </div>
         </div>
       </div>

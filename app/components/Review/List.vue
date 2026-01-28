@@ -80,9 +80,9 @@ const ratingDistribution = computed(() => {
             class="flex items-center gap-3"
           >
             <span class="text-sm text-gray-400 w-12">{{ t('reviews.starCount', { count: star }) }}</span>
-            <div class="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
-              <div 
-                class="h-full bg-orange-500 transition-all duration-300"
+            <div class="flex-1 h-2 bg-surface rounded-full overflow-hidden">
+              <div
+                class="h-full bg-primary transition-all duration-300"
                 :style="{ 
                   width: `${reviews.length > 0 ? (ratingDistribution[star as 1|2|3|4|5] / reviews.length) * 100 : 0}%` 
                 }"

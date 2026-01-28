@@ -46,7 +46,7 @@ const buttonConfig = computed(() => {
     primary: {
       color: 'orange' as const,
       variant: undefined,
-      class: 'bg-orange-500 hover:bg-orange-600 text-white font-semibold'
+      class: 'bg-primary hover:bg-primary-600 text-white font-semibold'
     },
     secondary: {
       color: 'neutral' as const,
@@ -56,7 +56,7 @@ const buttonConfig = computed(() => {
     ghost: {
       color: 'neutral' as const,
       variant: 'ghost' as const,
-      class: 'text-white hover:text-orange-500'
+      class: 'text-white hover:text-primary'
     },
     soft: {
       color: 'orange' as const,

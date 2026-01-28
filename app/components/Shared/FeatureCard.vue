@@ -11,8 +11,8 @@ defineProps<Props>()
 <template>
   <article class="text-center p-8 rounded-lg bg-black/50 border border-orange-500/20 hover:border-orange-500/50 transition-all duration-300 hover:transform hover:scale-105">
     <div class="flex justify-center mb-6">
-      <div class="w-20 h-20 rounded-full bg-orange-500/10 flex items-center justify-center">
-        <UIcon :name="icon" class="w-10 h-10 text-orange-500" />
+      <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
+        <UIcon :name="icon" class="w-10 h-10 text-primary" />
       </div>
     </div>
     <h3 class="text-2xl font-bold text-white mb-4">{{ title }}</h3>

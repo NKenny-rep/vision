@@ -5,10 +5,6 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   modules: ['@nuxt/image', '@nuxt/ui', 'nuxt-auth-utils', '@nuxtjs/i18n', '@nuxt/eslint'],
   
-  tailwindcss: {
-    configPath: '~/tailwind.config.ts',
-  },
-  
   eslint: {
     config: {
       stylistic: false,
@@ -95,5 +91,13 @@ export default defineNuxtConfig({
       cookieCrossOrigin: false,
       cookieSecure: false,
     }
+  },
+
+  // Auto-imports configuration for Nuxt 4 app directory  
+  imports: {
+    dirs: [
+      'composables',
+      'composables/**',
+    ]
   }
 })

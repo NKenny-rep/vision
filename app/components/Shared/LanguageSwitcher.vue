@@ -34,7 +34,7 @@ const languageItems = computed(() =>
     label: loc.name,
     icon: languageIcons[loc.code] || 'i-heroicons-language',
     onSelect: () => switchLanguage(loc.code),
-    class: locale.value === loc.code ? 'text-orange-500' : ''
+    class: locale.value === loc.code ? 'text-primary' : ''
   }))
 )
 

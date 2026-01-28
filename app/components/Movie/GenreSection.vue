@@ -45,15 +45,15 @@ const displayedMovies = computed(() => {
     </template>
 
     <!-- Carousel for default view, Grid for show all -->
-    <div v-if="!showAll" class="relative">
+    <div v-if="!showAll" class="relative -mx-2">
       <UCarousel
         :items="displayedMovies"
         contain-scroll="trimSnaps"
         :ui="{
-          item: 'basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 snap-start shrink-0',
-          container: 'gap-4 snap-x snap-mandatory',
-          prev: 'hidden md:flex absolute -left-20 top-1/2 -translate-y-1/2 bg-orange-500/90 hover:bg-orange-600 text-white z-10 shadow-lg',
-          next: 'hidden md:flex absolute -right-20 top-1/2 -translate-y-1/2 bg-orange-500/90 hover:bg-orange-600 text-white z-10 shadow-lg'
+          item: 'basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 snap-start shrink-0 px-2',
+          container: 'snap-x snap-mandatory',
+          prev: 'hidden md:flex absolute -left-20 top-1/2 -translate-y-1/2 bg-primary/90 hover:bg-primary-600 text-white z-10 shadow-lg',
+          next: 'hidden md:flex absolute -right-20 top-1/2 -translate-y-1/2 bg-primary/90 hover:bg-primary-600 text-white z-10 shadow-lg'
         }"
         arrows
         class="relative"

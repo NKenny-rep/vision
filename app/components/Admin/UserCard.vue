@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { User } from '~/types'
-import type { UserWithDetails } from '~/composables/useUserExpansion'
+import type { UserWithDetails } from '~/composables/user/useUserExpansion'
 import { formatDate } from '~/utils/i18nHelpers'
 import { getRoleBadgeClass } from '~/utils/styling'
 

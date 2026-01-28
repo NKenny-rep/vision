@@ -48,7 +48,7 @@ const handleError = () => {
       class="w-full h-full object-cover"
       @error="handleError"
     >
-    <div v-else class="w-full h-full bg-orange-500 flex-center text-white font-semibold">
+    <div v-else class="w-full h-full bg-primary flex-center text-white font-semibold">
       {{ initials }}
     </div>
   </div>

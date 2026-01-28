@@ -2,18 +2,18 @@
   <UDashboardNavbar>
     <template #left>
       <div class="flex items-center gap-4">
-        <h1 class="text-xl font-semibold text-orange-500">{{ $t('nav.dashboard') }}</h1>
+        <h1 class="text-xl font-semibold text-primary">{{ $t('nav.dashboard') }}</h1>
         <NuxtLink 
           :to="localePath('/browse')" 
-          class="text-white hover:text-orange-500 transition-colors font-medium"
-          active-class="text-orange-500"
+          class="text-white hover:text-primary transition-colors font-medium"
+          active-class="text-primary"
         >
           {{ $t('nav.browse') }}
         </NuxtLink>
         <NuxtLink 
           :to="localePath('/movie-list')" 
-          class="text-white hover:text-orange-500 transition-colors font-medium"
-          active-class="text-orange-500"
+          class="text-white hover:text-primary transition-colors font-medium"
+          active-class="text-primary"
         >
           {{ $t('nav.myList') }}
         </NuxtLink>

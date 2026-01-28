@@ -39,7 +39,9 @@
     "isRequired": "es requerido",
     "pleaseWait": "Por favor espere...",
     "validating": "Validando...",
-    "remove": "Quitar"
+    "remove": "Quitar",
+    "all": "Todos",
+    "reload": "Recargar"
   },
   "meta": {
     "title": "VideoVision - Transmite Películas y Series Ilimitadas",
@@ -62,7 +64,10 @@
   },
   "browse": {
     "title": "Explorar Películas y Series",
-    "description": "Descubre miles de películas y series. Entretenimiento ilimitado."
+    "description": "Descubre miles de películas y series. Entretenimiento ilimitado.",
+    "discoverMore": "Descubre Más",
+    "series": "Series",
+    "noResultsFilter": "No se encontraron resultados para este filtro"
   },
   "auth": {
     "login": {
@@ -203,7 +208,8 @@
     "removeFromList": "Quitar de Mi Lista",
     "play": "Reproducir",
     "watchTrailer": "Ver Tráiler",
-    "moreInfo": "Más Información"
+    "moreInfo": "Más Información",
+    "allMoviesLoaded": "¡Has llegado al final! Todas las películas cargadas."
   },
   "reviews": {
     "title": "Reseñas",
@@ -459,7 +465,13 @@
     "forbidden": "Acceso prohibido",
     "networkError": "Ocurrió un error de red",
     "tryAgain": "Por favor intenta de nuevo",
-    "loadingFailed": "Error al cargar el contenido"
+    "loadingFailed": "Error al cargar el contenido",
+    "loadFailed": "Error al cargar el contenido",
+    "movieLoadFailed": "Error al cargar películas",
+    "apiError": "Error al cargar {count} película(s) de la API",
+    "someMoviesFailed": "Error al cargar {count} película(s)",
+    "searchFailed": "Error en la búsqueda. Por favor intenta de nuevo.",
+    "checkConnectionRetry": "Por favor verifica tu conexión a internet e intenta de nuevo."
   },
   "search": {
     "title": "Base de Datos de Películas",
@@ -475,6 +487,7 @@
     "requiresSearch": "(requiere búsqueda)",
     "enterSearchTerm": "Por favor ingresa un término de búsqueda",
     "noResultsFound": "No se encontraron resultados",
+    "noResults": "No se encontraron películas",
     "searchFailed": "Error al buscar películas",
     "movie": "Película",
     "series": "Serie",

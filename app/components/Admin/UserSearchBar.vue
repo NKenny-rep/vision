@@ -43,7 +43,7 @@ onUnmounted(() => {
         v-model="searchQuery"
         type="text"
         :placeholder="t('admin.users.search.placeholder')"
-        class="w-full pl-10 pr-10 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-white placeholder-gray-400"
+        class="w-full pl-10 pr-10 py-2 bg-surface border border-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-white placeholder-gray-400"
         @input="handleSearch"
       >
       <button

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { UserWithDetails } from '~/composables/useUserExpansion'
+import type { UserWithDetails } from '~/composables/user/useUserExpansion'
 
 interface Props {
   user: UserWithDetails | null
@@ -45,7 +45,7 @@ const formatDateDetailed = (date: Date | string) => {
     <UCard class="bg-gray-900 border border-gray-700">
       <template #header>
         <h3 class="text-lg font-semibold text-white flex items-center gap-2">
-          <UIcon name="i-heroicons-user-circle" class="w-5 h-5 text-orange-500" />
+          <UIcon name="i-heroicons-user-circle" class="w-5 h-5 text-primary" />
           {{ t('admin.users.details.accountInfo') }}
         </h3>
       </template>
@@ -61,7 +61,7 @@ const formatDateDetailed = (date: Date | string) => {
         <div>
           <dt class="text-xs font-medium text-gray-400 mb-1">{{ t('admin.users.table.role') }}</dt>
           <dd>
-            <span class="px-2 py-1 rounded-full text-xs font-medium inline-flex items-center gap-1" :class="getRoleColor(user.roleName ?? undefined) + ' bg-gray-800'">
+            <span class="px-2 py-1 rounded-full text-xs font-medium inline-flex items-center gap-1" :class="getRoleColor(user.roleName ?? undefined) + ' bg-surface'">
               <UIcon name="i-heroicons-shield-check" class="w-3 h-3" />
               {{ user.roleName }}
             </span>
@@ -74,7 +74,7 @@ const formatDateDetailed = (date: Date | string) => {
     <UCard class="bg-gray-900 border border-gray-700">
       <template #header>
         <h3 class="text-lg font-semibold text-white flex items-center gap-2">
-          <UIcon name="i-heroicons-credit-card" class="w-5 h-5 text-orange-500" />
+          <UIcon name="i-heroicons-credit-card" class="w-5 h-5 text-primary" />
           {{ t('admin.users.details.subscription') }}
         </h3>
       </template>
@@ -102,7 +102,7 @@ const formatDateDetailed = (date: Date | string) => {
     <UCard class="bg-gray-900 border border-gray-700">
       <template #header>
         <h3 class="text-lg font-semibold text-white flex items-center gap-2">
-          <UIcon name="i-heroicons-clock" class="w-5 h-5 text-orange-500" />
+          <UIcon name="i-heroicons-clock" class="w-5 h-5 text-primary" />
           {{ t('admin.users.details.activity') }}
         </h3>
       </template>

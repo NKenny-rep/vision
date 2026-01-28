@@ -21,6 +21,7 @@ useSeoMeta({
 })
 
 const { getMovie } = useMovies()
+const { showError } = useToastNotification()
 
 // Fetch all movies with SSR support (Single Responsibility: data fetching)
 const { data: moviesData, pending: isLoading, error } = await useAsyncData(
@@ -30,9 +31,23 @@ const { data: moviesData, pending: isLoading, error } = await useAsyncData(
       BROWSE.FEATURED_MOVIES.map(title => getMovie(title, { plot: BROWSE.MOVIE_PLOT_TYPE }))
     )
     
-    return results
+    // Check for errors and show toast
+    const hasErrors = results.some(r => r.error.value)
+    if (hasErrors) {
+      const errorCount = results.filter(r => r.error.value).length
+      showError(t('errors.apiError', { count: errorCount }))
+    }
+    
+    const validMovies = results
       .filter(r => r.data.value && r.data.value.Response !== 'False')
       .map(r => r.data.value!)
+    
+    // If no valid movies, throw error to trigger error state
+    if (validMovies.length === 0 && hasErrors) {
+      throw new Error('Failed to load movies')
+    }
+    
+    return validMovies
   },
   {
     server: true,
@@ -42,6 +57,11 @@ const { data: moviesData, pending: isLoading, error } = await useAsyncData(
 
 const movies = computed(() => moviesData.value || [])
 const featuredMovie = computed(() => movies.value[0] || null)
+
+// Get all displayed movie titles to exclude from lazy load
+const displayedMovieTitles = computed(() => {
+  return movies.value.map(m => m.Title)
+})
 
 // Custom categories with specific labels
 const categories = computed(() => {
@@ -75,10 +95,12 @@ const getPosterUrl = (movie: OMDBMovie) => {
 <template>
   <div class="min-h-screen bg-black">
     <!-- Error State -->
-    <div v-if="error" class="container mx-auto px-4 py-20 text-center">
-      <UIcon name="i-heroicons-exclamation-triangle" class="w-16 h-16 text-red-500 mx-auto mb-4" />
-      <p class="text-gray-400 text-lg">{{ $t('errors.loadingFailed') }}</p>
-    </div>
+    <UIErrorState 
+      v-if="error" 
+      :title="$t('errors.loadFailed')"
+      :message="$t('errors.tryAgain')"
+      @reload="() => { error.value = null; refreshNuxtData('browse-movies') }"
+    />
 
     <!-- Skeleton Loading State -->
     <MovieBrowseSkeleton v-else-if="isLoading" />
@@ -148,6 +170,14 @@ const getPosterUrl = (movie: OMDBMovie) => {
           :key="category.title"
           :title="category.title"
           :movies="category.videos"
+        />
+      </div>
+
+      <!-- Lazy Load Section (below genre sections) -->
+      <div v-if="categories.length > 0" class="container mx-auto pb-20">
+        <MovieLazyList 
+          :title="$t('browse.discoverMore')"
+          :exclude-movies="displayedMovieTitles"
         />
       </div>
 

@@ -130,7 +130,7 @@ const roleSelectId = useId()
         :id="roleSelectId"
         v-model="formData.roleId"
         :disabled="loading"
-        class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+        class="w-full px-4 py-2 bg-surface border border-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
       >
         <option v-for="role in roleOptions" :key="role.value" :value="role.value">
           {{ role.label }}
