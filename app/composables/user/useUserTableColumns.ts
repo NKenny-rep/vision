@@ -18,10 +18,10 @@ export const useUserTableColumns = () => {
             ? h('img', {
                 src: user.avatar,
                 alt: user.name,
-                class: 'w-10 h-10 rounded-full object-cover'
+                class: 'hidden lg:block w-10 h-10 rounded-full object-cover'
               })
             : h('div', {
-                class: 'w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white font-semibold'
+                class: 'hidden lg:flex w-10 h-10 rounded-full bg-orange-500 items-center justify-center text-white font-semibold'
               }, user.name.charAt(0).toUpperCase()),
           h('div', [
             h('div', { class: 'font-medium text-white' }, user.name),

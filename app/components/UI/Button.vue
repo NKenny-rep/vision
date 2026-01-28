@@ -44,9 +44,9 @@ const emit = defineEmits<{
 const buttonConfig = computed(() => {
   const configs = {
     primary: {
-      color: 'orange' as const,
+      color: 'primary' as const,
       variant: undefined,
-      class: 'bg-primary hover:bg-primary-600 text-white font-semibold'
+      class: 'bg-orange-500 hover:bg-orange-600 text-white font-semibold'
     },
     secondary: {
       color: 'neutral' as const,
@@ -59,7 +59,7 @@ const buttonConfig = computed(() => {
       class: 'text-white hover:text-primary'
     },
     soft: {
-      color: 'orange' as const,
+      color: 'primary' as const,
       variant: 'soft' as const,
       class: 'font-semibold'
     },
@@ -93,7 +93,7 @@ const handleClick = (event: MouseEvent) => {
     :icon="icon || leadingIcon"
     :trailing-icon="trailingIcon"
     :aria-label="ariaLabel"
-    :class="buttonConfig.class"
+    :class="[buttonConfig.class, 'cursor-pointer']"
     @click="handleClick"
   >
     <slot>{{ label }}</slot>

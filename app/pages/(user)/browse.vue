@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { OMDBMovie } from '~/types'
 import { BROWSE } from '~/constants'
+import { getPosterUrl } from '~/utils/image'
 
 const localePath = useLocalePath();
 const { t } = useI18n();
@@ -22,19 +22,38 @@ useSeoMeta({
 
 const { getMovie } = useMovies()
 const { showError } = useToastNotification()
+const isOmdbLimitError = ref(false)
+
+// Helper to check for API limit errors
+const hasApiLimitError = (results: Awaited<ReturnType<typeof getMovie>>[]) => {
+  return results.some(r => r.error.value?.message?.includes('limit'))
+}
+
+// Helper to check if any results have errors
+const hasErrors = (results: Awaited<ReturnType<typeof getMovie>>[]) => {
+  return results.some(r => r.error.value != null)
+}
+
+// Helper to count errors
+const getErrorCount = (results: Awaited<ReturnType<typeof getMovie>>[]) => {
+  return results.filter(r => r.error.value != null).length
+}
 
 // Fetch all movies with SSR support (Single Responsibility: data fetching)
-const { data: moviesData, pending: isLoading, error } = await useAsyncData(
+const { data: moviesData, status, error } = await useAsyncData(
   'browse-movies',
   async () => {
     const results = await Promise.all(
       BROWSE.FEATURED_MOVIES.map(title => getMovie(title, { plot: BROWSE.MOVIE_PLOT_TYPE }))
     )
     
-    // Check for errors and show toast
-    const hasErrors = results.some(r => r.error.value)
-    if (hasErrors) {
-      const errorCount = results.filter(r => r.error.value).length
+    if (hasApiLimitError(results)) {
+      isOmdbLimitError.value = true
+      throw new Error('OMDB API limit reached')
+    }
+    
+    if (hasErrors(results)) {
+      const errorCount = getErrorCount(results)
       showError(t('errors.apiError', { count: errorCount }))
     }
     
@@ -42,8 +61,7 @@ const { data: moviesData, pending: isLoading, error } = await useAsyncData(
       .filter(r => r.data.value && r.data.value.Response !== 'False')
       .map(r => r.data.value!)
     
-    // If no valid movies, throw error to trigger error state
-    if (validMovies.length === 0 && hasErrors) {
+    if (validMovies.length === 0 && hasErrors(results)) {
       throw new Error('Failed to load movies')
     }
     
@@ -54,6 +72,8 @@ const { data: moviesData, pending: isLoading, error } = await useAsyncData(
     lazy: true
   }
 )
+
+const isLoading = computed(() => status.value === 'pending')
 
 const movies = computed(() => moviesData.value || [])
 const featuredMovie = computed(() => movies.value[0] || null)
@@ -82,14 +102,6 @@ const categories = computed(() => {
     { title: 'Oldie Goldies', videos: allMovies.filter(m => parseInt(m.Year) < 2000).slice(0, 10) }
   ].filter(cat => cat.videos.length > 0)
 })
-
-// Helper: Get poster URL with fallback (Single Responsibility: image handling)
-const getPosterUrl = (movie: OMDBMovie) => {
-  if (movie.Poster && movie.Poster !== 'N/A') {
-    return movie.Poster
-  }
-  return `https://placehold.co/300x450/1a1a1a/orange?text=${encodeURIComponent(movie.Title)}`
-}
 </script>
 
 <template>
@@ -97,9 +109,9 @@ const getPosterUrl = (movie: OMDBMovie) => {
     <!-- Error State -->
     <UIErrorState 
       v-if="error" 
-      :title="$t('errors.loadFailed')"
-      :message="$t('errors.tryAgain')"
-      @reload="() => { error.value = null; refreshNuxtData('browse-movies') }"
+      :title="isOmdbLimitError ? $t('errors.omdbApiLimit') : $t('errors.loadFailed')"
+      :message="isOmdbLimitError ? $t('errors.omdbApiLimitMessage') : $t('errors.tryAgain')"
+      @reload="() => { isOmdbLimitError = false; refreshNuxtData('browse-movies') }"
     />
 
     <!-- Skeleton Loading State -->
@@ -109,11 +121,11 @@ const getPosterUrl = (movie: OMDBMovie) => {
       <!-- Hero Section -->
       <section v-if="featuredMovie" class="relative h-[50vh] -mt-24">
         <!-- Gradient Overlays -->
-        <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent z-10"/>
-        <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black z-10"/>
+        <div class="absolute inset-0 bg-linear-to-r from-black via-black/80 to-transparent z-10"/>
+        <div class="absolute inset-0 bg-linear-to-b from-black/40 via-transparent to-black z-10"/>
         
         <img 
-          :src="getPosterUrl(featuredMovie)" 
+          :src="getPosterUrl(featuredMovie.Poster)" 
           :alt="featuredMovie.Title" 
           class="w-full h-full object-cover object-center"
         >
@@ -138,6 +150,7 @@ const getPosterUrl = (movie: OMDBMovie) => {
                   {{ $t('movies.playNow') }}
                 </UIButton>
                 <UIButton
+                  :to="localePath(`/watch/${featuredMovie.imdbID}`)"
                   variant="secondary"
                   size="xl"
                   icon="i-heroicons-information-circle"

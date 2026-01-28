@@ -49,6 +49,15 @@ export default defineEventHandler(async (event) => {
   } catch (error: unknown) {
     console.error('OMDB API Error:', error)
     const fetchError = error as FetchError;
+    
+    // Check if it's a 401 error from OMDB (API limit)
+    if (fetchError.statusCode === 401) {
+      throw createError({
+        statusCode: 401,
+        message: 'OMDB API key limit reached or invalid'
+      })
+    }
+    
     const statusCode = fetchError.statusCode || 500;
     const message = fetchError.message || 'Failed to fetch movie from OMDB';
     throw createError({

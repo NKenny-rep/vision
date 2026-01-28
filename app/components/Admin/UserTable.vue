@@ -115,10 +115,12 @@ const handleMobileToggleExpand = async (userId: number) => {
           <th
             v-for="header in headerGroup.headers"
             :key="header.id"
-            class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
+            class="px-3 py-2 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
             :class="[
               header.column.getCanSort() ? 'cursor-pointer select-none hover:text-white transition-colors' : '',
-              header.id === 'actions' ? 'text-right' : ''
+              header.id === 'actions' ? 'text-right' : '',
+              header.id === 'createdAt' ? 'hidden lg:table-cell' : '',
+              header.id === 'roleName' ? 'hidden lg:table-cell' : ''
             ]"
             @click="header.column.getToggleSortingHandler()?.($event)"
           >
@@ -136,14 +138,14 @@ const handleMobileToggleExpand = async (userId: number) => {
       <tbody class="divide-y divide-gray-700">
         <!-- Loading State -->
         <tr v-if="loading">
-          <td :colspan="tableColumns.length" class="px-6 py-8 text-center">
+          <td :colspan="tableColumns.length" class="px-3 py-4 text-center">
             <UIcon name="i-heroicons-arrow-path" class="animate-spin w-8 h-8 text-primary mx-auto" />
           </td>
         </tr>
 
         <!-- Empty State -->
         <tr v-else-if="!users || users.length === 0">
-          <td :colspan="tableColumns.length" class="px-6 py-8 text-center text-gray-400">
+          <td :colspan="tableColumns.length" class="px-3 py-4 text-center text-gray-400">
             {{ t('admin.users.table.empty') }}
           </td>
         </tr>
@@ -154,8 +156,12 @@ const handleMobileToggleExpand = async (userId: number) => {
             <td
               v-for="cell in row.getVisibleCells()"
               :key="cell.id"
-              class="px-6 py-4 whitespace-nowrap"
-              :class="cell.column.id === 'actions' ? 'text-right' : ''"
+              class="px-3 py-2 whitespace-nowrap"
+              :class="[
+                cell.column.id === 'actions' ? 'text-right' : '',
+                cell.column.id === 'createdAt' ? 'hidden lg:table-cell' : '',
+                cell.column.id === 'roleName' ? 'hidden lg:table-cell' : ''
+              ]"
             >
               <FlexRender
                 :render="cell.column.columnDef.cell"
@@ -166,7 +172,7 @@ const handleMobileToggleExpand = async (userId: number) => {
 
           <!-- Expanded Row Details -->
           <tr v-if="row.getIsExpanded()" class="bg-gray-800/30">
-            <td :colspan="tableColumns.length" class="px-6 py-6">
+            <td :colspan="tableColumns.length" class="px-3 py-3">
               <AdminUserDetailsCard
                 :user="expandedUserDetails[row.original.id] ?? null"
                 :loading="loadingDetails[row.original.id]"

@@ -14,6 +14,19 @@
   --color-primary-800: #9a3412;
   --color-primary-900: #7c2d12;
   --color-primary-950: #431407;
+  
+  --color-surface: #1f2937;
+  --color-surface-50: #f9fafb;
+  --color-surface-100: #f3f4f6;
+  --color-surface-200: #e5e7eb;
+  --color-surface-300: #d1d5db;
+  --color-surface-400: #9ca3af;
+  --color-surface-500: #6b7280;
+  --color-surface-600: #4b5563;
+  --color-surface-700: #374151;
+  --color-surface-800: #1f2937;
+  --color-surface-900: #111827;
+  
   --ui-radius: 0.5rem;
 }
 
@@ -24,6 +37,26 @@
   
   .border-default {
     @apply border-gray-200 dark:border-gray-700;
+  }
+
+  .search-container {
+    @apply absolute @[900px]:relative right-0 @[900px]:right-auto;
+    @apply top-full @[900px]:top-auto mt-2 @[900px]:mt-0;
+    @apply w-screen @[900px]:w-45 lg:w-70 max-w-md @[900px]:max-w-none;
+  }
+
+  .search-dropdown {
+    @apply absolute top-full left-0 mt-2 w-full min-w-70 max-w-[min(500px,90vw)];
+    @apply bg-gray-900 border border-gray-700 rounded-lg shadow-xl;
+    @apply max-h-[min(400px,60vh)] overflow-y-auto z-9999;
+  }
+
+  .search-item {
+    @apply flex items-center gap-3 p-3 hover:bg-surface cursor-pointer transition-colors;
+  }
+
+  .search-poster {
+    @apply w-12 h-18 object-cover rounded shrink-0;
   }
 }
 

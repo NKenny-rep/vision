@@ -119,9 +119,7 @@ const editFormData = computed(() => selectedUser.value ? {
     <!-- Actions Bar -->
     <div class="flex flex-col md:flex-row gap-4 mb-6 items-start md:items-center justify-between">
       <!-- Search -->
-      <div class="w-full md:w-96">
-        <AdminUserSearchBar @search="handleSearch" />
-      </div>
+      <AdminUserSearchBar @search="handleSearch" />
 
       <!-- Create Button -->
       <UIButton

@@ -275,7 +275,7 @@ const handleConfirm = async () => {
         </UButton>
         <UButton
           variant="outline"
-          color="gray"
+          color="neutral"
           :loading="isCancelling"
           :disabled="isChangingPlan || isCancelling"
           @click="showCancelModal = true"

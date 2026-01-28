@@ -26,11 +26,6 @@ export default defineNuxtConfig({
     preference: 'dark'
   },
 
-  ui: {
-    primary: 'orange',
-    gray: 'neutral'
-  },
-
   app: {
     head: {
       title: 'VideoVision - Stream Unlimited Movies & TV Shows',

@@ -17,10 +17,10 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <div class="flex-start gap-2">
+  <div class="grid grid-cols-[auto_1fr] gap-3 items-start">
     <UIcon v-if="icon" :name="icon" class="w-4 h-4 text-muted mt-0.5 shrink-0" />
-    <div class="flex-1" :class="{ 'min-w-0': truncate }">
-      <p v-if="label" class="text-xs text-muted">{{ label }}</p>
+    <div class="min-w-0">
+      <p v-if="label" class="text-xs text-muted mb-0.5">{{ label }}</p>
       <p class="text-sm text-white" :class="{ 'truncate': truncate }">
         <slot>{{ value }}</slot>
       </p>

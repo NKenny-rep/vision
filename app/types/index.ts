@@ -17,7 +17,7 @@ export interface User {
   phone?: string | null
   roleId: number
   roleName?: string
-  roles?: UserRole[]
+  roles?: readonly UserRole[]
   subscription?: SubscriptionPlan
   createdAt: Date | string
   updatedAt?: Date | string

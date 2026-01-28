@@ -20,12 +20,12 @@ const languageIcons: Record<string, string> = {
 // Initialize language from cookie on mount
 onMounted(() => {
   if (languageCookie.value && languageCookie.value !== locale.value) {
-    setLocale(languageCookie.value)
+    setLocale(languageCookie.value as 'en' | 'es')
   }
 })
 
 const switchLanguage = async (code: string) => {
-  await setLocale(code)
+  await setLocale(code as 'en' | 'es')
   languageCookie.value = code
 }
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { OMDBMovie, Review } from '~/types'
+import type { Review } from '~/types'
 
 const localePath = useLocalePath()
 const router = useRouter()
@@ -81,12 +81,8 @@ const trailerUrl = ref('')
 const searchTrailer = () => {
   if (!movie.value) return
   
-  // Generate YouTube search URL for trailer
   const searchQuery = encodeURIComponent(`${movie.value.Title} ${movie.value.Year} official trailer`)
   const youtubeSearchUrl = `https://www.youtube.com/results?search_query=${searchQuery}`
-  
-  // For embedding, we'll use a common pattern - most official trailers follow this format
-  // In production, you'd use YouTube Data API to get actual video ID
   const videoId = `${movie.value.imdbID}-trailer` // Placeholder
   trailerUrl.value = `https://www.youtube.com/embed/${videoId}`
   
@@ -121,14 +117,6 @@ const handleLike = async (reviewId: string | number) => {
       review.likes = (review.likes || 0) + 1
     }
   }
-}
-
-const getPosterUrl = (movieData: OMDBMovie | null) => {
-  if (!movieData) return ''
-  if (movieData.Poster && movieData.Poster !== 'N/A') {
-    return movieData.Poster
-  }
-  return `https://placehold.co/300x450/1a1a1a/orange?text=${encodeURIComponent(movieData.Title)}`
 }
 
 // Movie list state
@@ -207,7 +195,7 @@ watch(movie, () => {
             <!-- Poster -->
             <div class="md:col-span-1">
               <img 
-                :src="getPosterUrl(movie)" 
+                :src="getPosterUrl(movie.Poster)" 
                 :alt="movie.Title"
                 class="w-full rounded-lg shadow-2xl"
               >

@@ -1,19 +1,22 @@
 import type { OMDBSearchResponse, OMDBMovie, OMDBSearchParams, OMDBMovieParams } from '~/types'
 import { API_ROUTES } from '~/constants/apiRoutes'
 
-/**
- * Movie Repository Interface
- * Defines contract for movie data access
- */
 export interface IMovieRepository {
   search(params: OMDBSearchParams): Promise<OMDBSearchResponse>
   getById(idOrTitle: string, params?: Omit<OMDBMovieParams, 'i' | 't'>): Promise<OMDBMovie>
 }
 
-/**
- * API Adapter Implementation
- * Implements IMovieRepository using Nuxt API routes
- */
+interface ApiError {
+  statusCode?: number
+  message?: string
+}
+
+interface AsyncDataResult<T> {
+  data: Ref<T | null>
+  error: Ref<ApiError | null>
+  status: Ref<string>
+}
+
 class MovieApiAdapter implements IMovieRepository {
   async search(params: OMDBSearchParams): Promise<OMDBSearchResponse> {
     return await $fetch<OMDBSearchResponse>(API_ROUTES.MOVIES.SEARCH, {
@@ -28,35 +31,25 @@ class MovieApiAdapter implements IMovieRepository {
   }
 }
 
-/**
- * Movies Composable with Repository Pattern
- * @param repository Optional repository implementation (enables dependency injection for testing)
- */
 export const useMovies = (repository: IMovieRepository = new MovieApiAdapter()) => {
-  /**
-   * Search for movies by title
-   * @param params Search parameters
-   * @returns Search results with movies array
-   */
   const searchMovies = async (params: OMDBSearchParams) => {
-    const { data, error, status } = await useFetch<OMDBSearchResponse>(
-      `/api/movies/search`,
-      {
+    try {
+      const data = await $fetch<OMDBSearchResponse>(API_ROUTES.MOVIES.SEARCH, {
         query: params,
-        key: `movies-search-${params.s}-${params.page || 1}`,
-        getCachedData: (key) => useNuxtApp().payload.data[key] || useNuxtApp().static.data[key],
+      })
+      if (data && data.Response === 'True' && Array.isArray(data.Search)) {
+        return { data: data.Search, error: null, status: 'success' };
+      } else if (data && data.Response === 'False') {
+        return { data: [], error: { message: data.Error || 'No results found.' }, status: 'empty' };
+      } else {
+        return { data: [], error: { message: 'Unexpected response from server.' }, status: 'error' };
       }
-    )
-    
-    return { data, error, status }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      return { data: [], error: { message: errorMessage }, status: 'error' };
+    }
   }
 
-  /**
-   * Get a single movie by IMDb ID or title (using repository)
-   * @param idOrTitle IMDb ID (e.g., 'tt1285016') or movie title (e.g., 'The Matrix')
-   * @param params Optional additional parameters
-   * @returns Movie details
-   */
   const getMovie = async (
     idOrTitle: string, 
     params?: Omit<OMDBMovieParams, 'i' | 't'>
@@ -72,9 +65,6 @@ export const useMovies = (repository: IMovieRepository = new MovieApiAdapter()) 
     return { data, error, status }
   }
 
-  /**
-   * Direct repository access for non-reactive operations
-   */
   const fetchMovie = async (
     idOrTitle: string,
     params?: Omit<OMDBMovieParams, 'i' | 't'>
@@ -93,7 +83,7 @@ export const useMovies = (repository: IMovieRepository = new MovieApiAdapter()) 
   const useMovieSearch = (initialQuery: OMDBSearchParams) => {
     const searchQuery = ref<OMDBSearchParams>(initialQuery)
     
-    const { data, error, status, refresh } = useFetch<OMDBSearchResponse>('/api/movies/search', {
+    const { data, error, status, refresh } = useFetch<OMDBSearchResponse>(API_ROUTES.MOVIES.SEARCH, {
       query: searchQuery,
       key: computed(() => `movies-search-${searchQuery.value.s}-${searchQuery.value.page || 1}`),
       watch: [searchQuery]
@@ -133,5 +123,10 @@ export const useMovies = (repository: IMovieRepository = new MovieApiAdapter()) 
     useMovieSearch,
     fetchMovie,
     fetchMovies,
+    // Error helpers
+    isApiLimitError: (error: ApiError | null): boolean => error?.statusCode === 401,
+    hasErrors: (results: AsyncDataResult<unknown>[]): boolean => results.some(r => r.error && r.error.value),
+    getErrorCount: (results: AsyncDataResult<unknown>[]): number => results.filter(r => r.error && r.error.value).length,
+    hasApiLimitError: (results: AsyncDataResult<unknown>[]): boolean => results.some(r => r.error && r.error.value && r.error.value.statusCode === 401),
   }
 }

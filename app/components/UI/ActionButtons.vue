@@ -12,7 +12,7 @@ interface Props {
   disabled?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   showView: false,
   showEdit: true,
   showDelete: true,

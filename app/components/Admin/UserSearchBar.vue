@@ -33,7 +33,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="relative">
+  <div class="relative md:w-64 lg:w-80">
     <div class="relative">
       <UIcon
         name="i-heroicons-magnifying-glass"

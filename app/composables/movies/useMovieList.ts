@@ -17,6 +17,8 @@ export interface MovieListResponse {
 
 export const useMovieList = () => {
   const { ensureAuthenticated, isSessionReady } = useAuthentication()
+  const { showSuccess, showError } = useToastNotification()
+  const { t } = useI18n()
 
   const isInList = async (omdbId: string): Promise<boolean> => {
     if (!isSessionReady.value) return false
@@ -48,9 +50,11 @@ export const useMovieList = () => {
         method: 'POST',
         body: movie,
       })
+      showSuccess(t('userPanel.movieList.messages.added'))
       return result
     } catch (error) {
       console.error('Failed to add movie to list:', error)
+      showError(t('userPanel.movieList.messages.addFailed'))
       throw error
     }
   }
@@ -63,9 +67,11 @@ export const useMovieList = () => {
         method: 'POST',
         body: { omdbId },
       })
+      showSuccess(t('userPanel.movieList.messages.removed'))
       return result
     } catch (error) {
       console.error('Failed to remove movie from list:', error)
+      showError(t('userPanel.movieList.messages.removeFailed'))
       throw error
     }
   }

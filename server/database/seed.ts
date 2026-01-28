@@ -75,6 +75,37 @@ async function seed() {
 
     // 3. Create users
     console.log('Creating users...')
+    
+    // Helper function to generate random users
+    const generateRandomUsers = (count: number, startId: number) => {
+      const firstNames = ['Emma', 'Liam', 'Olivia', 'Noah', 'Ava', 'Ethan', 'Sophia', 'Mason', 'Isabella', 'William', 
+        'Mia', 'James', 'Charlotte', 'Benjamin', 'Amelia', 'Lucas', 'Harper', 'Henry', 'Evelyn', 'Alexander',
+        'Abigail', 'Michael', 'Emily', 'Daniel', 'Elizabeth', 'Matthew', 'Sofia', 'Jackson', 'Avery', 'Sebastian',
+        'Ella', 'David', 'Scarlett', 'Joseph', 'Grace', 'Samuel', 'Chloe', 'John', 'Victoria', 'Owen',
+        'Riley', 'Dylan', 'Aria', 'Luke', 'Lily', 'Gabriel', 'Aubrey', 'Anthony', 'Zoey', 'Isaac']
+      
+      const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez',
+        'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin',
+        'Lee', 'Perez', 'Thompson', 'White', 'Harris', 'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson',
+        'Walker', 'Young', 'Allen', 'King', 'Wright', 'Scott', 'Torres', 'Nguyen', 'Hill', 'Flores',
+        'Green', 'Adams', 'Nelson', 'Baker', 'Hall', 'Rivera', 'Campbell', 'Mitchell', 'Carter', 'Roberts']
+      
+      return Array.from({ length: count }, (_, i) => {
+        const firstName = firstNames[i % firstNames.length]
+        const lastName = lastNames[i % lastNames.length]
+        const uniqueId = startId + i
+        
+        return {
+          email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}${uniqueId}@videovision.com`,
+          password: userPassword,
+          name: `${firstName} ${lastName}`,
+          avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${firstName}${uniqueId}`,
+          phone: `+1-555-${String(uniqueId).padStart(4, '0')}`,
+          roleId: userRole.id,
+        }
+      })
+    }
+    
     const [adminUser, user1, user2, user3, goku, tonymontana, _aldebaran, _shion, _cloud] = await db.insert(schema.users).values([
       {
         email: 'admin@videovision.com',
@@ -150,10 +181,41 @@ async function seed() {
         },
       ]).returning()
 
+    // Create additional 50 users
+    console.log('Creating additional 50 users...')
+    const additionalUsers = await db.insert(schema.users).values(
+      generateRandomUsers(50, 10)
+    ).returning()
+
     console.log('✓ Users created')
 
     // 4. Create payment methods
     console.log('Creating payment methods...')
+    
+    // Helper to generate random payment methods
+    const generateRandomPaymentMethods = (users: typeof additionalUsers) => {
+      const cardBrands = ['visa', 'mastercard', 'amex', 'discover']
+      const paymentTypeIds = [creditCardType.id, debitCardType.id]
+      
+      return users.map(user => {
+        // Generate random expiry date after March 2026
+        const year = 2026 + Math.floor(Math.random() * 4) // 2026-2029
+        const month = year === 2026 
+          ? 4 + Math.floor(Math.random() * 9) // April-December for 2026
+          : 1 + Math.floor(Math.random() * 12) // Any month for 2027+
+        
+        return {
+          userId: user.id,
+          paymentTypeId: paymentTypeIds[Math.floor(Math.random() * paymentTypeIds.length)],
+          cardLast4: String(Math.floor(1000 + Math.random() * 9000)),
+          cardBrand: cardBrands[Math.floor(Math.random() * cardBrands.length)],
+          expiryMonth: String(month).padStart(2, '0'),
+          expiryYear: String(year),
+          isDefault: true,
+        }
+      })
+    }
+    
     await db.insert(schema.paymentMethods).values([
       {
         userId: adminUser.id,
@@ -161,7 +223,7 @@ async function seed() {
         cardLast4: '4242',
         cardBrand: 'visa',
         expiryMonth: '12',
-        expiryYear: '2025',
+        expiryYear: '2027',
         isDefault: true,
       },
       {
@@ -188,7 +250,16 @@ async function seed() {
         cardLast4: '8888',
         cardBrand: 'amex',
         expiryMonth: '09',
-        expiryYear: '2025',
+        expiryYear: '2027',
+        isDefault: true,
+      },
+      {
+        userId: user3.id,
+        paymentTypeId: creditCardType.id,
+        cardLast4: '3333',
+        cardBrand: 'visa',
+        expiryMonth: '08',
+        expiryYear: '2027',
         isDefault: true,
       },
       {
@@ -209,7 +280,40 @@ async function seed() {
         expiryYear: '2028',
         isDefault: true,
       },
+      {
+        userId: _aldebaran.id,
+        paymentTypeId: debitCardType.id,
+        cardLast4: '6666',
+        cardBrand: 'mastercard',
+        expiryMonth: '05',
+        expiryYear: '2027',
+        isDefault: true,
+      },
+      {
+        userId: _shion.id,
+        paymentTypeId: creditCardType.id,
+        cardLast4: '5544',
+        cardBrand: 'visa',
+        expiryMonth: '10',
+        expiryYear: '2026',
+        isDefault: true,
+      },
+      {
+        userId: _cloud.id,
+        paymentTypeId: creditCardType.id,
+        cardLast4: '2211',
+        cardBrand: 'amex',
+        expiryMonth: '07',
+        expiryYear: '2028',
+        isDefault: true,
+      },
     ])
+    
+    // Add payment methods for additional users
+    await db.insert(schema.paymentMethods).values(
+      generateRandomPaymentMethods(additionalUsers)
+    )
+    
     console.log('✓ Payment methods created')
 
     // 5. Create movie lists
@@ -414,6 +518,29 @@ async function seed() {
 
     // 9. Create user subscriptions
     console.log('Creating user subscriptions...')
+    
+    // Helper to generate random subscriptions
+    const generateRandomSubscriptions = (users: typeof additionalUsers) => {
+      const statuses: Array<'active' | 'cancelled' | 'expired'> = ['active', 'active', 'active', 'cancelled', 'expired']
+      const allPlans = [basicPlan, standardPlan, premiumPlan]
+      
+      return users.map(user => {
+        const status = statuses[Math.floor(Math.random() * statuses.length)]
+        const plan = allPlans[Math.floor(Math.random() * allPlans.length)]
+        const startDate = new Date(2024, Math.floor(Math.random() * 12), Math.floor(1 + Math.random() * 28))
+        
+        return {
+          userId: user.id,
+          planId: plan.id,
+          status,
+          startDate,
+          autoRenew: status === 'active' ? Math.random() > 0.3 : false,
+          ...(status === 'cancelled' && { cancelledAt: new Date(startDate.getTime() + 30 * 24 * 60 * 60 * 1000) }),
+          ...(status === 'expired' && { endDate: new Date(startDate.getTime() + 60 * 24 * 60 * 60 * 1000) })
+        }
+      })
+    }
+    
     await db.insert(schema.userSubscriptions).values([
       {
         userId: adminUser.id,
@@ -436,16 +563,64 @@ async function seed() {
         startDate: new Date('2024-08-01'),
         autoRenew: false,
       },
+      {
+        userId: user3.id,
+        planId: standardPlan.id,
+        status: 'active',
+        startDate: new Date('2024-07-10'),
+        autoRenew: true,
+      },
+      {
+        userId: goku.id,
+        planId: premiumPlan.id,
+        status: 'active',
+        startDate: new Date('2024-03-20'),
+        autoRenew: true,
+      },
+      {
+        userId: tonymontana.id,
+        planId: standardPlan.id,
+        status: 'active',
+        startDate: new Date('2024-05-05'),
+        autoRenew: true,
+      },
+      {
+        userId: _aldebaran.id,
+        planId: basicPlan.id,
+        status: 'active',
+        startDate: new Date('2024-09-12'),
+        autoRenew: true,
+      },
+      {
+        userId: _shion.id,
+        planId: basicPlan.id,
+        status: 'active',
+        startDate: new Date('2024-10-01'),
+        autoRenew: false,
+      },
+      {
+        userId: _cloud.id,
+        planId: premiumPlan.id,
+        status: 'active',
+        startDate: new Date('2024-04-15'),
+        autoRenew: true,
+      },
     ])
+    
+    // Add subscriptions for additional users
+    await db.insert(schema.userSubscriptions).values(
+      generateRandomSubscriptions(additionalUsers)
+    )
 
     console.log('✓ User subscriptions created')
 
     console.log('✅ Database seeded successfully!')
     console.log('\n📊 Summary:')
     console.log(`  - 2 roles`)
-    console.log(`  - 4 users (admin@videovision.com / john.doe@example.com)`)
+    console.log(`  - 59 users (9 initial + 50 additional)`)
     console.log(`  - 3 subscription plans`)
-    console.log(`  - 3 active subscriptions`)
+    console.log(`  - 53 active subscriptions (initial + random)`)
+    console.log(`  - 59 payment methods`)
     console.log(`  - 4 movie lists`)
     console.log(`  - 9 movie list items`)
     console.log(`  - 4 reviews`)
@@ -453,6 +628,8 @@ async function seed() {
     console.log('\n🔑 Login credentials (all users use password: "password123"):')
     console.log('  Admin: admin@videovision.com (Premium Plan)')
     console.log('  User:  john.doe@example.com (Standard Plan)')
+    console.log('\n📧 Additional 50 users: firstname.lastnameNUMBER@videovision.com')
+    console.log('  Example: emma.smith10@videovision.com, liam.johnson11@videovision.com, etc.')
 
   } catch (error) {
     console.error('❌ Error seeding database:', error)

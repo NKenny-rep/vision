@@ -39,8 +39,8 @@ const _props = withDefaults(defineProps<Props>(), {
     />
     
     <!-- Gradient Overlay - Stronger fade at top to blend with navbar -->
-    <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/70"/>
-    <div class="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40"/>
+    <div class="absolute inset-0 bg-linear-to-b from-black/80 via-transparent to-black/70"/>
+    <div class="absolute inset-0 bg-linear-to-r from-black/40 via-transparent to-black/40"/>
 
     <!-- Content -->
     <div class="relative z-20 container mx-auto px-4 py-32 text-center">

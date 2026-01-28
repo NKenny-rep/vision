@@ -67,6 +67,7 @@ const handleSubmit = async () => {
             :rows="5"
             :maxlength="1000"
             autoresize
+            class="w-full"
           />
           <template #help>
             <div class="flex justify-between text-sm">

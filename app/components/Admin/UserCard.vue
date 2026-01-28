@@ -24,18 +24,18 @@ const { t } = useI18n()
 
 <template>
   <UCard class="overflow-hidden">
-    <div class="stack-3">
+    <div class="stack-4">
       <!-- User Info Header -->
-      <div class="flex-start gap-3 pb-3 border-b border-default">
+      <div class="flex-start gap-4 pb-4 border-b border-default">
         <UIAvatar :src="user.avatar" :name="user.name" :alt="user.name" size="md" />
         <div class="flex-1 min-w-0">
-          <h3 class="font-semibold text-white truncate">{{ user.name }}</h3>
-          <p class="text-xs text-muted">ID: {{ user.id }}</p>
+          <h3 class="font-semibold text-white truncate text-base">{{ user.name }}</h3>
+          <p class="text-sm text-muted">ID: {{ user.id }}</p>
         </div>
       </div>
 
       <!-- User Details -->
-      <div class="stack-2">
+      <div class="stack-3">
         <UIInfoRow
           icon="i-heroicons-envelope"
           :label="t('admin.users.table.email')"

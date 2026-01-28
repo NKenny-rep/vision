@@ -175,7 +175,7 @@ onMounted(async () => {
         />
 
         <!-- Payment Methods List Component -->
-        <ProfilePaymentMethodsList
+        <ProfilePaymentMethodList
           :payment-methods="[...(profile?.paymentMethods || [])]"
           @remove="handleRemovePayment"
         />
