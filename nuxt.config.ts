@@ -50,6 +50,11 @@ export default defineNuxtConfig({
     }
   },
 
+  experimental: {
+    // Inline CSS to prevent FOUC
+    inlineSSRStyles: true
+  },
+
   // i18n Configuration
   i18n: {
     
