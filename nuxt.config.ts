@@ -26,11 +26,6 @@ export default defineNuxtConfig({
     preference: 'dark'
   },
 
-  ui: {
-    primary: 'orange',
-    gray: 'neutral'
-  },
-
   app: {
     head: {
       title: 'VideoVision - Stream Unlimited Movies & TV Shows',
@@ -53,6 +48,11 @@ export default defineNuxtConfig({
         lang: 'en'
       }
     }
+  },
+
+  experimental: {
+    // Inline CSS to prevent FOUC
+    inlineSSRStyles: true
   },
 
   // i18n Configuration
@@ -91,5 +91,13 @@ export default defineNuxtConfig({
       cookieCrossOrigin: false,
       cookieSecure: false,
     }
+  },
+
+  // Auto-imports configuration for Nuxt 4 app directory  
+  imports: {
+    dirs: [
+      'composables',
+      'composables/**',
+    ]
   }
 })

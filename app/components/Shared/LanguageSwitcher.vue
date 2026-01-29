@@ -20,12 +20,12 @@ const languageIcons: Record<string, string> = {
 // Initialize language from cookie on mount
 onMounted(() => {
   if (languageCookie.value && languageCookie.value !== locale.value) {
-    setLocale(languageCookie.value)
+    setLocale(languageCookie.value as 'en' | 'es')
   }
 })
 
 const switchLanguage = async (code: string) => {
-  await setLocale(code)
+  await setLocale(code as 'en' | 'es')
   languageCookie.value = code
 }
 
@@ -34,7 +34,7 @@ const languageItems = computed(() =>
     label: loc.name,
     icon: languageIcons[loc.code] || 'i-heroicons-language',
     onSelect: () => switchLanguage(loc.code),
-    class: locale.value === loc.code ? 'text-orange-500' : ''
+    class: locale.value === loc.code ? 'text-primary' : ''
   }))
 )
 

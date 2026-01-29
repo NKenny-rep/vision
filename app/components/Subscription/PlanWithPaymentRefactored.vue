@@ -13,7 +13,7 @@
  * - Plan card UI → PlanCard component
  */
 
-import type { PaymentMethodData } from '~/composables/usePaymentValidation'
+import type { PaymentMethodData } from '~/composables/forms/usePaymentValidation'
 
 interface SubscriptionPlan {
   id: number

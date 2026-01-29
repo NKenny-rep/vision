@@ -70,7 +70,7 @@ const toggleList = async () => {
       <button
         v-if="loggedIn"
         :disabled="isLoading"
-        class="w-8 h-8 rounded-full bg-black/80 hover:bg-orange-500 flex items-center justify-center transition-all"
+        class="w-8 h-8 rounded-full bg-black/80 hover:bg-primary flex-center transition-all duration-300"
         :class="{ 'opacity-50 cursor-not-allowed': isLoading, 'ring-2 ring-orange-500': isInList }"
         :title="isInList ? 'Remove from My List' : 'Add to My List'"
         @click.stop.prevent="toggleList"

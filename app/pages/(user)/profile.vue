@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { ProfileUpdateData } from '~/composables/useProfile'
-import type { PaymentMethodData } from '~/composables/usePaymentValidation'
+import type { ProfileUpdateData } from '~/composables/user/useProfile'
+import type { PaymentMethodData } from '~/composables/forms/usePaymentValidation'
 import { getInitialsFromName } from '~/utils/userHelpers'
 
 const { t } = useI18n()
@@ -175,7 +175,7 @@ onMounted(async () => {
         />
 
         <!-- Payment Methods List Component -->
-        <ProfilePaymentMethodsList
+        <ProfilePaymentMethodList
           :payment-methods="[...(profile?.paymentMethods || [])]"
           @remove="handleRemovePayment"
         />

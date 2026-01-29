@@ -82,3 +82,8 @@ export const BROWSE = {
   ],
   MOVIE_PLOT_TYPE: 'short' as const,
 } as const
+
+export const SEARCH = {
+  MIN_LENGTH: 3,
+  DEBOUNCE_MS: 400,
+} as const

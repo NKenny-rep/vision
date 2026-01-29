@@ -51,37 +51,28 @@ describe('useMovies', () => {
       Response: 'True',
     }
 
-    // Mock useFetch to return mock data
-    useFetchMock.mockReturnValueOnce({
-      data: ref(mockResponse),
-      error: ref(null),
-      status: ref('success'),
-      refresh: vi.fn(),
-    })
+    global.$fetch = vi.fn().mockResolvedValue(mockResponse)
 
     const { result } = await mountComposable()
-    const { data, error } = await result.searchMovies({ s: 'test' })
+    const { data, error, status } = await result.searchMovies({ s: 'test' })
 
-    expect(useFetchMock).toHaveBeenCalled()
-    expect(data.value).toEqual(mockResponse)
-    expect(error.value).toBeNull()
+    expect(global.$fetch).toHaveBeenCalled()
+    expect(data).toEqual(mockResponse.Search)
+    expect(error).toBeNull()
+    expect(status).toBe('success')
   })
 
   it('should handle movie search error', async () => {
     const mockError = new Error('Something went wrong!')
     
-    useFetchMock.mockReturnValueOnce({
-      data: ref(null),
-      error: ref(mockError),
-      status: ref('error'),
-      refresh: vi.fn(),
-    })
+    global.$fetch = vi.fn().mockRejectedValue(mockError)
 
     const { result } = await mountComposable()
-    const { data, error } = await result.searchMovies({ s: 'test' })
+    const { data, error, status } = await result.searchMovies({ s: 'test' })
 
-    expect(data.value).toBeNull()
-    expect(error.value).toEqual(mockError)
+    expect(data).toEqual([])
+    expect(error).toEqual({ message: 'Something went wrong!' })
+    expect(status).toBe('error')
   })
 
   it('should fetch movie details successfully by ID', async () => {

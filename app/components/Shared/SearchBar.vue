@@ -1,166 +1,200 @@
 <script setup lang="ts">
-/**
- * SearchBar Component (Molecule)
- * Movie search with expandable input and results dropdown
- */
+import { getPosterUrl } from '~/utils/image'
+import { SEARCH } from '~/constants'
+import type { OMDBSearchItem } from '~/types'
 
-interface SearchResult {
-  imdbID: string
-  Title: string
-  Year: string
-  Type: string
-  Poster: string
+interface Props {
+  alwaysOpen?: boolean
 }
+
+const props = withDefaults(defineProps<Props>(), {
+  alwaysOpen: false
+})
 
 const { searchMovies } = useMovies()
 const localePath = useLocalePath()
+const { t } = useI18n()
 
-const isOpen = ref(false)
-const query = ref('')
-const results = ref<SearchResult[]>([])
-const isSearching = ref(false)
+// Reactive state
+const state = reactive({
+  isOpen: props.alwaysOpen,
+  query: '',
+  results: [] as OMDBSearchItem[],
+  isSearching: false,
+  hasError: false
+})
 
-const toggleSearch = () => {
-  isOpen.value = !isOpen.value
-  if (isOpen.value) {
-    nextTick(() => {
-      const input = document.querySelector('#movie-search-input') as HTMLInputElement
-      input?.focus()
-    })
-  } else {
-    query.value = ''
-    results.value = []
-  }
-}
+let searchTimeout: NodeJS.Timeout | null = null
 
-const viewAllResults = () => {
-  if (query.value) {
-    navigateTo(localePath(`/movies?q=${encodeURIComponent(query.value)}`))
-    isOpen.value = false
-    query.value = ''
-    results.value = []
-  }
-}
+// Sync alwaysOpen prop
+watch(() => props.alwaysOpen, (val) => state.isOpen = val)
 
-const handleSearch = async () => {
-  if (query.value.trim().length < 3) {
-    results.value = []
-    return
-  }
+// Search state machine handlers
+const searchHandlers = {
+  reset: () => {
+    state.query = ''
+    state.results = []
+    state.hasError = false
+    if (searchTimeout) clearTimeout(searchTimeout)
+  },
   
-  isSearching.value = true
-  try {
-    const { data } = await searchMovies({ s: query.value.trim() })
-    results.value = data.value?.Search || []
-  } catch (error) {
-    console.error('Search error:', error)
-    results.value = []
-  } finally {
-    isSearching.value = false
+  toggle: () => {
+    if (props.alwaysOpen) return
+    state.isOpen = !state.isOpen
+    
+    if (state.isOpen) {
+      nextTick(() => document.getElementById('movie-search-input')?.focus())
+    } else {
+      searchHandlers.reset()
+    }
+  },
+  
+  execute: async () => {
+    if (searchTimeout) clearTimeout(searchTimeout)
+    if (!props.alwaysOpen) state.isOpen = true
+    
+    const trimmed = state.query.trim()
+    if (trimmed.length < SEARCH.MIN_LENGTH) {
+      state.results = []
+      state.hasError = false
+      return
+    }
+    
+    state.hasError = false
+    
+    searchTimeout = setTimeout(async () => {
+      if (state.query.trim().length < SEARCH.MIN_LENGTH) return
+      
+      state.isSearching = true
+      const { data, error, status } = await searchMovies({ s: state.query.trim() })
+      
+      state.results = (status === 'success' && data) ? data : []
+      state.hasError = status === 'empty' || !!error
+      state.isSearching = false
+    }, SEARCH.DEBOUNCE_MS)
   }
 }
 
-const selectMovie = (movie: SearchResult) => {
-  navigateTo(localePath(`/watch/${movie.imdbID}`))
-  isOpen.value = false
-  query.value = ''
-  results.value = []
+// Navigation handlers
+const navigate = {
+  toMovie: (movie: OMDBSearchItem) => {
+    navigateTo(localePath(`/watch/${movie.imdbID}`))
+    state.isOpen = false
+    searchHandlers.reset()
+  },
+  
+  toResults: () => {
+    if (!state.query) return
+    navigateTo(localePath(`/movies?q=${encodeURIComponent(state.query)}`))
+    state.isOpen = false
+    searchHandlers.reset()
+  }
 }
 
-const getPosterUrl = (poster: string) => {
-  return poster !== 'N/A' 
-    ? poster 
-    : 'https://placehold.co/50x75/1a1a1a/orange?text=No+Image'
-}
+// Computed properties
+const shouldShowResults = computed(() => 
+  state.query.length >= SEARCH.MIN_LENGTH && (state.results.length > 0 || state.hasError)
+)
+
+const hasInputError = computed(() => 
+  state.hasError && state.query.length >= SEARCH.MIN_LENGTH && !state.isSearching && state.results.length === 0
+)
+
+// Computed classes
+const containerClass = computed(() => 
+  props.alwaysOpen ? 'relative w-full' : 'search-container'
+)
+
+const inputClass = computed(() => [
+  props.alwaysOpen ? 'w-full' : 'w-full @[900px]:w-45 lg:w-70',
+  { 'border border-red-500': hasInputError.value }
+])
+
+const trailingAction = computed(() => 
+  props.alwaysOpen ? searchHandlers.reset : searchHandlers.toggle
+)
+
+onUnmounted(() => searchTimeout && clearTimeout(searchTimeout))
+
+defineExpose({
+  state,
+  searchHandlers,
+  navigate
+})
+
 </script>
 
 <template>
-  <div class="relative flex items-center">
-    <!-- Search Input (appears when open) -->
-    <Transition
-      enter-active-class="transition-all duration-300 ease-out"
-      enter-from-class="opacity-0 scale-95"
-      enter-to-class="opacity-100 scale-100"
-      leave-active-class="transition-all duration-200 ease-in"
-      leave-from-class="opacity-100 scale-100"
-      leave-to-class="opacity-0 scale-95"
-    >
-      <div v-if="isOpen" class="absolute right-0 top-1/2 -translate-y-1/2" style="width: 300px;">
-        <UInput
-          id="movie-search-input"
-          v-model="query"
-          placeholder="Search movies..."
-          size="lg"
-          icon="i-heroicons-magnifying-glass"
-          :trailing="true"
-          @input="handleSearch"
-          @keyup.escape="toggleSearch"
-        >
-          <template #trailing>
-            <UIButton
-              variant="ghost"
-              size="xs"
-              icon="i-heroicons-x-mark"
-              aria-label="Close search"
-              @click="toggleSearch"
-            />
-          </template>
-        </UInput>
-        
-        <!-- Search Results Dropdown -->
-        <div 
-          v-if="results.length > 0" 
-          class="absolute top-full mt-2 w-full bg-gray-900 border border-gray-800 rounded-lg shadow-xl max-h-96 overflow-y-auto z-50"
-        >
-          <div
-            v-for="movie in results"
-            :key="movie.imdbID"
-            class="flex items-center gap-3 p-3 hover:bg-gray-800 cursor-pointer transition-colors"
-            @click="selectMovie(movie)"
-          >
-            <img 
-              :src="getPosterUrl(movie.Poster)" 
-              :alt="movie.Title"
-              class="w-12 h-18 object-cover rounded"
-            >
-            <div class="flex-1 min-w-0">
-              <p class="text-white font-semibold truncate">{{ movie.Title }}</p>
-              <p class="text-gray-400 text-sm">{{ movie.Year }} • {{ movie.Type }}</p>
-            </div>
-          </div>
-          
-          <!-- View All Results Button -->
-          <div class="border-t border-gray-800 p-2">
-            <UIButton
-              block
-              variant="ghost"
-              size="sm"
-              class="text-orange-500 hover:text-orange-400"
-              @click="viewAllResults"
-            >
-              View all results for "{{ query }}"
-            </UIButton>
-          </div>
-        </div>
-        
-        <!-- No Results -->
-        <div 
-          v-else-if="query.length >= 2 && !isSearching && results.length === 0" 
-          class="absolute top-full mt-2 w-full bg-gray-900 border border-gray-800 rounded-lg shadow-xl p-4 z-50"
-        >
-          <p class="text-gray-400 text-center">No movies found</p>
-        </div>
-      </div>
-    </Transition>
-    
-    <!-- Search Icon Button (appears when closed) -->
+  <div class="flex items-center relative" :class="{ 'w-full': alwaysOpen }">
     <UIButton
-      v-if="!isOpen"
+      v-if="!alwaysOpen"
       variant="ghost"
       size="lg"
       icon="i-heroicons-magnifying-glass"
       aria-label="Search movies"
-      @click="toggleSearch"
+      @click="searchHandlers.toggle"
     />
+    
+    <div v-if="alwaysOpen || state.isOpen" class="transition-all duration-200 ease-out" :class="containerClass">
+      <UInput
+        id="movie-search-input"
+        v-model="state.query"
+        :placeholder="t('search.placeholder')"
+        size="lg"
+        icon="i-heroicons-magnifying-glass"
+        :class="inputClass"
+        @input="searchHandlers.execute"
+        @keyup.escape="searchHandlers.toggle"
+      >
+        <template v-if="(alwaysOpen && state.query) || !alwaysOpen" #trailing>
+          <UIButton
+            variant="ghost"
+            size="xs"
+            icon="i-heroicons-x-mark"
+            :aria-label="alwaysOpen ? 'Clear search' : 'Close search'"
+            @click="trailingAction"
+          />
+        </template>
+      </UInput>
+        
+      <Transition
+        enter-active-class="transition-all duration-200 ease-out"
+        enter-from-class="opacity-0 -translate-y-2"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition-all duration-150 ease-in"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 -translate-y-2"
+      >
+        <div v-if="shouldShowResults" class="search-dropdown">
+          <UTooltip
+            v-for="movie in state.results"
+            :key="movie.imdbID"
+            :text="movie.Title"
+            :popper="{ placement: 'top' }"
+            :ui="{ 
+              content: 'bg-primary text-white ring-1 ring-primary shadow-lg'
+            }"
+          >
+            <button
+              type="button"
+              class="search-item w-full text-left"
+              @click="navigate.toMovie(movie)"
+            >
+              <img :src="getPosterUrl(movie.Poster)" :alt="movie.Title" class="search-poster">
+              <div class="flex-1 min-w-0 flex items-center justify-between gap-3">
+                <p class="text-white font-semibold truncate">{{ movie.Title }}</p>
+                <p class="text-muted text-sm whitespace-nowrap shrink-0">{{ movie.Year }} • {{ movie.Type }}</p>
+              </div>
+            </button>
+          </UTooltip>
+          
+          <div v-if="state.hasError && !state.results.length" class="flex-center flex-col gap-2 p-6">
+            <UIcon name="i-heroicons-exclamation-triangle" class="w-8 h-8 text-red-500" />
+            <p class="text-red-500 text-center text-sm">{{ t('search.noResults') }}</p>
+          </div>
+        </div>
+      </Transition>
+    </div>
   </div>
 </template>
+

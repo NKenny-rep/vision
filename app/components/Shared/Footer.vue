@@ -4,8 +4,8 @@
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
         <!-- Company Info -->
         <div>
-          <h3 class="text-orange-500 font-bold text-xl mb-4">
-            <span class="text-orange-500">Video</span><span class="text-white">Vision</span>
+          <h3 class="text-primary font-bold text-xl mb-4">
+            <span class="text-primary">Video</span><span class="text-white">Vision</span>
           </h3>
           <p class="text-gray-400 text-sm">
             Your premium destination for streaming entertainment.
@@ -17,17 +17,17 @@
           <h4 class="text-white font-semibold mb-4">Company</h4>
           <ul class="space-y-2">
             <li>
-              <a href="#about" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">
+              <a href="#about" class="text-gray-400 hover:text-primary text-sm transition-colors">
                 About Us
               </a>
             </li>
             <li>
-              <a href="#careers" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">
+              <a href="#careers" class="text-gray-400 hover:text-primary text-sm transition-colors">
                 Careers
               </a>
             </li>
             <li>
-              <a href="#press" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">
+              <a href="#press" class="text-gray-400 hover:text-primary text-sm transition-colors">
                 Press
               </a>
             </li>
@@ -44,12 +44,12 @@
               </a>
             </li>
             <li>
-              <a href="#contact" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">
+              <a href="#contact" class="text-gray-400 hover:text-primary text-sm transition-colors">
                 Contact Us
               </a>
             </li>
             <li>
-              <a href="#faq" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">
+              <a href="#faq" class="text-gray-400 hover:text-primary text-sm transition-colors">
                 FAQ
               </a>
             </li>
@@ -61,17 +61,17 @@
           <h4 class="text-white font-semibold mb-4">Legal</h4>
           <ul class="space-y-2">
             <li>
-              <a href="#privacy" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">
+              <a href="#privacy" class="text-gray-400 hover:text-primary text-sm transition-colors">
                 Privacy Policy
               </a>
             </li>
             <li>
-              <a href="#terms" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">
+              <a href="#terms" class="text-gray-400 hover:text-primary text-sm transition-colors">
                 Terms of Service
               </a>
             </li>
             <li>
-              <a href="#cookies" class="text-gray-400 hover:text-orange-500 text-sm transition-colors">
+              <a href="#cookies" class="text-gray-400 hover:text-primary text-sm transition-colors">
                 Cookie Settings
               </a>
             </li>
@@ -83,28 +83,28 @@
       <div class="flex justify-center gap-6 mb-8 pb-8 border-b border-orange-500/10">
         <a 
           href="#facebook" 
-          class="text-gray-400 hover:text-orange-500 transition-colors" 
+          class="text-gray-400 hover:text-primary transition-colors" 
           aria-label="Follow us on Facebook"
         >
           <UIcon name="i-heroicons-globe-alt" class="w-6 h-6" />
         </a>
         <a 
           href="#twitter" 
-          class="text-gray-400 hover:text-orange-500 transition-colors" 
+          class="text-gray-400 hover:text-primary transition-colors" 
           aria-label="Follow us on Twitter"
         >
           <UIcon name="i-heroicons-at-symbol" class="w-6 h-6" />
         </a>
         <a 
           href="#instagram" 
-          class="text-gray-400 hover:text-orange-500 transition-colors" 
+          class="text-gray-400 hover:text-primary transition-colors" 
           aria-label="Follow us on Instagram"
         >
           <UIcon name="i-heroicons-camera" class="w-6 h-6" />
         </a>
         <a 
           href="#youtube" 
-          class="text-gray-400 hover:text-orange-500 transition-colors" 
+          class="text-gray-400 hover:text-primary transition-colors" 
           aria-label="Subscribe to our YouTube channel"
         >
           <UIcon name="i-heroicons-play-circle" class="w-6 h-6" />

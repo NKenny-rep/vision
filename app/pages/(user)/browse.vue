@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { OMDBMovie } from '~/types'
 import { BROWSE } from '~/constants'
+import { getPosterUrl } from '~/utils/image'
 
 const localePath = useLocalePath();
 const { t } = useI18n();
@@ -9,8 +9,6 @@ definePageMeta({
   layout: 'default',
   middleware: ['auth']
 })
-
-// SEO Meta Tags
 useSeoMeta({
   title: `${t('browse.title') || 'Browse Movies & TV Shows'} - ${t('common.appName')}`,
   description: t('browse.description') || 'Discover thousands of movies and TV shows. Stream unlimited entertainment on VideoVision.',
@@ -21,18 +19,43 @@ useSeoMeta({
 })
 
 const { getMovie } = useMovies()
+const { showError } = useToastNotification()
+
+// Helper to check if any results have errors
+const hasErrors = (results: Awaited<ReturnType<typeof getMovie>>[]) => {
+  return results.some(r => r.error.value != null)
+}
+
+// Helper to count errors
+const getErrorCount = (results: Awaited<ReturnType<typeof getMovie>>[]) => {
+  return results.filter(r => r.error.value != null).length
+}
 
 // Fetch all movies with SSR support (Single Responsibility: data fetching)
-const { data: moviesData, pending: isLoading, error } = await useAsyncData(
+const { data: moviesData, status, refresh: refreshBrowseMovies } = await useAsyncData(
   'browse-movies',
   async () => {
     const results = await Promise.all(
       BROWSE.FEATURED_MOVIES.map(title => getMovie(title, { plot: BROWSE.MOVIE_PLOT_TYPE }))
     )
     
-    return results
+    if (hasErrors(results)) {
+      const errorCount = getErrorCount(results)
+      showError(t('errors.apiError', { count: errorCount }))
+    }
+    
+    const validMovies = results
       .filter(r => r.data.value && r.data.value.Response !== 'False')
       .map(r => r.data.value!)
+    
+    if (validMovies.length === 0 && hasErrors(results)) {
+      throw createError({
+        statusCode: 500,
+        message: 'Failed to load movies'
+      })
+    }
+    
+    return validMovies
   },
   {
     server: true,
@@ -40,8 +63,15 @@ const { data: moviesData, pending: isLoading, error } = await useAsyncData(
   }
 )
 
+const isLoading = computed(() => status.value === 'pending')
+
 const movies = computed(() => moviesData.value || [])
 const featuredMovie = computed(() => movies.value[0] || null)
+
+// Get all displayed movie titles to exclude from lazy load
+const displayedMovieTitles = computed(() => {
+  return movies.value.map(m => m.Title)
+})
 
 // Custom categories with specific labels
 const categories = computed(() => {
@@ -62,36 +92,23 @@ const categories = computed(() => {
     { title: 'Oldie Goldies', videos: allMovies.filter(m => parseInt(m.Year) < 2000).slice(0, 10) }
   ].filter(cat => cat.videos.length > 0)
 })
-
-// Helper: Get poster URL with fallback (Single Responsibility: image handling)
-const getPosterUrl = (movie: OMDBMovie) => {
-  if (movie.Poster && movie.Poster !== 'N/A') {
-    return movie.Poster
-  }
-  return `https://placehold.co/300x450/1a1a1a/orange?text=${encodeURIComponent(movie.Title)}`
-}
 </script>
 
 <template>
-  <div class="min-h-screen bg-black">
-    <!-- Error State -->
-    <div v-if="error" class="container mx-auto px-4 py-20 text-center">
-      <UIcon name="i-heroicons-exclamation-triangle" class="w-16 h-16 text-red-500 mx-auto mb-4" />
-      <p class="text-gray-400 text-lg">{{ $t('errors.loadingFailed') }}</p>
-    </div>
-
-    <!-- Skeleton Loading State -->
-    <MovieBrowseSkeleton v-else-if="isLoading" />
+  <MovieApiErrorBoundary @reload="refreshBrowseMovies">
+    <div class="min-h-screen bg-black">
+      <!-- Skeleton Loading State -->
+      <MovieBrowseSkeleton v-if="isLoading" />
 
     <template v-else>
       <!-- Hero Section -->
       <section v-if="featuredMovie" class="relative h-[50vh] -mt-24">
         <!-- Gradient Overlays -->
-        <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent z-10"/>
-        <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black z-10"/>
+        <div class="absolute inset-0 bg-linear-to-r from-black via-black/80 to-transparent z-10"/>
+        <div class="absolute inset-0 bg-linear-to-b from-black/40 via-transparent to-black z-10"/>
         
         <img 
-          :src="getPosterUrl(featuredMovie)" 
+          :src="getPosterUrl(featuredMovie.Poster)" 
           :alt="featuredMovie.Title" 
           class="w-full h-full object-cover object-center"
         >
@@ -116,6 +133,7 @@ const getPosterUrl = (movie: OMDBMovie) => {
                   {{ $t('movies.playNow') }}
                 </UIButton>
                 <UIButton
+                  :to="localePath(`/watch/${featuredMovie.imdbID}`)"
                   variant="secondary"
                   size="xl"
                   icon="i-heroicons-information-circle"
@@ -151,11 +169,20 @@ const getPosterUrl = (movie: OMDBMovie) => {
         />
       </div>
 
+      <!-- Lazy Load Section (below genre sections) -->
+      <div v-if="categories.length > 0" class="container mx-auto pb-20">
+        <MovieLazyList 
+          :title="$t('browse.discoverMore')"
+          :exclude-movies="displayedMovieTitles"
+        />
+      </div>
+
       <!-- Empty State - only show if not loading and no data -->
       <div v-else-if="moviesData && categories.length === 0" class="text-center py-20">
         <UIcon name="i-heroicons-film" class="w-16 h-16 text-gray-600 mx-auto mb-4" />
         <p class="text-gray-400">{{ $t('movies.noMoviesFound') }}</p>
       </div>
     </template>
-  </div>
+    </div>
+  </MovieApiErrorBoundary>
 </template>

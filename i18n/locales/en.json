@@ -39,7 +39,9 @@
     "isRequired": "is required",
     "pleaseWait": "Please wait...",
     "validating": "Validating...",
-    "remove": "Remove"
+    "remove": "Remove",
+    "all": "All",
+    "reload": "Reload"
   },
   "meta": {
     "title": "VideoVision - Stream Unlimited Movies & TV Shows",
@@ -62,7 +64,10 @@
   },
   "browse": {
     "title": "Browse Movies & TV Shows",
-    "description": "Discover thousands of movies and TV shows. Stream unlimited entertainment."
+    "description": "Discover thousands of movies and TV shows. Stream unlimited entertainment.",
+    "discoverMore": "Discover More",
+    "series": "Series",
+    "noResultsFilter": "No results found for this filter"
   },
   "auth": {
     "login": {
@@ -194,7 +199,6 @@
     "director": "Director",
     "cast": "Cast",
     "playNow": "Play Now",
-    "moreInfo": "More Info",
     "noMoviesInGenre": "No movies found in this genre.",
     "plot": "Plot",
     "noMoviesFound": "No movies found",
@@ -203,7 +207,8 @@
     "removeFromList": "Remove from List",
     "play": "Play",
     "watchTrailer": "Watch Trailer",
-    "moreInfo": "More Info"
+    "moreInfo": "More Info",
+    "allMoviesLoaded": "You've reached the end! All movies loaded."
   },
   "reviews": {
     "title": "Reviews",
@@ -264,7 +269,13 @@
         "description": "Start adding movies to build your personal collection",
         "browseButton": "Browse Movies"
       },
-      "removeButton": "Remove from List"
+      "removeButton": "Remove from List",
+      "messages": {
+        "added": "Added to your list! Enjoy watching it later.",
+        "removed": "Removed from your list. You can always add it back!",
+        "addFailed": "Oops! Couldn't add to your list. Please try again.",
+        "removeFailed": "Couldn't remove from your list. Please try again."
+      }
     }
   },
   "profile": {
@@ -282,7 +293,6 @@
     "subscription": {
       "title": "Subscription",
       "noSubscription": "No active subscription",
-      "currentPlan": "Current Plan",
       "startDate": "Start Date",
       "endDate": "End Date",
       "autoRenew": "Auto Renew",
@@ -354,7 +364,6 @@
       "createVideo": "Create Video",
       "createVideoSubtitle": "Add a new video to your library",
       "id": "ID",
-      "title": "Title",
       "status": "Status",
       "views": "Views",
       "actions": "Actions",
@@ -454,12 +463,23 @@
     "forbidden": "Access forbidden",
     "networkError": "Network error occurred",
     "tryAgain": "Please try again",
-    "loadingFailed": "Failed to load content"
+    "loadingFailed": "Failed to load content",
+    "loadFailed": "Failed to load content",
+    "movieLoadFailed": "Failed to load movies",
+    "apiError": "Failed to load {count} movie(s) from API",
+    "omdbApiLimit": "OMDB API Limit Reached",
+    "omdbApiLimitMessage": "The movie database API limit has been reached. Please try again later or contact support.",
+    "apiLimitReached": "API Limit Reached",
+    "apiLimitMessage": "The OMDB API key limit has been reached or is invalid. Please try again later.",
+    "someMoviesFailed": "Failed to load {count} movie(s)",
+    "searchFailed": "Search failed. Please try again.",
+    "checkConnectionRetry": "Please check your internet connection and try again."
   },
   "search": {
     "title": "Movie Database",
     "titleHighlight": "Database",
     "subtitle": "Search by title, then refine results with type and year filters",
+    "placeholder": "Search movies...",
     "searchPlaceholder": "Search for movies, series, or episodes...",
     "searchButton": "Search",
     "filterByType": "Filter by Type",
@@ -470,6 +490,9 @@
     "requiresSearch": "(requires search)",
     "enterSearchTerm": "Please enter a search term",
     "noResultsFound": "No results found",
+    "noResults": "No movies found",
+    "viewAll": "View all results for \"{query}\"",
+    "viewAllShort": "View all ({count})",
     "searchFailed": "Failed to search movies",
     "movie": "Movie",
     "series": "Series",

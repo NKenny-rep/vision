@@ -40,35 +40,25 @@ const performSearch = async () => {
   isLoading.value = true
   error.value = ''
 
-  try {
-    const params: OMDBSearchParams = {
-      s: searchQuery.value,
-      page: currentPage.value,
-      ...(selectedType.value && { type: selectedType.value }),
-      ...(selectedYear.value && { y: selectedYear.value })
-    }
+  const params: OMDBSearchParams = {
+    s: searchQuery.value,
+    page: currentPage.value,
+    ...(selectedType.value && { type: selectedType.value }),
+    ...(selectedYear.value && { y: selectedYear.value })
+  }
 
-    const { data } = await searchMovies(params)
-    
-    if (data.value?.Response === 'True') {
-      movies.value = data.value.Search || []
-      totalResults.value = parseInt(data.value.totalResults || '0')
-    } else {
-      movies.value = []
-      totalResults.value = 0
-      error.value = data.value?.Error || 'No results found'
-    }
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      error.value = err.message || 'Failed to search movies';
-    } else {
-      error.value = 'Failed to search movies';
-    }
+  const result = await searchMovies(params)
+  
+  if (result.data && result.data.length > 0) {
+    movies.value = result.data
+    totalResults.value = parseInt(result.data.totalResults || '0')
+  } else {
     movies.value = []
     totalResults.value = 0
-  } finally {
-    isLoading.value = false
+    error.value = result.error?.message || 'No results found'
   }
+
+  isLoading.value = false
 }
 
 // Handle page change
@@ -94,8 +84,9 @@ const yearOptions = Array.from({ length: 50 }, (_, i) => currentYear - i)
 </script>
 
 <template>
-  <div class="min-h-screen bg-black py-8">
-    <div class="container mx-auto px-4">
+  <MovieApiErrorBoundary @reload="performSearch">
+    <div class="min-h-screen bg-black py-8">
+      <div class="container mx-auto px-4">
       <!-- Header -->
       <div class="mb-8">
         <h1 class="text-4xl font-bold text-white mb-2">
@@ -203,6 +194,7 @@ const yearOptions = Array.from({ length: 50 }, (_, i) => currentYear - i)
         @page-change="handlePageChange"
         @view-details="handleViewDetails"
       />
+      </div>
     </div>
-  </div>
+  </MovieApiErrorBoundary>
 </template>

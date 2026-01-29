@@ -1,4 +1,4 @@
-import type { PaymentMethodData } from '~/composables/usePaymentValidation'
+import type { PaymentMethodData } from '~/composables/forms/usePaymentValidation'
 import { API_ROUTES } from '~/constants/apiRoutes'
 
 export interface PaymentType {

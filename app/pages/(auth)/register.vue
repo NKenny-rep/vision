@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { PaymentMethodData } from '~/composables/useRegistrationForm'
+import type { PaymentMethodData } from '~/composables/auth/useRegistrationForm'
 
 const { t } = useI18n()
 const localePath = useLocalePath()

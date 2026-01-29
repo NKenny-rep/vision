@@ -33,7 +33,7 @@ const { t } = useI18n()
     <button
       type="button"
       :title="t('common.edit')"
-      class="text-orange-500 hover:text-orange-400 transition-colors p-2 rounded hover:bg-orange-500/10"
+      class="text-primary hover:text-primary-400 transition-colors p-2 rounded hover:bg-primary/10"
       @click.stop="emit('edit', user)"
     >
       <UIcon name="i-heroicons-pencil-square" class="w-5 h-5" />

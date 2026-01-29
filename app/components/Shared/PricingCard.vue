@@ -57,7 +57,7 @@ const cardClasses = computed(() => {
       v-if="featured" 
       class="absolute -top-4 left-1/2 transform -translate-x-1/2"
     >
-      <span class="bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
+      <span class="bg-primary text-white px-4 py-1 rounded-full text-sm font-semibold">
         {{ featuredLabel }}
       </span>
     </div>
@@ -81,7 +81,7 @@ const cardClasses = computed(() => {
       >
         <UIcon 
           :name="feature.icon" 
-          class="w-6 h-6 text-orange-500 shrink-0 mt-0.5" 
+          class="w-6 h-6 text-primary shrink-0 mt-0.5" 
         />
         <span class="text-gray-300">{{ feature.text }}</span>
       </li>

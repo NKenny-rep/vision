@@ -39,8 +39,8 @@ const _props = withDefaults(defineProps<Props>(), {
     />
     
     <!-- Gradient Overlay - Stronger fade at top to blend with navbar -->
-    <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/70"/>
-    <div class="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40"/>
+    <div class="absolute inset-0 bg-linear-to-b from-black/80 via-transparent to-black/70"/>
+    <div class="absolute inset-0 bg-linear-to-r from-black/40 via-transparent to-black/40"/>
 
     <!-- Content -->
     <div class="relative z-20 container mx-auto px-4 py-32 text-center">
@@ -49,7 +49,7 @@ const _props = withDefaults(defineProps<Props>(), {
         class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 animate-fade-in"
       >
         {{ title }}<br >
-        and <span class="text-orange-500">{{ titleHighlight }}</span>
+        and <span class="text-primary">{{ titleHighlight }}</span>
       </h1>
       
       <p class="text-xl md:text-2xl text-gray-300 mb-4 max-w-3xl mx-auto">
@@ -78,7 +78,7 @@ const _props = withDefaults(defineProps<Props>(), {
       v-if="showScrollIndicator"
       class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce"
     >
-      <UIcon name="i-heroicons-chevron-down" class="w-8 h-8 text-orange-500" />
+      <UIcon name="i-heroicons-chevron-down" class="w-8 h-8 text-primary" />
     </div>
   </section>
 </template>

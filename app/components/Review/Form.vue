@@ -56,7 +56,7 @@ const handleSubmit = async () => {
           </div>
           <template #help>
             <span v-if="rating === 0" class="text-gray-500">{{ t('reviews.clickToRate') }}</span>
-            <span v-else class="text-orange-500">{{ t('reviews.starsSelected', { count: rating }) }}</span>
+            <span v-else class="text-primary">{{ t('reviews.starsSelected', { count: rating }) }}</span>
           </template>
         </UFormField>
 
@@ -67,6 +67,7 @@ const handleSubmit = async () => {
             :rows="5"
             :maxlength="1000"
             autoresize
+            class="w-full"
           />
           <template #help>
             <div class="flex justify-between text-sm">

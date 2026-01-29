@@ -1,5 +1,6 @@
 // app/composables/useMovieList.enhanced.test.ts
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { useMovieList } from './useMovieList'
 import type { MovieListItem, MovieListResponse } from './useMovieList'
 
@@ -9,13 +10,29 @@ vi.stubGlobal('$fetch', mockFetch)
 
 const mockEnsureAuthenticated = vi.fn()
 const mockIsSessionReady = { value: true }
+const mockShowSuccess = vi.fn()
+const mockShowError = vi.fn()
+const mockT = vi.fn((key: string) => key)
 
-vi.mock('./useAuthentication', () => ({
-  useAuthentication: () => ({
+mockNuxtImport('useAuthentication', () => {
+  return () => ({
     ensureAuthenticated: mockEnsureAuthenticated,
     isSessionReady: mockIsSessionReady
   })
-}))
+})
+
+mockNuxtImport('useToastNotification', () => {
+  return () => ({
+    showSuccess: mockShowSuccess,
+    showError: mockShowError
+  })
+})
+
+mockNuxtImport('useI18n', () => {
+  return () => ({
+    t: mockT
+  })
+})
 
 describe('useMovieList - Enhanced Tests', () => {
   const mockMovieListItem: MovieListItem = {

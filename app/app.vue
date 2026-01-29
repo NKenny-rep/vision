@@ -1,8 +1,6 @@
 <script setup lang="ts">
-// Setup i18n head meta tags
 const { locale, t } = useI18n();
 
-// Update HTML lang attribute dynamically
 useHead({
   htmlAttrs: {
     lang: locale
@@ -14,7 +12,7 @@ useHead({
 </script>
 
 <template>
-   <UApp>
+  <UApp>
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>

@@ -49,7 +49,7 @@ describe('Shared/LanguageSwitcher', () => {
     const wrapper = await mountSuspended(LanguageSwitcher)
 
     const currentItem = wrapper.vm.languageItems.find(item => item.label === 'English')
-    expect(currentItem?.class).toContain('text-orange-500')
+    expect(currentItem?.class).toContain('text-primary')
   })
 
   it('should call setLocale when language is selected', async () => {

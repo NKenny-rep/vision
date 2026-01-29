@@ -8,7 +8,7 @@
  */
 
 import { CARD_BRANDS } from '~/constants'
-import type { PaymentMethodData } from '~/composables/usePaymentValidation'
+import type { PaymentMethodData } from '~/composables/forms/usePaymentValidation'
 
 interface PaymentType {
   id: number

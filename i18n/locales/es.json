@@ -39,7 +39,9 @@
     "isRequired": "es requerido",
     "pleaseWait": "Por favor espere...",
     "validating": "Validando...",
-    "remove": "Quitar"
+    "remove": "Quitar",
+    "all": "Todos",
+    "reload": "Recargar"
   },
   "meta": {
     "title": "VideoVision - Transmite Películas y Series Ilimitadas",
@@ -62,7 +64,10 @@
   },
   "browse": {
     "title": "Explorar Películas y Series",
-    "description": "Descubre miles de películas y series. Entretenimiento ilimitado."
+    "description": "Descubre miles de películas y series. Entretenimiento ilimitado.",
+    "discoverMore": "Descubre Más",
+    "series": "Series",
+    "noResultsFilter": "No se encontraron resultados para este filtro"
   },
   "auth": {
     "login": {
@@ -194,7 +199,6 @@
     "director": "Director",
     "cast": "Reparto",
     "playNow": "Reproducir Ahora",
-    "moreInfo": "Más Información",
     "noMoviesInGenre": "No se encontraron películas en este género.",
     "plot": "Sinopsis",
     "noMoviesFound": "No se encontraron películas",
@@ -203,7 +207,8 @@
     "removeFromList": "Quitar de Mi Lista",
     "play": "Reproducir",
     "watchTrailer": "Ver Tráiler",
-    "moreInfo": "Más Información"
+    "moreInfo": "Más Información",
+    "allMoviesLoaded": "¡Has llegado al final! Todas las películas cargadas."
   },
   "reviews": {
     "title": "Reseñas",
@@ -264,7 +269,13 @@
         "description": "Comienza a agregar películas para construir tu colección personal",
         "browseButton": "Explorar Películas"
       },
-      "removeButton": "Eliminar de la Lista"
+      "removeButton": "Eliminar de la Lista",
+      "messages": {
+        "added": "¡Agregado a tu lista! Disfrútalo más tarde.",
+        "removed": "¡Eliminado de tu lista! Siempre puedes agregarlo de nuevo.",
+        "addFailed": "¡Ups! No se pudo agregar a tu lista. Por favor intenta de nuevo.",
+        "removeFailed": "No se pudo eliminar de tu lista. Por favor intenta de nuevo."
+      }
     }
   },
   "profile": {
@@ -282,7 +293,6 @@
     "subscription": {
       "title": "Suscripción",
       "noSubscription": "Sin suscripción activa",
-      "currentPlan": "Plan Actual",
       "startDate": "Fecha de Inicio",
       "endDate": "Fecha de Finalización",
       "autoRenew": "Renovación Automática",
@@ -359,7 +369,7 @@
       "createVideo": "Crear Video",
       "createVideoSubtitle": "Agregar un nuevo video a tu biblioteca",
       "id": "ID",
-      "title": "Título",
+      "videoTitle": "Título del Video",
       "status": "Estado",
       "views": "Vistas",
       "actions": "Acciones",
@@ -459,12 +469,23 @@
     "forbidden": "Acceso prohibido",
     "networkError": "Ocurrió un error de red",
     "tryAgain": "Por favor intenta de nuevo",
-    "loadingFailed": "Error al cargar el contenido"
+    "loadingFailed": "Error al cargar el contenido",
+    "loadFailed": "Error al cargar el contenido",
+    "movieLoadFailed": "Error al cargar películas",
+    "apiError": "Error al cargar {count} película(s) de la API",
+    "omdbApiLimit": "Límite de API OMDB Alcanzado",
+    "omdbApiLimitMessage": "Se ha alcanzado el límite de la API de base de datos de películas. Por favor intenta más tarde o contacta a soporte.",
+    "apiLimitReached": "Límite de API Alcanzado",
+    "apiLimitMessage": "Se ha alcanzado el límite de la clave API de OMDB o la clave no es válida. Por favor intenta de nuevo más tarde.",
+    "someMoviesFailed": "Error al cargar {count} película(s)",
+    "searchFailed": "Error en la búsqueda. Por favor intenta de nuevo.",
+    "checkConnectionRetry": "Por favor verifica tu conexión a internet e intenta de nuevo."
   },
   "search": {
     "title": "Base de Datos de Películas",
     "titleHighlight": "Base de Datos",
     "subtitle": "Busca por título, luego refina los resultados con filtros de tipo y año",
+    "placeholder": "Buscar películas...",
     "searchPlaceholder": "Buscar películas, series o episodios...",
     "searchButton": "Buscar",
     "filterByType": "Filtrar por Tipo",
@@ -475,6 +496,9 @@
     "requiresSearch": "(requiere búsqueda)",
     "enterSearchTerm": "Por favor ingresa un término de búsqueda",
     "noResultsFound": "No se encontraron resultados",
+    "noResults": "No se encontraron películas",
+    "viewAll": "Ver todos los resultados para \"{query}\"",
+    "viewAllShort": "Ver todos ({count})",
     "searchFailed": "Error al buscar películas",
     "movie": "Película",
     "series": "Serie",
