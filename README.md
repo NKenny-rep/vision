@@ -55,7 +55,7 @@ Note: for testing local development there is already a neon postgre database con
 6. **Access the application**
    - Open browser: `http://localhost:3000`
    - Login with default credentials:
-     - **Admin**: `admin@videovision.com` / `password123`
+     - **Admin**: `admin@videovision.com` / `admin123`
      - **User**: `john.doe@example.com` / `password123`
      - **User**: `goku@videovision.com` / `password123`
      - **User**: `Tarantino@vision.com` / `tarantino`

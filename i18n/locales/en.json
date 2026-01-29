@@ -469,6 +469,8 @@
     "apiError": "Failed to load {count} movie(s) from API",
     "omdbApiLimit": "OMDB API Limit Reached",
     "omdbApiLimitMessage": "The movie database API limit has been reached. Please try again later or contact support.",
+    "apiLimitReached": "API Limit Reached",
+    "apiLimitMessage": "The OMDB API key limit has been reached or is invalid. Please try again later.",
     "someMoviesFailed": "Failed to load {count} movie(s)",
     "searchFailed": "Search failed. Please try again.",
     "checkConnectionRetry": "Please check your internet connection and try again."

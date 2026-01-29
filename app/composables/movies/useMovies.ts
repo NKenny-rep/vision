@@ -6,15 +6,29 @@ export interface IMovieRepository {
   getById(idOrTitle: string, params?: Omit<OMDBMovieParams, 'i' | 't'>): Promise<OMDBMovie>
 }
 
-interface ApiError {
+interface FetchError {
   statusCode?: number
   message?: string
+  data?: {
+    message?: string
+  }
+  response?: {
+    status?: number
+  }
 }
 
-interface AsyncDataResult<T> {
-  data: Ref<T | null>
-  error: Ref<ApiError | null>
-  status: Ref<string>
+// Type guard to check if error is a FetchError
+const isFetchError = (error: unknown): error is FetchError => {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    ('statusCode' in error || 'message' in error || 'response' in error)
+  )
+}
+
+// Type guard to check if error is an Error instance
+const isErrorInstance = (error: unknown): error is Error => {
+  return error instanceof Error
 }
 
 class MovieApiAdapter implements IMovieRepository {
@@ -32,21 +46,60 @@ class MovieApiAdapter implements IMovieRepository {
 }
 
 export const useMovies = (repository: IMovieRepository = new MovieApiAdapter()) => {
+  // Global state for API limit error (called inside composable context)
+  const apiLimitError = useState<boolean>('omdb-api-limit-error', () => false)
+  const apiLimitMessage = useState<string>('omdb-api-limit-message', () => '')
+  
+  const extractErrorDetails = (error: unknown): { statusCode?: number; message: string } => {
+    if (isFetchError(error)) {
+      const statusCode = error.statusCode ?? error.response?.status
+      const message = error.data?.message ?? error.message ?? 'An error occurred'
+      return { statusCode, message }
+    }
+    
+    if (isErrorInstance(error)) {
+      return { message: error.message }
+    }
+    
+    return { message: 'An unknown error occurred' }
+  }
+  
+  const handleApiError = (error: unknown): { statusCode?: number; errorMessage: string } => {
+    const { statusCode, message: errorMessage } = extractErrorDetails(error)
+    
+    // Check for 401 Unauthorized (API limit reached)
+    if (statusCode === 401) {
+      apiLimitError.value = true
+      apiLimitMessage.value = errorMessage
+    }
+    
+    return { statusCode, errorMessage }
+  }
+  
+  const clearApiError = (): void => {
+    apiLimitError.value = false
+    apiLimitMessage.value = ''
+  }
+  
   const searchMovies = async (params: OMDBSearchParams) => {
     try {
       const data = await $fetch<OMDBSearchResponse>(API_ROUTES.MOVIES.SEARCH, {
         query: params,
       })
       if (data && data.Response === 'True' && Array.isArray(data.Search)) {
-        return { data: data.Search, error: null, status: 'success' };
+        return { data: data.Search, error: null, status: 'success' as const };
       } else if (data && data.Response === 'False') {
-        return { data: [], error: { message: data.Error || 'No results found.' }, status: 'empty' };
+        return { data: [], error: { message: data.Error || 'No results found.' }, status: 'empty' as const };
       } else {
-        return { data: [], error: { message: 'Unexpected response from server.' }, status: 'error' };
+        return { data: [], error: { message: 'Unexpected response from server.' }, status: 'error' as const };
       }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      return { data: [], error: { message: errorMessage }, status: 'error' };
+    } catch (error: unknown) {
+      const { statusCode, errorMessage } = handleApiError(error)
+      return { 
+        data: [], 
+        error: { message: errorMessage, statusCode }, 
+        status: 'error' as const
+      };
     }
   }
 
@@ -56,7 +109,14 @@ export const useMovies = (repository: IMovieRepository = new MovieApiAdapter()) 
   ) => {
     const { data, error, status } = await useAsyncData<OMDBMovie>(
       `movie-${idOrTitle}-${params?.plot || 'short'}`,
-      async () => repository.getById(idOrTitle, params),
+      async () => {
+        try {
+          return await repository.getById(idOrTitle, params)
+        } catch (err: unknown) {
+          handleApiError(err)
+          throw err
+        }
+      },
       {
         getCachedData: (key) => useNuxtApp().payload.data[key] || useNuxtApp().static.data[key],
       }
@@ -123,10 +183,9 @@ export const useMovies = (repository: IMovieRepository = new MovieApiAdapter()) 
     useMovieSearch,
     fetchMovie,
     fetchMovies,
-    // Error helpers
-    isApiLimitError: (error: ApiError | null): boolean => error?.statusCode === 401,
-    hasErrors: (results: AsyncDataResult<unknown>[]): boolean => results.some(r => r.error && r.error.value),
-    getErrorCount: (results: AsyncDataResult<unknown>[]): number => results.filter(r => r.error && r.error.value).length,
-    hasApiLimitError: (results: AsyncDataResult<unknown>[]): boolean => results.some(r => r.error && r.error.value && r.error.value.statusCode === 401),
+    // Global error state
+    apiLimitError: readonly(apiLimitError),
+    apiLimitMessage: readonly(apiLimitMessage),
+    clearApiError,
   }
 }

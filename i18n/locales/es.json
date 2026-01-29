@@ -475,6 +475,8 @@
     "apiError": "Error al cargar {count} película(s) de la API",
     "omdbApiLimit": "Límite de API OMDB Alcanzado",
     "omdbApiLimitMessage": "Se ha alcanzado el límite de la API de base de datos de películas. Por favor intenta más tarde o contacta a soporte.",
+    "apiLimitReached": "Límite de API Alcanzado",
+    "apiLimitMessage": "Se ha alcanzado el límite de la clave API de OMDB o la clave no es válida. Por favor intenta de nuevo más tarde.",
     "someMoviesFailed": "Error al cargar {count} película(s)",
     "searchFailed": "Error en la búsqueda. Por favor intenta de nuevo.",
     "checkConnectionRetry": "Por favor verifica tu conexión a internet e intenta de nuevo."

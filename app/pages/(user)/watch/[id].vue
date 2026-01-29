@@ -20,7 +20,7 @@ const movieList = useMovieList()
 const goBack = () => router.back()
 
 // Fetch movie data
-const { data: movie, pending: isLoading } = await useAsyncData(
+const { data: movie, pending: isLoading, refresh: refreshMovie } = await useAsyncData(
   `movie-${videoId}`,
   async () => {
     const { data } = await getMovie(videoId, { plot: 'full' })
@@ -158,36 +158,37 @@ watch(movie, () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-black">
-    <!-- Back Button -->
-    <div class="container mx-auto px-4 pt-6">
-      <UIButton
-        variant="ghost"
-        size="sm"
-        icon="i-heroicons-arrow-left"
-        @click="goBack"
-      >
-        {{ $t('common.back') }}
-      </UIButton>
-    </div>
-
-    <!-- Skeleton Loading State -->
-    <MovieDetailsSkeleton v-if="isLoading" />
-
-    <!-- Error State -->
-    <div v-else-if="!movie || movie.Response === 'False'" class="flex items-center justify-center min-h-screen">
-      <div class="text-center">
-        <UIcon name="i-heroicons-exclamation-triangle" class="w-16 h-16 text-red-500 mx-auto mb-4" />
-        <h2 class="text-2xl font-bold text-white mb-2">{{ $t('watch.movieNotFound') }}</h2>
-        <p class="text-gray-400 mb-6">{{ $t('watch.movieNotFoundDescription') }}</p>
-        <UIButton :to="localePath('/browse')" variant="primary">
-          {{ $t('watch.backToBrowse') }}
+  <MovieApiErrorBoundary @reload="refreshMovie">
+    <div class="min-h-screen bg-black">
+      <!-- Back Button -->
+      <div class="container mx-auto px-4 pt-6">
+        <UIButton
+          variant="ghost"
+          size="sm"
+          icon="i-heroicons-arrow-left"
+          @click="goBack"
+        >
+          {{ $t('common.back') }}
         </UIButton>
       </div>
-    </div>
 
-    <!-- Movie Content -->
-    <template v-else>
+      <!-- Skeleton Loading State -->
+      <MovieDetailsSkeleton v-if="isLoading" />
+
+      <!-- Error State -->
+      <div v-else-if="!movie || movie.Response === 'False'" class="flex items-center justify-center min-h-screen">
+        <div class="text-center">
+          <UIcon name="i-heroicons-exclamation-triangle" class="w-16 h-16 text-red-500 mx-auto mb-4" />
+          <h2 class="text-2xl font-bold text-white mb-2">{{ $t('watch.movieNotFound') }}</h2>
+          <p class="text-gray-400 mb-6">{{ $t('watch.movieNotFoundDescription') }}</p>
+          <UIButton :to="localePath('/browse')" variant="primary">
+            {{ $t('watch.backToBrowse') }}
+          </UIButton>
+        </div>
+      </div>
+
+      <!-- Movie Content -->
+      <template v-else>
       <!-- Movie Info -->
       <div class="container mx-auto px-4 py-8">
         <div class="max-w-6xl mx-auto">
@@ -350,5 +351,6 @@ watch(movie, () => {
         </div>
       </div>
     </template>
-  </div>
+    </div>
+  </MovieApiErrorBoundary>
 </template>

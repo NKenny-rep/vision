@@ -9,8 +9,6 @@ definePageMeta({
   layout: 'default',
   middleware: ['auth']
 })
-
-// SEO Meta Tags
 useSeoMeta({
   title: `${t('browse.title') || 'Browse Movies & TV Shows'} - ${t('common.appName')}`,
   description: t('browse.description') || 'Discover thousands of movies and TV shows. Stream unlimited entertainment on VideoVision.',
@@ -22,12 +20,6 @@ useSeoMeta({
 
 const { getMovie } = useMovies()
 const { showError } = useToastNotification()
-const isOmdbLimitError = ref(false)
-
-// Helper to check for API limit errors
-const hasApiLimitError = (results: Awaited<ReturnType<typeof getMovie>>[]) => {
-  return results.some(r => r.error.value?.message?.includes('limit'))
-}
 
 // Helper to check if any results have errors
 const hasErrors = (results: Awaited<ReturnType<typeof getMovie>>[]) => {
@@ -40,17 +32,12 @@ const getErrorCount = (results: Awaited<ReturnType<typeof getMovie>>[]) => {
 }
 
 // Fetch all movies with SSR support (Single Responsibility: data fetching)
-const { data: moviesData, status, error } = await useAsyncData(
+const { data: moviesData, status, refresh: refreshBrowseMovies } = await useAsyncData(
   'browse-movies',
   async () => {
     const results = await Promise.all(
       BROWSE.FEATURED_MOVIES.map(title => getMovie(title, { plot: BROWSE.MOVIE_PLOT_TYPE }))
     )
-    
-    if (hasApiLimitError(results)) {
-      isOmdbLimitError.value = true
-      throw new Error('OMDB API limit reached')
-    }
     
     if (hasErrors(results)) {
       const errorCount = getErrorCount(results)
@@ -62,7 +49,10 @@ const { data: moviesData, status, error } = await useAsyncData(
       .map(r => r.data.value!)
     
     if (validMovies.length === 0 && hasErrors(results)) {
-      throw new Error('Failed to load movies')
+      throw createError({
+        statusCode: 500,
+        message: 'Failed to load movies'
+      })
     }
     
     return validMovies
@@ -105,17 +95,10 @@ const categories = computed(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-black">
-    <!-- Error State -->
-    <UIErrorState 
-      v-if="error" 
-      :title="isOmdbLimitError ? $t('errors.omdbApiLimit') : $t('errors.loadFailed')"
-      :message="isOmdbLimitError ? $t('errors.omdbApiLimitMessage') : $t('errors.tryAgain')"
-      @reload="() => { isOmdbLimitError = false; refreshNuxtData('browse-movies') }"
-    />
-
-    <!-- Skeleton Loading State -->
-    <MovieBrowseSkeleton v-else-if="isLoading" />
+  <MovieApiErrorBoundary @reload="refreshBrowseMovies">
+    <div class="min-h-screen bg-black">
+      <!-- Skeleton Loading State -->
+      <MovieBrowseSkeleton v-if="isLoading" />
 
     <template v-else>
       <!-- Hero Section -->
@@ -200,5 +183,6 @@ const categories = computed(() => {
         <p class="text-gray-400">{{ $t('movies.noMoviesFound') }}</p>
       </div>
     </template>
-  </div>
+    </div>
+  </MovieApiErrorBoundary>
 </template>
