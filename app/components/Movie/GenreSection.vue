@@ -45,28 +45,35 @@ const displayedMovies = computed(() => {
     </template>
 
     <!-- Carousel for default view, Grid for show all -->
-    <div v-if="!showAll" class="relative -mx-2">
-      <UCarousel
-        :items="displayedMovies"
-        contain-scroll="trimSnaps"
-        :ui="{
-          item: 'basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 snap-start shrink-0 px-2',
-          container: 'snap-x snap-mandatory',
-          prev: 'hidden md:flex absolute -left-20 top-1/2 -translate-y-1/2 bg-primary/90 hover:bg-primary-600 text-white z-10 shadow-lg',
-          next: 'hidden md:flex absolute -right-20 top-1/2 -translate-y-1/2 bg-primary/90 hover:bg-primary-600 text-white z-10 shadow-lg'
-        }"
-        arrows
-        class="relative"
-      >
-        <template #default="{ item }">
-          <MovieCard
-            :movie="item"
-            size="md"
-            class="h-full"
-          />
-        </template>
-      </UCarousel>
-    </div>
+    <ClientOnly v-if="!showAll">
+      <div class="relative -mx-2">
+        <UCarousel
+          :items="displayedMovies"
+          contain-scroll="trimSnaps"
+          :ui="{
+            item: 'basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 snap-start shrink-0 px-2',
+            container: 'snap-x snap-mandatory',
+            prev: 'hidden md:flex absolute -left-20 top-1/2 -translate-y-1/2 bg-primary/90 hover:bg-primary-600 text-white z-10 shadow-lg',
+            next: 'hidden md:flex absolute -right-20 top-1/2 -translate-y-1/2 bg-primary/90 hover:bg-primary-600 text-white z-10 shadow-lg'
+          }"
+          arrows
+          class="relative"
+        >
+          <template #default="{ item }">
+            <MovieCard
+              :movie="item"
+              size="md"
+              class="h-full"
+            />
+          </template>
+        </UCarousel>
+      </div>
+      <template #fallback>
+        <div class="flex gap-4 overflow-x-auto pb-4">
+          <MovieCardSkeleton :count="6" size="md" />
+        </div>
+      </template>
+    </ClientOnly>
 
     <!-- Grid for show all view -->
     <div v-else class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
