@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { User } from '~/types'
-import type { UserWithDetails } from '~/composables/useUserExpansion'
+import type { UserWithDetails } from '~/composables/user/useUserExpansion'
 import { formatDate } from '~/utils/i18nHelpers'
 import { getRoleBadgeClass } from '~/utils/styling'
 
@@ -24,91 +24,60 @@ const { t } = useI18n()
 
 <template>
   <UCard class="overflow-hidden">
-    <div class="space-y-3">
+    <div class="stack-4">
       <!-- User Info Header -->
-      <div class="flex items-center gap-3 pb-3 border-b border-gray-700">
-        <img
-          v-if="user.avatar"
-          :src="user.avatar"
-          :alt="user.name"
-          class="w-12 h-12 rounded-full object-cover"
-        >
-        <div
-          v-else
-          class="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center text-white font-semibold text-lg"
-        >
-          {{ user.name.charAt(0).toUpperCase() }}
-        </div>
+      <div class="flex-start gap-4 pb-4 border-b border-default">
+        <UIAvatar :src="user.avatar" :name="user.name" :alt="user.name" size="md" />
         <div class="flex-1 min-w-0">
-          <h3 class="font-semibold text-white truncate">{{ user.name }}</h3>
-          <p class="text-xs text-gray-400">ID: {{ user.id }}</p>
+          <h3 class="font-semibold text-white truncate text-base">{{ user.name }}</h3>
+          <p class="text-sm text-muted">ID: {{ user.id }}</p>
         </div>
       </div>
 
       <!-- User Details -->
-      <div class="space-y-2">
-        <div class="flex items-start gap-2">
-          <UIcon name="i-heroicons-envelope" class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
-          <div class="flex-1 min-w-0">
-            <p class="text-xs text-gray-400">{{ t('admin.users.table.email') }}</p>
-            <p class="text-sm text-white truncate">{{ user.email }}</p>
-          </div>
-        </div>
+      <div class="stack-3">
+        <UIInfoRow
+          icon="i-heroicons-envelope"
+          :label="t('admin.users.table.email')"
+          :value="user.email"
+          truncate
+        />
 
-        <div v-if="user.phone" class="flex items-start gap-2">
-          <UIcon name="i-heroicons-phone" class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
-          <div class="flex-1">
-            <p class="text-xs text-gray-400">{{ t('admin.users.table.phone') }}</p>
-            <p class="text-sm text-white">{{ user.phone }}</p>
-          </div>
-        </div>
+        <UIInfoRow
+          v-if="user.phone"
+          icon="i-heroicons-phone"
+          :label="t('admin.users.table.phone')"
+          :value="user.phone"
+        />
 
-        <div class="flex items-start gap-2">
-          <UIcon name="i-heroicons-shield-check" class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
-          <div class="flex-1">
-            <p class="text-xs text-gray-400">{{ t('admin.users.table.role') }}</p>
-            <span :class="['inline-block mt-1 px-2 py-1 rounded-full text-xs font-medium', getRoleBadgeClass(user.roleName)]">
-              {{ user.roleName }}
-            </span>
-          </div>
-        </div>
+        <UIInfoRow icon="i-heroicons-shield-check" :label="t('admin.users.table.role')">
+          <span :class="['inline-block mt-1 px-2 py-1 rounded-full text-xs font-medium', getRoleBadgeClass(user.roleName)]">
+            {{ user.roleName }}
+          </span>
+        </UIInfoRow>
 
-        <div class="flex items-start gap-2">
-          <UIcon name="i-heroicons-calendar" class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
-          <div class="flex-1">
-            <p class="text-xs text-gray-400">{{ t('admin.users.table.createdAt') }}</p>
-            <p class="text-sm text-white">{{ formatDate(user.createdAt) }}</p>
-          </div>
-        </div>
+        <UIInfoRow
+          icon="i-heroicons-calendar"
+          :label="t('admin.users.table.createdAt')"
+          :value="formatDate(user.createdAt)"
+        />
       </div>
 
       <!-- Actions -->
-      <div class="flex items-center justify-end gap-2 pt-3 border-t border-gray-700">
-        <button
-          :title="expanded ? t('common.hide') : t('common.view')"
-          class="text-blue-500 hover:text-blue-400 transition-colors p-2 rounded hover:bg-blue-500/10"
-          @click="emit('toggleExpand', user.id)"
-        >
-          <UIcon :name="expanded ? 'i-heroicons-chevron-up' : 'i-heroicons-eye'" class="w-5 h-5" />
-        </button>
-        <button
-          :title="t('common.edit')"
-          class="text-orange-500 hover:text-orange-400 transition-colors p-2 rounded hover:bg-orange-500/10"
-          @click="emit('edit', user)"
-        >
-          <UIcon name="i-heroicons-pencil-square" class="w-5 h-5" />
-        </button>
-        <button
-          :title="t('common.delete')"
-          class="text-red-500 hover:text-red-400 transition-colors p-2 rounded hover:bg-red-500/10"
-          @click="emit('delete', user)"
-        >
-          <UIcon name="i-heroicons-trash" class="w-5 h-5" />
-        </button>
+      <div class="pt-3 border-t border-default">
+        <UIActionButtons
+          show-view
+          show-edit
+          show-delete
+          :view-icon="expanded ? 'i-heroicons-chevron-up' : 'i-heroicons-eye'"
+          @view="emit('toggleExpand', user.id)"
+          @edit="emit('edit', user)"
+          @delete="emit('delete', user)"
+        />
       </div>
 
       <!-- Expanded Details -->
-      <div v-if="expanded" class="pt-3 border-t border-gray-700">
+      <div v-if="expanded" class="pt-3 border-t border-default">
         <AdminUserDetailsCard
           v-if="userDetails"
           :user="userDetails"

@@ -22,10 +22,10 @@ const shouldShowAuthButtons = computed(() => !props.hideAuthButtons)
     <div class="flex items-center gap-8">
       <NuxtLink 
         :to="isLoggedIn ? routes.user.browse() : routes.public.home()" 
-        class="text-orange-500 font-bold text-2xl md:text-3xl hover:text-orange-400 transition-colors" 
+        class="text-primary font-bold text-2xl md:text-3xl hover:text-primary-400 transition-colors" 
         :aria-label="$t('common.appName')"
       >
-        <span class="text-orange-500">Video</span><span class="text-white">Vision</span>
+        <span class="text-primary">Video</span><span class="text-white">Vision</span>
       </NuxtLink>
 
       <!-- Navigation Links (when logged in) -->
@@ -34,8 +34,8 @@ const shouldShowAuthButtons = computed(() => !props.hideAuthButtons)
           v-for="link in NAV_LINKS.AUTHENTICATED"
           :key="link.path"
           :to="$localePath(link.path)" 
-          class="text-white hover:text-orange-500 transition-colors font-medium"
-          active-class="text-orange-500"
+          class="text-white hover:text-primary transition-colors font-medium"
+          active-class="text-primary"
         >
           {{ $t(link.labelKey) }}
         </NuxtLink>

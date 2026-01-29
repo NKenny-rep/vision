@@ -33,25 +33,58 @@ const formData = ref<UserFormData>({
 
 const errors = ref<ValidationErrors>({})
 
-// Form field configuration pattern
-const formFields = computed(() => [
+// Type-safe field definition
+type FieldConfig = {
+  key: keyof UserFormData
+  type: 'text' | 'email' | 'password' | 'tel' | 'url'
+  label: string
+  placeholder: string
+  required: boolean
+  hint?: string
+}
+
+// Centralized field value converters (Strategy Pattern)
+const fieldConverters = {
+  default: (value: string) => value,
+  nullable: (value: string) => value || null,
+  number: (value: string) => Number(value),
+} as const
+
+// Map each field to its converter strategy
+const fieldToConverter: Record<keyof UserFormData, keyof typeof fieldConverters> = {
+  name: 'default',
+  email: 'default',
+  password: 'default',
+  phone: 'nullable',
+  avatar: 'nullable',
+  roleId: 'number',
+}
+
+// Generic update handler using converter strategy
+const updateField = (key: keyof UserFormData, value: string) => {
+  const converter = fieldConverters[fieldToConverter[key]]
+  formData.value[key] = converter(value) as never
+}
+
+// Declarative form configuration
+const formFields = computed<FieldConfig[]>(() => [
   {
     key: 'name',
-    type: 'text' as const,
+    type: 'text',
     label: t('admin.users.form.name'),
     placeholder: t('admin.users.form.namePlaceholder'),
     required: true,
   },
   {
     key: 'email',
-    type: 'email' as const,
+    type: 'email',
     label: t('admin.users.form.email'),
     placeholder: t('admin.users.form.emailPlaceholder'),
     required: true,
   },
   {
     key: 'password',
-    type: 'password' as const,
+    type: 'password',
     label: t('admin.users.form.password'),
     placeholder: t('admin.users.form.passwordPlaceholder'),
     required: !props.isEdit,
@@ -59,14 +92,14 @@ const formFields = computed(() => [
   },
   {
     key: 'phone',
-    type: 'tel' as const,
+    type: 'tel',
     label: t('admin.users.form.phone'),
     placeholder: t('admin.users.form.phonePlaceholder'),
     required: false,
   },
   {
     key: 'avatar',
-    type: 'url' as const,
+    type: 'url',
     label: t('admin.users.form.avatar'),
     placeholder: t('admin.users.form.avatarPlaceholder'),
     required: false,
@@ -108,13 +141,14 @@ const roleSelectId = useId()
     <UIFormField
       v-for="field in formFields"
       :key="field.key"
-      v-model="formData[field.key]"
+      :model-value="String(formData[field.key] ?? '')"
       :label="field.label"
       :type="field.type"
       :placeholder="field.placeholder"
-      :error="errors[field.key as keyof ValidationErrors]"
+      :error="errors[field.key]"
       :required="field.required"
       :disabled="loading"
+      @update:model-value="(value: string) => updateField(field.key, value)"
     >
       <template v-if="field.hint" #hint>
         <span class="text-sm text-gray-400">({{ field.hint }})</span>
@@ -130,7 +164,7 @@ const roleSelectId = useId()
         :id="roleSelectId"
         v-model="formData.roleId"
         :disabled="loading"
-        class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+        class="w-full px-4 py-2 bg-surface border border-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
       >
         <option v-for="role in roleOptions" :key="role.value" :value="role.value">
           {{ role.label }}

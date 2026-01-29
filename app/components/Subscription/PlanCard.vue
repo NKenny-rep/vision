@@ -76,7 +76,7 @@ const handleClick = () => {
       {{ t('common.popular') || 'POPULAR' }}
     </div>
 
-    <div :class="['flex flex-col flex-grow', compact ? 'p-3' : 'p-6 sm:p-8']">>
+    <div :class="['flex flex-col grow', compact ? 'p-3' : 'p-6 sm:p-8']">>
       <!-- Plan Header -->
       <div :class="['text-center', compact ? 'mb-3' : 'mb-6']">
         <h4
@@ -126,7 +126,7 @@ const handleClick = () => {
       </div>
 
       <!-- Features -->
-      <ul :class="['flex-grow', compact ? 'space-y-1.5 mb-3' : 'space-y-3 mb-6']">>
+      <ul :class="['grow', compact ? 'space-y-1.5 mb-3' : 'space-y-3 mb-6']">
         <li :class="compact ? 'flex items-start gap-2' : 'flex items-start gap-3'">
           <UIcon
             name="i-heroicons-check-circle-20-solid"

@@ -45,7 +45,7 @@ const handleSubmit = async () => {
       </div>
 
       <UForm class="space-y-4" @submit="handleSubmit">
-        <UFormGroup :label="t('reviews.yourRating')" required>
+        <UFormField :label="t('reviews.yourRating')" required>
           <div class="flex items-center gap-4">
             <UIStarRating
               v-model="rating"
@@ -56,17 +56,18 @@ const handleSubmit = async () => {
           </div>
           <template #help>
             <span v-if="rating === 0" class="text-gray-500">{{ t('reviews.clickToRate') }}</span>
-            <span v-else class="text-orange-500">{{ t('reviews.starsSelected', { count: rating }) }}</span>
+            <span v-else class="text-primary">{{ t('reviews.starsSelected', { count: rating }) }}</span>
           </template>
-        </UFormGroup>
+        </UFormField>
 
-        <UFormGroup :label="t('reviews.yourReview')" required>
+        <UFormField :label="t('reviews.yourReview')" required>
           <UTextarea
             v-model="comment"
             :placeholder="t('reviews.tellUsWhatYouThink')"
             :rows="5"
             :maxlength="1000"
             autoresize
+            class="w-full"
           />
           <template #help>
             <div class="flex justify-between text-sm">
@@ -76,7 +77,7 @@ const handleSubmit = async () => {
               <span class="text-gray-500">{{ comment.length }} / 1000</span>
             </div>
           </template>
-        </UFormGroup>
+        </UFormField>
 
         <div class="flex gap-3 pt-4">
           <UIButton

@@ -8,6 +8,7 @@ export const useUserTableColumns = () => {
 
   const columns: ColumnDef<User>[] = [
     {
+      id: 'name',
       accessorKey: 'name',
       header: () => t('admin.users.table.user'),
       cell: ({ row }) => {
@@ -17,10 +18,10 @@ export const useUserTableColumns = () => {
             ? h('img', {
                 src: user.avatar,
                 alt: user.name,
-                class: 'w-10 h-10 rounded-full object-cover'
+                class: 'hidden lg:block w-10 h-10 rounded-full object-cover'
               })
             : h('div', {
-                class: 'w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white font-semibold'
+                class: 'hidden lg:flex w-10 h-10 rounded-full bg-orange-500 items-center justify-center text-white font-semibold'
               }, user.name.charAt(0).toUpperCase()),
           h('div', [
             h('div', { class: 'font-medium text-white' }, user.name),
@@ -30,16 +31,19 @@ export const useUserTableColumns = () => {
       },
     },
     {
+      id: 'email',
       accessorKey: 'email',
       header: () => t('admin.users.table.email'),
       cell: ({ getValue }) => h('span', { class: 'text-sm text-gray-300' }, getValue() as string),
     },
     {
+      id: 'phone',
       accessorKey: 'phone',
       header: () => t('admin.users.table.phone'),
       cell: ({ getValue }) => h('span', { class: 'text-sm text-gray-300' }, (getValue() as string) || '-'),
     },
     {
+      id: 'roleName',
       accessorKey: 'roleName',
       header: () => t('admin.users.table.role'),
       cell: ({ getValue }) => {
@@ -50,6 +54,7 @@ export const useUserTableColumns = () => {
       },
     },
     {
+      id: 'createdAt',
       accessorKey: 'createdAt',
       header: () => t('admin.users.table.createdAt'),
       cell: ({ getValue }) => h('span', { class: 'text-sm text-gray-300' }, formatDate(getValue() as Date)),

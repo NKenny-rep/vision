@@ -1,12 +1,6 @@
 import type { UserFormData } from '~/types'
 
-export interface ValidationErrors {
-  name?: string
-  email?: string
-  password?: string
-  phone?: string
-  roleId?: string
-}
+export type ValidationErrors = Partial<Record<keyof UserFormData, string>>
 
 export interface IUserValidator {
   validate(data: UserFormData, isEdit: boolean): ValidationErrors
@@ -43,13 +37,13 @@ export class UserFormValidator implements IUserValidator {
   validateField<K extends keyof UserFormData>(field: K, value: UserFormData[K], isEdit: boolean = false): string | undefined {
     switch (field) {
       case 'name':
-        return this.validateName(value)
+        return this.validateName(String(value || ''))
       case 'email':
-        return this.validateEmail(value)
+        return this.validateEmail(String(value || ''))
       case 'password':
-        return this.validatePassword(value, isEdit)
+        return this.validatePassword(String(value || ''), isEdit)
       case 'phone':
-        return value ? this.validatePhone(value) : undefined
+        return value ? this.validatePhone(String(value)) : undefined
       default:
         return undefined
     }

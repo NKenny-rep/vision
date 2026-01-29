@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { TableColumn } from '#ui/types'
-import type { OMDBSearchResult } from '~/types'
+import type { OMDBSearchItem } from '~/types'
+import { getPosterUrl } from '~/utils/image'
 
 interface Props {
-  movies: OMDBSearchResult[]
+  movies: OMDBSearchItem[]
   loading?: boolean
   totalResults?: number
   currentPage?: number
@@ -29,18 +29,14 @@ const emit = defineEmits<{
 const totalPages = computed(() => Math.ceil(props.totalResults / props.pageSize))
 const shouldShowPagination = computed(() => props.showPagination && props.totalResults > props.pageSize)
 
-const getPosterUrl = (poster: string) => {
-  return poster && poster !== 'N/A' 
-    ? poster 
-    : 'https://placehold.co/100x150/1a1a1a/orange?text=No+Poster'
-}
+const getMovie = (row: unknown): OMDBSearchItem => row as OMDBSearchItem
 
 const handleImageError = (event: Event) => {
   (event.target as HTMLImageElement).src = 'https://placehold.co/100x150/1a1a1a/orange?text=No+Image'
 }
 
 const columns = computed(() => {
-  const baseColumns: TableColumn[] = [
+  const allColumns = [
     { 
       key: 'Poster', 
       label: 'Poster',
@@ -54,39 +50,40 @@ const columns = computed(() => {
   ]
   
   if (!props.compact) {
-    baseColumns.push({ 
+    allColumns.push({ 
       key: 'Type', 
       label: 'Type',
       sortable: true 
     })
   }
   
-  baseColumns.push({ 
+  allColumns.push({ 
     key: 'Year', 
     label: 'Year',
     sortable: true 
   })
   
   if (!props.compact) {
-    baseColumns.push({ 
+    allColumns.push({ 
       key: 'imdbID', 
       label: 'IMDb',
       sortable: false 
     })
   }
   
-  baseColumns.push({ 
+  allColumns.push({ 
     key: 'actions', 
     label: 'Actions',
     sortable: false 
   })
   
-  return baseColumns
+  return allColumns
 })
 </script>
 
 <template>
   <div class="space-y-4">
+    <!-- @vue-ignore -->
     <UTable
       :rows="movies"
       :columns="columns"
@@ -97,10 +94,10 @@ const columns = computed(() => {
       }"
       :ui="{
         base: 'bg-gray-900',
-        divide: 'divide-gray-800',
-        thead: 'bg-gray-800 border-b border-gray-700',
-        tbody: 'divide-y divide-gray-800',
-        tr: 'hover:bg-gray-800/50 transition-colors',
+        divide: 'divide-surface',
+        thead: 'bg-surface border-b border-gray-700',
+        tbody: 'divide-y divide-surface',
+        tr: 'hover:bg-surface/50 transition-colors',
         th: {
           base: 'text-left text-xs font-medium text-gray-400 uppercase',
           padding: 'px-4 py-3'
@@ -113,8 +110,8 @@ const columns = computed(() => {
     >
       <template #Poster-data="{ row }">
         <img 
-          :src="getPosterUrl(row.Poster)" 
-          :alt="row.Title"
+          :src="getPosterUrl(getMovie(row).Poster)" 
+          :alt="getMovie(row).Title"
           class="w-12 h-16 object-cover rounded"
           loading="lazy"
           @error="handleImageError"
@@ -122,29 +119,29 @@ const columns = computed(() => {
       </template>
 
       <template #Title-data="{ row }">
-        <p class="text-sm font-medium text-white line-clamp-2">{{ row.Title }}</p>
+        <p class="text-sm font-medium text-white line-clamp-2">{{ getMovie(row).Title }}</p>
       </template>
 
       <template #Type-data="{ row }">
         <span 
           class="px-2 py-1 text-xs font-medium rounded-full capitalize"
           :class="{
-            'bg-orange-500/20 text-orange-400': row.Type === 'movie',
-            'bg-blue-500/20 text-blue-400': row.Type === 'series',
-            'bg-purple-500/20 text-purple-400': row.Type === 'episode'
+            'bg-primary/20 text-primary-400': getMovie(row).Type === 'movie',
+            'bg-blue-500/20 text-blue-400': getMovie(row).Type === 'series',
+            'bg-purple-500/20 text-purple-400': getMovie(row).Type === 'episode'
           }"
         >
-          {{ row.Type }}
+          {{ getMovie(row).Type }}
         </span>
       </template>
 
       <template #imdbID-data="{ row }">
-        <span class="font-mono text-gray-400">{{ row.imdbID }}</span>
+        <span class="font-mono text-gray-400">{{ getMovie(row).imdbID }}</span>
       </template>
 
       <template #actions-data="{ row }">
         <div class="text-right">
-          <UIButton variant="ghost" size="sm" @click="emit('view-details', row.imdbID)">
+          <UIButton variant="ghost" size="sm" @click="emit('view-details', getMovie(row).imdbID)">
             View
           </UIButton>
         </div>

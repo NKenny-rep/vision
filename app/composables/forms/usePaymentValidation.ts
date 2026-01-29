@@ -1,11 +1,3 @@
-/**
- * Payment Validation Composable
- * 
- * Single Responsibility: Handles payment validation using Zod schemas
- * Follows DRY: Reusable validation logic across components
- * Type-safe: Zod provides runtime validation + TypeScript inference
- */
-
 import { z } from 'zod'
 
 // Helper to get current year and month
@@ -58,17 +50,10 @@ export type PaymentMethodData = z.infer<typeof paymentMethodSchema>
 export const usePaymentValidation = () => {
   const { t } = useI18n()
 
-  /**
-   * Validate payment data using Zod schema
-   * Returns validation result with detailed errors
-   */
   const validatePaymentData = (data: unknown) => {
     return paymentMethodSchema.safeParse(data)
   }
 
-  /**
-   * Get human-readable error message for a specific field
-   */
   const getFieldErrorMessage = (fieldName: keyof PaymentMethodData, errors: z.ZodError): string | null => {
     const fieldError = errors.issues.find(err => err.path[0] === fieldName)
     if (!fieldError) return null
@@ -91,9 +76,6 @@ export const usePaymentValidation = () => {
     return fieldError.message.replace(fieldName, fieldLabel)
   }
 
-  /**
-   * Get all validation errors as user-friendly messages
-   */
   const getAllErrorMessages = (errors: z.ZodError): string[] => {
     return errors.issues.map(err => {
       const fieldName = err.path[0] as string

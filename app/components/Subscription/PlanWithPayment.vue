@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
-import type { PaymentMethodData } from '~/composables/usePaymentValidation'
-import { usePaymentValidation } from '~/composables/usePaymentValidation'
+import type { PaymentMethodData } from '~/composables/forms/usePaymentValidation'
+import { usePaymentValidation } from '~/composables/forms/usePaymentValidation'
 
 interface SubscriptionPlan {
   id: number

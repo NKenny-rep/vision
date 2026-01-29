@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MovieListItem } from '~/composables/useMovieList'
+import type { MovieListItem } from '~/composables/movies/useMovieList'
 import MovieBaseCard from './BaseCard.vue'
 
 interface Props {
@@ -35,7 +35,7 @@ const handleRemove = () => {
   <MovieBaseCard :movie="movieData" :size="size">
     <template #action-button>
       <button
-        class="w-8 h-8 rounded-full bg-red-600/80 hover:bg-red-600 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
+        class="w-8 h-8 rounded-full bg-danger/80 hover:bg-danger flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
         :title="t('userPanel.movieList.removeButton')"
         @click.stop="handleRemove"
       >

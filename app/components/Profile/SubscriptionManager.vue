@@ -275,7 +275,7 @@ const handleConfirm = async () => {
         </UButton>
         <UButton
           variant="outline"
-          color="gray"
+          color="neutral"
           :loading="isCancelling"
           :disabled="isChangingPlan || isCancelling"
           @click="showCancelModal = true"
@@ -323,7 +323,7 @@ const handleConfirm = async () => {
       :message="t('profile.subscription.cancelConfirm')"
       :user-info="currentPlanInfo"
       :confirm-text="t('profile.subscription.cancelSubscription')"
-      confirm-class="bg-red-600 hover:bg-red-700"
+      confirm-class="bg-danger hover:bg-danger-700"
       :loading="isCancelling"
       @confirm="handleCancelSubscription"
     />

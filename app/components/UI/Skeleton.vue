@@ -37,7 +37,7 @@ const animationClasses = {
 
 <template>
   <div 
-    class="bg-gray-800"
+    class="bg-surface"
     :class="[
       variantClasses[variant],
       animationClasses[animation]

@@ -22,8 +22,18 @@
 <script setup lang="ts">
 const localePath = useLocalePath();
 const { isLoggedIn } = useAuthentication()
+const { t } = useI18n();
 
 definePageMeta({
   layout: 'default'
+})
+
+// SEO Meta Tags
+useSeoMeta({
+  title: `${t('myList.title') || 'My List'} - ${t('common.appName')}`,
+  description: t('myList.description') || 'Your personalized collection of favorite movies and TV shows',
+  ogTitle: `My List - ${t('common.appName')}`,
+  ogDescription: 'Manage your favorite content',
+  robots: 'noindex, nofollow', // Private user page
 })
 </script>
